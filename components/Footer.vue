@@ -2,7 +2,7 @@
   <footer>
     <div class="footer symbolFooter">
       <div class="columns">
-        <div class="column is-4 footer-description">
+        <div class="column is-4">
           <div class="ft-logo">
             <a href="https://www.nem.io/" target="_blank">
               <img src="~/assets/images/logo_footer.png" >
@@ -21,7 +21,7 @@
             </p>
           </div>
         </div>
-        <div class="column is-4">
+        <div class="column is-4 ft-link">
           <ul class="social-icon">
             <li v-for="link in links" :key="link.text" class="social-icon-item">
                 <a target="_blank" :href="link.href">
@@ -44,6 +44,7 @@ import IconReddit from 'vue-material-design-icons/Reddit.vue'
 import IconForum from 'vue-material-design-icons/Forum.vue'
 import IconTelegram from 'vue-material-design-icons/Telegram.vue'
 import IconHomeCurrencyUsd from 'vue-material-design-icons/HomeCurrencyUsd.vue'
+import IconEarth from 'vue-material-design-icons/Earth.vue'
 
 export default {
   components: {
@@ -52,7 +53,8 @@ export default {
     IconReddit,
     IconForum,
     IconTelegram,
-    IconHomeCurrencyUsd
+    IconHomeCurrencyUsd,
+    IconEarth
   },
 
   data() {
@@ -92,7 +94,12 @@ export default {
 				"href": "https://symboldev-faucet-02.herokuapp.com/",
 				"text": "Faucet-02",
 				"icon": "IconHomeCurrencyUsd"
-			}
+      },
+      {
+        "href": "http://explorer.symboldev.network/",
+				"text": "Explorer",
+				"icon": "IconEarth"
+      }
 		]
     }
   },
@@ -100,8 +107,8 @@ export default {
 </script>
 
 <style lang="stylus" scoped>
-.footer-description {
-  margin-top: -40px;
+.ft-link {
+  padding : 0px 0px
 }
 
 .ft-logo {
@@ -136,7 +143,7 @@ export default {
   justify-content: space-between;
   flex-wrap: wrap;
   display: flex;
-  padding: 0;
+  padding: 30px 0;
 
   .social-icon-item {
       flex: auto;
@@ -155,5 +162,9 @@ export default {
           }
       }
   }
+}
+
+.column.is-4{
+  padding: 0 15px
 }
 </style>
