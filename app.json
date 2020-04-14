@@ -1,9 +1,9 @@
 {
   "name": "symbol-faucet",
-  "description": "Faucet application for nem2",
+  "description": "Faucet application for symbol",
   "keywords": [
     "nem",
-    "nem2",
+    "symbol",
     "catapult",
     "blockchain"
   ],
@@ -51,7 +51,7 @@
       "required": false
     },
     "NEM_FEE_MULTIPLIER": {
-      "required": false,
+      "required": false
     },
     "NEM_MAX_FEE": {
       "required": false,

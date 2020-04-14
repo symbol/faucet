@@ -1,8 +1,10 @@
-# :potable_water: NEM2 (catapult) Faucet
+# :potable_water: Symbol (Catapult) Faucet
 
-## :heartbeat: Demo
+## :heartbeat: Symbol Faucet
 
-- [symbol Test Faucet](http://test-symbol-faucet.44uk.net/)
+- [Symbol Faucet-01](https://symboldev-faucet-01.herokuapp.com/)
+- [Symbol Faucet-02](https://symboldev-faucet-02.herokuapp.com/)
+
 
 ## :handshake: Using with catapult-service-bootstrap
 
@@ -129,6 +131,7 @@ $ npm run dev
 ## :muscle: Powered by
 
 - [NEM - Distributed Ledger Technology (Blockchain) Catapult](https://www.nem.io/catapult/)
-- [nemtech/nem2\-sdk\-typescript\-javascript: nem2\-sdk official for typescript & javascript](https://github.com/nemtech/symbol-sdk-typescript-javascript)
+- [nemtech/symbol\-sdk\-typescript\-javascript: symbol\-sdk official for typescript & javascript](https://github.com/nemtech/symbol-sdk-typescript-javascript)
 - [nuxt/nuxt\.js: The Vue\.js Framework](https://github.com/nuxt/nuxt.js)
-- [44uk/nem2\-faucet: Faucet application for nem2 \(catapult\)](https://github.com/44uk/symbol-faucet)
+- [44uk/symbol\-faucet: Faucet application for symbol \(catapult\)](https://github.com/44uk/symbol-faucet)
+
