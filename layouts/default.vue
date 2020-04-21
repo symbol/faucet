@@ -1,8 +1,8 @@
 <template lang="pug">
 #app
-  Navbar
+  //- Navbar
   nuxt
-  Footer
+  //- Footer
 </template>
 
 <script>
