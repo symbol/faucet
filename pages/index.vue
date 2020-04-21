@@ -10,42 +10,218 @@
           <span>Claim mosaics for development and testing purposes on the symbol network</span>
         </div>
       </b-row>
-      <!-- <b-row>
-        <b-col col-lg-6 d-none d-lg-block >
-          <FaucetForm/>
-        </b-col>
-      </b-row> -->
+
       <b-row>
-        <span>Please send back claimed mosaics when you no longer need it.</span>
-        <span>Faucet Address: XXXXX</span>
-        <span>Faucet Balance: 123.23 XYM</span>
+        <div class="info">
+          <span>Please send back claimed mosaics when you no longer need it.</span>
+          <span>Faucet Address: <span class="highlight">{{ faucet.address }}</span> </span>
+          <span>Faucet Balance: {{ faucet.balance }}</span>
+        </div>
+
       </b-row>
     </b-col>
 
     <b-col col-lg-6 d-none d-lg-block >
-      <FaucetForm/>
+      <FaucetForm
+      :mosaicFQN="faucet.mosaicFQN"
+      :recipientPlaceholder="formAttribute.recipientPlaceholder"
+      :amountPlaceholder="formAttribute.amountPlaceholder"
+      />
     </b-col>
   </b-row>
 </b-container>
 </template>
 
 <script>
+import { Address, AccountHttp, MosaicHttp, MosaicService, Listener } from 'symbol-sdk'
+import { interval } from 'rxjs'
+import { filter, mergeMap, concatMap, distinctUntilChanged } from 'rxjs/operators'
+
 import FaucetForm from '@/components/FaucetForm.vue'
 
 export default {
   components: {
     FaucetForm,
   },
+  asyncData({ res, store, error }) {
+  if (res.error) return error(res.error)
+  if (!res.data) return {}
+  const faucet = res.data.faucet
+  const firstChar = faucet.address[0]
+  const recipientPattern = `^${firstChar}[ABCD].+`
+  const recipientPlaceholder = `${faucet.network} address start with a capital ${firstChar}`
+  const amountPlaceholder = `(Up to ${faucet.outOpt}. Optional, if you want fixed amount)`
+  const data = {
+    faucet,
+    formAttribute: {
+      recipientPattern,
+      recipientPlaceholder,
+      amountPlaceholder
+    }
+  }
+  console.debug('asyncData: %o', data)
+  return data
+},
+data() {
+  return {
+    app: {
+      waiting: false,
+      listener: null,
+      poller: null
+    },
+    faucet: {
+      drained: false,
+      network: null,
+      apiUrl: null,
+      publicUrl: null,
+      mosaicFQN: null,
+      mosaicId: null,
+      outMax: null,
+      outMin: null,
+      outOpt: null,
+      step: null,
+      address: null,
+      balance: null
+    },
+    form: {
+      recipient: null,
+      message: null,
+      amount: null,
+      encryption: false
+    },
+    txHashes: []
+  }
+},
+created() {
+  if (process.browser) {
+    const { recipient, amount, message, encryption } = this.$nuxt.$route.query
+    this.form = {
+      ...this.form,
+      recipient,
+      amount,
+      message,
+      encryption: encryption && encryption.toLowerCase() === 'true'
+    }
+  }
+},
+async mounted() {
+  const faucetAddress = Address.createFromRawAddress(this.faucet.address)
+  this.app.listener = new Listener(this.faucet.publicUrl.replace('http', 'ws'), WebSocket)
+  this.app.listener.open().then(() => {
+    this.app.listener.unconfirmedAdded(faucetAddress).subscribe(_ => {
+      this.info('Your request had been unconfirmed status!')
+    })
+    this.app.listener.confirmed(faucetAddress).subscribe(_ => {
+      this.info('Your Request had been confirmed status!')
+    })
+  })
+
+  this.app.poller = this.accountPolling(faucetAddress)
+  this.app.poller.subscribe(mosaicAmountView => (this.faucet.balance = mosaicAmountView.relativeAmount()))
+
+  if (this.$recaptcha) {
+    await this.$recaptcha.init()
+  }
+},
+beforeDestroy() {
+  this.app.listener != null && this.app.listener.close()
+  this.app.poller != null && this.app.poller.unsubscribe()
+},
+methods: {
+  accountPolling(address) {
+    const accountHttp = new AccountHttp(this.faucet.publicUrl)
+    const mosaicHttp = new MosaicHttp(this.faucet.publicUrl)
+    const mosaicService = new MosaicService(accountHttp, mosaicHttp)
+    return interval(5000).pipe(
+      concatMap(() => mosaicService.mosaicsAmountViewFromAddress(address)),
+      mergeMap(_ => _),
+      filter(_ => _.mosaicInfo.id.toHex() === this.faucet.mosaicId),
+      distinctUntilChanged((prev, current) => prev.relativeAmount() === current.relativeAmount())
+    )
+  },
+  async claim() {
+    this.app.waiting = true
+    this.$router.push({ path: this.$route.path, query: this.form })
+    const formData = { ...this.form }
+    if (this.$recaptcha) {
+      formData.reCaptcha = await this.$recaptcha.execute('login')
+    }
+    this.$axios
+      .$post('/claims', formData)
+      .then(resp => {
+        this.txHashes.unshift(resp.txHash)
+        this.info(`Send your declaration.`)
+        this.success(`Amount: ${resp.amount} ${this.faucet.mosaicId}`)
+        this.success(`Transaction Hash: ${resp.txHash}`)
+      })
+      .catch(err => {
+        const msg = (err.response.data && err.response.data.error) || err.response.statusTest
+        this.failed(`Message from server: ${msg}`)
+        this.app.waiting = false
+      })
+      .finally(() => {
+        this.app.waiting = false
+      })
+  },
+  info(message) {
+    this.$buefy.snackbar.open({
+      type: 'is-info',
+      message,
+      queue: false
+    })
+  },
+  success(message) {
+    this.$buefy.snackbar.open({
+      type: 'is-success',
+      message,
+      queue: false,
+      duration: 8000
+    })
+  },
+  warning(message) {
+    this.$buefy.snackbar.open({
+      type: 'is-warning',
+      message,
+      queue: false,
+      duration: 8000
+    })
+  },
+  failed(message) {
+    this.$buefy.snackbar.open({
+      type: 'is-danger',
+      message,
+      queue: false,
+      duration: 8000
+    })
+  }
+}
 }
 </script>
 <style lang="scss" scoped>
 .container {
-  margin-top: 50px;
+  margin-top: 20px;
+}
+
+.row {
+  padding: 20px 0;
+  margin: 5px;
 }
 .subTitle {
   span {
       font-size: 19px;
       font-weight: bolder;
+  }
+}
+
+.info {
+  span {
+    display: block;
+    font-size: 12px;
+
+    .highlight {
+      display: inline;
+      color: var(--primary)
+    }
   }
 }
 </style>
