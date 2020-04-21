@@ -47,6 +47,11 @@ export default {
     padding: 20px;
     border-radius: 16px;
     height: 120%;
+    border-radius: 8px;
+    opacity: 0.7;
+    background: linear-gradient(120deg, #5200c6 0%, #44004e 100%);
+    background-size: 100% auto;
+    box-shadow: 0 1px 5px 1px #000a;
 }
 
 .formInput {
