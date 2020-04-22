@@ -23,7 +23,7 @@
         <div class="info">
           <span>Please send back claimed mosaics when you no longer need it.</span>
           <span>Faucet Address: <span class="highlight">{{ faucet.address }}</span> </span>
-          <span>Faucet Balance: {{ faucet.balance }}</span>
+          <span>Faucet Balance: {{ faucet.balance }} ({{faucet.mosaicFQN}}) </span>
         </div>
 
       </b-row>
@@ -49,7 +49,7 @@ import FaucetForm from '@/components/FaucetForm.vue'
 
 export default {
   components: {
-    FaucetForm,
+    FaucetForm
   },
   asyncData({ res, store, error }) {
   if (res.error) return error(res.error)
@@ -101,26 +101,26 @@ data() {
   }
 },
 created() {
-  if (process.browser) {
-    const { recipient, amount, message, encryption } = this.$nuxt.$route.query
-    this.form = {
-      ...this.form,
-      recipient,
-      amount,
-      message,
-      encryption: encryption && encryption.toLowerCase() === 'true'
-    }
-  }
+  // if (process.browser) {
+  //   const { recipient, amount, message, encryption } = this.$nuxt.$route.query
+  //   this.form = {
+  //     ...this.form,
+  //     recipient,
+  //     amount,
+  //     message,
+  //     encryption: encryption && encryption.toLowerCase() === 'true'
+  //   }
+  // }
 },
 async mounted() {
   const faucetAddress = Address.createFromRawAddress(this.faucet.address)
   this.app.listener = new Listener(this.faucet.publicUrl.replace('http', 'ws'), WebSocket)
   this.app.listener.open().then(() => {
     this.app.listener.unconfirmedAdded(faucetAddress).subscribe(_ => {
-      this.info('Your request had been unconfirmed status!')
+      this.makeToast('success', 'Your request had been unconfirmed status!')
     })
     this.app.listener.confirmed(faucetAddress).subscribe(_ => {
-      this.info('Your Request had been confirmed status!')
+      this.makeToast('success', 'Your Request had been confirmed status!')
     })
   })
 
@@ -147,59 +147,13 @@ methods: {
       distinctUntilChanged((prev, current) => prev.relativeAmount() === current.relativeAmount())
     )
   },
-  async claim() {
-    this.app.waiting = true
-    this.$router.push({ path: this.$route.path, query: this.form })
-    const formData = { ...this.form }
-    if (this.$recaptcha) {
-      formData.reCaptcha = await this.$recaptcha.execute('login')
-    }
-    this.$axios
-      .$post('/claims', formData)
-      .then(resp => {
-        this.txHashes.unshift(resp.txHash)
-        this.info(`Send your declaration.`)
-        this.success(`Amount: ${resp.amount} ${this.faucet.mosaicId}`)
-        this.success(`Transaction Hash: ${resp.txHash}`)
-      })
-      .catch(err => {
-        const msg = (err.response.data && err.response.data.error) || err.response.statusTest
-        this.failed(`Message from server: ${msg}`)
-        this.app.waiting = false
-      })
-      .finally(() => {
-        this.app.waiting = false
-      })
-  },
-  info(message) {
-    this.$buefy.snackbar.open({
-      type: 'is-info',
-      message,
-      queue: false
-    })
-  },
-  success(message) {
-    this.$buefy.snackbar.open({
-      type: 'is-success',
-      message,
-      queue: false,
-      duration: 8000
-    })
-  },
-  warning(message) {
-    this.$buefy.snackbar.open({
-      type: 'is-warning',
-      message,
-      queue: false,
-      duration: 8000
-    })
-  },
-  failed(message) {
-    this.$buefy.snackbar.open({
-      type: 'is-danger',
-      message,
-      queue: false,
-      duration: 8000
+  makeToast(variant = null, message) {
+    this.$bvToast.toast(message, {
+    title: `Notification`,
+    variant: variant,
+    solid: true,
+    toaster: 'b-toaster-top-right',
+    appendToast: true
     })
   }
 }

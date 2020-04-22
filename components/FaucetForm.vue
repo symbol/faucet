@@ -1,32 +1,33 @@
 <template>
-<div class="faucetForm">
+<div class="faucetForm p-3">
     <b-col>
         <div class="formTitle">
             <h1>Faucet</h1>
         </div>
-
-        <div class="formInput">
+        <b-form @submit.prevent="claim">
+            <div class="formInput">
             <div class="inputGroup">
                 <span>Mosaic</span>
-                <b-input disabled="true" :value="mosaicFQN"></b-input>
+                <b-input disabled v-model="form.mosaicName" required></b-input>
             </div>
 
             <div class="inputGroup">
                 <span>Recipient</span>
-                <b-input :placeholder="recipientPlaceholder"></b-input>
+                <b-input :placeholder="recipientPlaceholder" v-model="form.recipient" required></b-input>
             </div>
 
             <div class="inputGroup">
                 <span>Amount</span>
-                <b-input :placeholder="amountPlaceholder"></b-input>
+                <b-input :placeholder="amountPlaceholder" v-model="form.amount"></b-input>
             </div>
 
         </div>
 
         <div class="formSubmit">
             <span>Submit</span>
-            <b-button>CLAIM!</b-button>
+            <b-button type="submit">CLAIM!</b-button>
         </div>
+        </b-form>
     </b-col>
 </div>
 </template>
@@ -37,15 +38,42 @@ export default {
         mosaicFQN: { type: String, default: '' },
         recipientPlaceholder: { type: String, default: ''},
         amountPlaceholder: { type: String, default: ''}
+    },
+    data() {
+      return {
+        form: {
+          mosaicName: this.mosaicFQN,
+          recipient: '',
+          amount: ''
+        }
+      }
+    },
+    methods: {
+        claim() {
+            this.$axios
+            .$post('/claims', { ...this.form })
+            .then(resp => {
+                // this.txHashes.unshift(resp.txHash)
+                this.$parent.makeToast('success', `Send your declaration.`)
+                this.$parent.makeToast('success', `Amount: ${resp.amount} ${this.form.mosaicName}`)
+                this.$parent.makeToast('success', `Transaction Hash: ${resp.txHash}`)
+            })
+            .catch(err => {
+                const msg = (err.response.data && err.response.data.error) || err.response.statusTest
+                this.$parent.makeToast('danger', `Message from server: ${msg}`)
+            })
+        }
     }
 }
 </script>
 
 <style lang="scss" scoped>
+
+.form-control {
+    font-size: inherit !important;
+}
+
 .faucetForm {
-    background: rgba(82, 0, 198, 0.8);
-    padding: 20px;
-    border-radius: 16px;
     height: 120%;
     border-radius: 8px;
     opacity: 0.7;
@@ -60,6 +88,7 @@ export default {
 
     .inputGroup {
         padding: 10px 0;
+        font-size: 13px;
     }
 }
 
