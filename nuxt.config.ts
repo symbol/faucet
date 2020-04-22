@@ -34,7 +34,6 @@ export const config: any = {
   /*
    ** Global CSS
    */
-  // css: ['assets/stylesheets/overwrite.styl', 'assets/stylesheets/symbol.styl'],
   css: ['@/assets/stylesheets/main.scss'],
 
   /*
