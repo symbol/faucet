@@ -1,7 +1,7 @@
 <template>
 <b-container>
   <b-row >
-    <b-col col-12 col-lg-6 >
+    <b-col cols="12" lg="6" >
       <b-row>
         <b-img src="~/assets/images/symbol_logo_white.svg" fluid alt="Symbol" width=200></b-img>
       </b-row>
@@ -9,6 +9,14 @@
         <div class="subTitle">
           <span>Claim mosaics for development and testing purposes on the symbol network</span>
         </div>
+      </b-row>
+
+      <b-row>
+        <FaucetForm class="d-lg-none d-xl-none d-md-block"
+      :mosaicFQN="faucet.mosaicFQN"
+      :recipientPlaceholder="formAttribute.recipientPlaceholder"
+      :amountPlaceholder="formAttribute.amountPlaceholder"
+      />
       </b-row>
 
       <b-row>
@@ -21,8 +29,8 @@
       </b-row>
     </b-col>
 
-    <b-col col-lg-6 d-none d-lg-block >
-      <FaucetForm
+    <b-col lg="6">
+      <FaucetForm class="d-lg-block d-none"
       :mosaicFQN="faucet.mosaicFQN"
       :recipientPlaceholder="formAttribute.recipientPlaceholder"
       :amountPlaceholder="formAttribute.amountPlaceholder"
