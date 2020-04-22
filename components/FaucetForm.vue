@@ -24,7 +24,6 @@
         </div>
 
         <div class="formSubmit">
-            <span>Submit</span>
             <b-button type="submit">CLAIM!</b-button>
         </div>
         </b-form>
@@ -89,6 +88,10 @@ export default {
     .inputGroup {
         padding: 10px 0;
         font-size: 13px;
+
+        input {
+            opacity: 1;
+        }
     }
 }
 
@@ -103,6 +106,7 @@ export default {
     button {
         color: var(--primary);
         background-color: white;
+        opacity: 1;
     }
 }
 </style>

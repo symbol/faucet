@@ -20,9 +20,15 @@
       </b-row>
 
       <b-row>
-        <div class="info">
+        <div class="subTitle">
           <span>Please send back claimed mosaics when you no longer need it.</span>
-          <span>Faucet Address: <span class="highlight">{{ faucet.address }}</span> </span>
+        </div>
+        <div class="info">
+          <span>Faucet Address:
+            <span class="highlight">
+              {{ faucet.address }}
+            </span>
+          </span>
           <span>Faucet Balance: {{ faucet.balance }} ({{faucet.mosaicFQN}}) </span>
         </div>
 
