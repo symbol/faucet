@@ -72,6 +72,10 @@ export default {
     font-size: inherit !important;
 }
 
+.formTitle {
+    padding: 5px 0;
+}
+
 .faucetForm {
     height: 120%;
     border-radius: 8px;
@@ -82,9 +86,6 @@ export default {
 }
 
 .formInput {
-    padding: 20px 0;
-    margin: 5px;
-
     .inputGroup {
         padding: 10px 0;
         font-size: 13px;

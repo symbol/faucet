@@ -1,38 +1,40 @@
 <template>
+<b-jumbotron class="d-flex align-items-center bg-transparent">
 <b-container>
-  <b-row >
+  <b-row>
     <b-col cols="12" lg="6" >
-      <b-row>
+      <div class="p-3">
+        <b-col>
+          <b-row>
         <b-img src="~/assets/images/symbol_logo_white.svg" fluid alt="Symbol" width=200></b-img>
       </b-row>
       <b-row>
-        <div class="subTitle">
-          <span>Claim mosaics for development and testing purposes on the symbol network</span>
+        <div>
+          <span class="subTitle">Claim mosaics for development and testing purposes on the symbol network</span>
         </div>
       </b-row>
 
       <b-row>
         <FaucetForm class="d-lg-none d-xl-none d-md-block"
-      :mosaicFQN="faucet.mosaicFQN"
-      :recipientPlaceholder="formAttribute.recipientPlaceholder"
-      :amountPlaceholder="formAttribute.amountPlaceholder"
-      />
+        :mosaicFQN="faucet.mosaicFQN"
+        :recipientPlaceholder="formAttribute.recipientPlaceholder"
+        :amountPlaceholder="formAttribute.amountPlaceholder"
+        />
       </b-row>
 
       <b-row>
-        <div class="subTitle">
-          <span>Please send back claimed mosaics when you no longer need it.</span>
-        </div>
         <div class="info">
-          <span>Faucet Address:
-            <span class="highlight">
+          <span class="subTitle">Please send back claimed mosaics when you no longer need it.</span>
+          <span class="subTitle">Faucet Address:
+            <span class="highlight subTitle">
               {{ faucet.address }}
             </span>
           </span>
-          <span>Faucet Balance: {{ faucet.balance }} ({{faucet.mosaicFQN}}) </span>
+          <span class="subTitle">Faucet Balance: {{ faucet.balance }} ({{faucet.mosaicFQN}}) </span>
         </div>
-
       </b-row>
+        </b-col>
+      </div>
     </b-col>
 
     <b-col lg="6">
@@ -44,6 +46,7 @@
     </b-col>
   </b-row>
 </b-container>
+</b-jumbotron>
 </template>
 
 <script>
@@ -171,20 +174,18 @@ methods: {
 }
 
 .row {
-  padding: 20px 0;
-  margin: 5px;
+  padding: 10px 0;
 }
+
 .subTitle {
-  span {
-      font-size: 19px;
-      font-weight: bolder;
-  }
+    font-size: 19px;
+    font-weight: bolder;
 }
 
 .info {
   span {
     display: block;
-    font-size: 12px;
+    padding: 5px 0;
 
     .highlight {
       display: inline;
