@@ -2,25 +2,24 @@
 <div class="faucetForm p-3">
     <b-col>
         <div class="formTitle">
-            <h1>Faucet</h1>
+            <span>Faucet</span>
         </div>
         <b-form @submit.prevent="claim">
             <div class="formInput">
             <div class="inputGroup">
                 <span>Mosaic</span>
-                <b-input disabled v-model="form.mosaicName" required></b-input>
+                <b-form-input id="input-small" size="sm" disabled v-model="form.mosaicName" required />
             </div>
 
             <div class="inputGroup">
                 <span>Recipient</span>
-                <b-input :placeholder="recipientPlaceholder" v-model="form.recipient" required></b-input>
+                <b-form-input id="input-small" size="sm" :placeholder="recipientPlaceholder" v-model="form.recipient" required />
             </div>
 
             <div class="inputGroup">
                 <span>Amount</span>
-                <b-input :placeholder="amountPlaceholder" v-model="form.amount"></b-input>
+                <b-form-input id="input-small" size="sm" :placeholder="amountPlaceholder" v-model="form.amount" />
             </div>
-
         </div>
 
         <div class="formSubmit">
@@ -74,6 +73,10 @@ export default {
 
 .formTitle {
     padding: 5px 0;
+
+    span {
+        font-size: 32px;
+    }
 }
 
 .faucetForm {
@@ -88,7 +91,7 @@ export default {
 .formInput {
     .inputGroup {
         padding: 10px 0;
-        font-size: 13px;
+        font-size: 14px;
 
         input {
             opacity: 1;

@@ -1,12 +1,12 @@
 <template>
 <b-jumbotron class="d-flex align-items-center bg-transparent">
-<b-container>
+<b-container lg>
   <b-row>
     <b-col cols="12" lg="6" >
       <div class="p-3">
         <b-col>
           <b-row>
-        <b-img src="~/assets/images/symbol_logo_white.svg" fluid alt="Symbol" width=200></b-img>
+        <b-img src="~/assets/images/symbol_logo_white.svg" fluid alt="Symbol" width=240></b-img>
       </b-row>
       <b-row>
         <div>
@@ -24,13 +24,13 @@
 
       <b-row>
         <div class="info">
-          <span class="subTitle">Please send back claimed mosaics when you no longer need it.</span>
-          <span class="subTitle">Faucet Address:
-            <span class="highlight subTitle">
+          <span>Please send back claimed mosaics when you no longer need it.</span>
+          <span>Faucet Address:
+            <span class="highlight">
               {{ faucet.address }}
             </span>
           </span>
-          <span class="subTitle">Faucet Balance: {{ faucet.balance }} ({{faucet.mosaicFQN}}) </span>
+          <span>Faucet Balance: {{ faucet.balance }} ({{faucet.mosaicFQN}}) </span>
         </div>
       </b-row>
         </b-col>
@@ -178,7 +178,7 @@ methods: {
 }
 
 .subTitle {
-    font-size: 19px;
+    font-size: 18px;
     font-weight: bolder;
 }
 
@@ -186,10 +186,11 @@ methods: {
   span {
     display: block;
     padding: 5px 0;
+    font-size: 14px;
 
     .highlight {
       display: inline;
-      color: var(--primary)
+      color: var(--secondary)
     }
   }
 }
