@@ -8,7 +8,11 @@
             <div class="formInput">
             <div class="inputGroup">
                 <span>Mosaic</span>
-                <b-form-input id="input-small" size="sm" disabled v-model="form.mosaicName" required />
+                <b-form-select v-model="form.mosaicName" size="sm" required>
+                    <b-form-select-option v-for="(mosaic,index) in mosaicList" :value="mosaic.mosaicAliasName" :key="'option_'+index">
+                        {{mosaic.mosaicAliasName}}
+                    </b-form-select-option>
+                </b-form-select>
             </div>
 
             <div class="inputGroup">
@@ -37,6 +41,11 @@ export default {
         recipientPlaceholder: { type: String, default: ''},
         amountPlaceholder: { type: String, default: ''}
     },
+    computed: {
+        mosaicList () {
+        return this.$store.getters['getMosaicList']
+        }
+    },
     data() {
       return {
         form: {
@@ -47,19 +56,19 @@ export default {
       }
     },
     methods: {
-        claim() {
-            this.$axios
-            .$post('/claims', { ...this.form })
-            .then(resp => {
-                // this.txHashes.unshift(resp.txHash)
-                this.$parent.makeToast('success', `Send your declaration.`)
-                this.$parent.makeToast('success', `Amount: ${resp.amount} ${this.form.mosaicName}`)
-                this.$parent.makeToast('success', `Transaction Hash: ${resp.txHash}`)
-            })
-            .catch(err => {
-                const msg = (err.response.data && err.response.data.error) || err.response.statusTest
-                this.$parent.makeToast('danger', `Message from server: ${msg}`)
-            })
+    claim() {
+        this.$axios
+        .$post('/claims', { ...this.form })
+        .then(resp => {
+            // this.txHashes.unshift(resp.txHash)
+            this.$parent.makeToast('success', `Send your declaration.`)
+            this.$parent.makeToast('success', `Amount: ${resp.amount} ${this.form.mosaicName}`)
+            this.$parent.makeToast('success', `Transaction Hash: ${resp.txHash}`)
+        })
+        .catch(err => {
+            const msg = (err.response.data && err.response.data.error) || err.response.statusTest
+            this.$parent.makeToast('danger', `Message from server: ${msg}`)
+        })
         }
     }
 }

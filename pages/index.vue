@@ -30,7 +30,9 @@
               {{ faucet.address }}
             </span>
           </span>
-          <span>Faucet Balance: {{ faucet.balance }} ({{faucet.mosaicFQN}}) </span>
+          <div v-for="(mosaic,index) in mosaicList" :key="'mosaic_'+index">
+            <span>Faucet Balance: {{ mosaic.amount }} ({{mosaic.mosaicAliasName}}) </span>
+          </div>
         </div>
       </b-row>
         </b-col>
@@ -50,9 +52,9 @@
 </template>
 
 <script>
-import { Address, AccountHttp, MosaicHttp, MosaicService, Listener } from 'symbol-sdk'
-import { interval } from 'rxjs'
-import { filter, mergeMap, concatMap, distinctUntilChanged } from 'rxjs/operators'
+import { Address, AccountHttp, MosaicHttp, MosaicService, Listener, NamespaceHttp, RepositoryFactoryHttp } from 'symbol-sdk'
+import { interval, combineLatest } from 'rxjs'
+import { filter, mergeMap, concatMap, distinctUntilChanged, map } from 'rxjs/operators'
 
 import FaucetForm from '@/components/FaucetForm.vue'
 
@@ -79,6 +81,11 @@ export default {
   console.debug('asyncData: %o', data)
   return data
 },
+  computed: {
+      mosaicList () {
+      return this.$store.getters['getMosaicList']
+      }
+  },
 data() {
   return {
     app: {
@@ -122,6 +129,9 @@ created() {
   // }
 },
 async mounted() {
+
+  // this.$store.dispatch('getAccountBalance', this.faucet)
+
   const faucetAddress = Address.createFromRawAddress(this.faucet.address)
   this.app.listener = new Listener(this.faucet.publicUrl.replace('http', 'ws'), WebSocket)
   this.app.listener.open().then(() => {
@@ -134,7 +144,10 @@ async mounted() {
   })
 
   this.app.poller = this.accountPolling(faucetAddress)
-  this.app.poller.subscribe(mosaicAmountView => (this.faucet.balance = mosaicAmountView.relativeAmount()))
+  this.app.poller.subscribe(mosaicList => this.$store.commit('setMosaicList', mosaicList))
+
+  // this.app.poller = this.accountPolling(faucetAddress)
+  // this.app.poller.subscribe(mosaicAmountView => (this.faucet.balance = mosaicAmountView.relativeAmount()))
 
   if (this.$recaptcha) {
     await this.$recaptcha.init()
@@ -145,16 +158,42 @@ beforeDestroy() {
   this.app.poller != null && this.app.poller.unsubscribe()
 },
 methods: {
+  // accountPolling(address) {
+  //   const accountHttp = new AccountHttp(this.faucet.publicUrl)
+  //   const mosaicHttp = new MosaicHttp(this.faucet.publicUrl)
+  //   const mosaicService = new MosaicService(accountHttp, mosaicHttp)
+  //   return interval(5000).pipe(
+  //     concatMap(() => mosaicService.mosaicsAmountViewFromAddress(address)),
+  //     mergeMap(_ => _),
+  //     filter(_ => _.mosaicInfo.id.toHex() === this.faucet.mosaicId),
+  //     distinctUntilChanged((prev, current) => prev.relativeAmount() === current.relativeAmount())
+  //   )
+  // },
   accountPolling(address) {
-    const accountHttp = new AccountHttp(this.faucet.publicUrl)
-    const mosaicHttp = new MosaicHttp(this.faucet.publicUrl)
-    const mosaicService = new MosaicService(accountHttp, mosaicHttp)
-    return interval(5000).pipe(
-      concatMap(() => mosaicService.mosaicsAmountViewFromAddress(address)),
-      mergeMap(_ => _),
-      filter(_ => _.mosaicInfo.id.toHex() === this.faucet.mosaicId),
-      distinctUntilChanged((prev, current) => prev.relativeAmount() === current.relativeAmount())
+    const repositoryFactory = new RepositoryFactoryHttp(this.faucet.publicUrl)
+    const mosaicService = new MosaicService(repositoryFactory.createAccountRepository(), repositoryFactory.createMosaicRepository())
+
+    const mosaicsAmountView = mosaicService.mosaicsAmountViewFromAddress(address)
+    const mosaicsNames = mosaicService.mosaicsAmountViewFromAddress(address).pipe(
+      map(mosaicsAmountView => mosaicsAmountView.map(mosaic => mosaic.mosaicInfo.id)),
+      concatMap(mosaicIds => repositoryFactory.createNamespaceRepository().getMosaicsNames(mosaicIds))
     )
+
+    return combineLatest(mosaicsAmountView, mosaicsNames).pipe(
+      map(([mosaicsAmountView, mosaicsNames]) => {
+        return mosaicsAmountView.map(mosaicView => {
+          const mosaicName = mosaicsNames.find(name => name.mosaicId.equals(mosaicView.mosaicInfo.id))
+          const mosaicAliasName = mosaicName.names.length > 0 ? mosaicName.names[0].name : mosaicView.mosaicInfo.id.toHex()
+
+          return {
+            ...mosaicView,
+            amount: mosaicView.amount.compact() / Math.pow(10, mosaicView.mosaicInfo.divisibility),
+            mosaicAliasName
+          }
+        })
+      })
+    )
+
   },
   makeToast(variant = null, message) {
     this.$bvToast.toast(message, {
