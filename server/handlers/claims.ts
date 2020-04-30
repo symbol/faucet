@@ -11,11 +11,9 @@ import {
   PlainMessage,
   TransferTransaction,
   Deadline,
-  ChainHttp,
-  TransactionHttp,
-  MosaicHttp,
   Message,
   NetworkType,
+  MosaicId
 } from "symbol-sdk"
 import { of, forkJoin } from "rxjs"
 import { map, mergeMap } from "rxjs/operators"
@@ -29,14 +27,15 @@ _.mixin({
 })
 
 export const handler = (conf: IAppConfig) => {
-  const chainHttp = new ChainHttp(conf.API_URL)
-  const mosaicHttp = new MosaicHttp(conf.API_URL, conf.NETWORK_TYPE)
-  const transactionHttp = new TransactionHttp(conf.API_URL)
+  const repositoryFactory = conf.REPOSITORY_FACTORY
+  const transactionHttp = repositoryFactory.createTransactionRepository()
   const accountService = new AccountService(conf.API_URL, conf.NETWORK_TYPE)
 
   return async (req: any, res: any, next: any) => {
-    const { recipient, amount, message, encryption, reCaptcha } = req.body
-    console.debug({ recipient, amount, message, encryption, reCaptcha })
+    const { recipient, amount, message, encryption, reCaptcha, mosaicName, mosaicId } = req.body
+    console.debug({ recipient, amount, message, encryption, reCaptcha, mosaicName, mosaicId })
+
+    const mosaicIdDto =  new MosaicId(mosaicId)
 
     if (conf.RECAPTCHA_ENABLED) {
       const reCaptchaResult = await requestReCaptchaValidation(
@@ -56,14 +55,16 @@ export const handler = (conf: IAppConfig) => {
     const recipientAccount = new Account(recipientAddress)
     console.debug(`Recipient => %s`, recipientAccount.address.pretty())
 
-    const currentHeight = await chainHttp.getBlockchainHeight().toPromise()
+    const currentHeight = await repositoryFactory
+      .createChainRepository().getBlockchainHeight().toPromise()
+
     console.debug(`Current Height => %s`, currentHeight)
 
     forkJoin([
       // fetch mosaic info
-      mosaicHttp.getMosaic(conf.MOSAIC_ID),
+      repositoryFactory.createMosaicRepository().getMosaic(mosaicIdDto),
       // check recipient balance
-      accountService.getAccountInfoWithMosaicAmountView(recipientAccount, conf.MOSAIC_ID)
+      accountService.getAccountInfoWithMosaicAmountView(recipientAccount, mosaicIdDto)
         .pipe(
           map(({ account, mosaicAmountView }) => {
             if (
@@ -76,7 +77,7 @@ export const handler = (conf: IAppConfig) => {
           })
         ),
       // check faucet balance
-      accountService.getAccountInfoWithMosaicAmountView(conf.FAUCET_ACCOUNT, conf.MOSAIC_ID)
+      accountService.getAccountInfoWithMosaicAmountView(conf.FAUCET_ACCOUNT, mosaicIdDto)
         .pipe(
           map(({ mosaicAmountView }) => {
             if (
