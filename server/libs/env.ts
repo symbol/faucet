@@ -19,6 +19,7 @@ const {
   NEM_WAIT_BLOCK,
   RECAPTCHA_CLIENT_SECRET,
   RECAPTCHA_SERVER_SECRET,
+  NEM_BLACK_LIST_MOSAICS,
 } = process.env
 
 const API_URL = NEM_API_URL || "http://localhost:3000"
@@ -32,6 +33,14 @@ const OUT_MAX = parseInt(NEM_OUT_MAX || "") || 500000000
 const OUT_OPT = parseInt(NEM_OUT_OPT || "") || (OUT_MAX + OUT_MIN) / 2
 const RECAPTCHA_ENABLED = !!(RECAPTCHA_CLIENT_SECRET && RECAPTCHA_SERVER_SECRET)
 const RECAPTCHA_ENDPOINT = "https://www.google.com/recaptcha/api/siteverify"
+const BLACK_LIST_MOSAICS = NEM_BLACK_LIST_MOSAICS || ''
+
+let BLACK_LIST_MOSAICS_ARRAY = ['']
+
+// convert to Array
+if (BLACK_LIST_MOSAICS) {
+  BLACK_LIST_MOSAICS_ARRAY = BLACK_LIST_MOSAICS.split(',')
+}
 
 export const env = {
   PRIVATE_KEY: NEM_PRIVATE_KEY,
@@ -55,4 +64,5 @@ export const env = {
   RECAPTCHA_CLIENT_SECRET,
   RECAPTCHA_SERVER_SECRET,
   RECAPTCHA_ENDPOINT,
+  BLACK_LIST_MOSAICS: BLACK_LIST_MOSAICS_ARRAY,
 }
