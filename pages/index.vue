@@ -16,7 +16,8 @@
 
       <b-row>
         <FaucetForm class="d-lg-none d-xl-none d-md-block"
-        :mosaicFQN="faucet.mosaicFQN"
+        :mosaicFQN="faucet.mosaicId"
+        :filterMosaics="faucet.filterMosaics"
         :recipientPlaceholder="formAttribute.recipientPlaceholder"
         :amountPlaceholder="formAttribute.amountPlaceholder"
         />
@@ -30,7 +31,7 @@
               {{ faucet.address }}
             </span>
           </span>
-          <div v-for="(mosaic,index) in mosaicList" :key="'mosaic_'+index">
+          <div v-for="(mosaic,index) in faucet.filterMosaics" :key="'mosaic_'+index">
             <span>Faucet Balance: {{ mosaic.amount }} ({{mosaic.mosaicAliasName}}) </span>
           </div>
         </div>
@@ -41,7 +42,8 @@
 
     <b-col lg="6">
       <FaucetForm class="d-lg-block d-none"
-      :mosaicFQN="faucet.mosaicFQN"
+      :mosaicId="faucet.mosaicId"
+      :filterMosaics="faucet.filterMosaics"
       :recipientPlaceholder="formAttribute.recipientPlaceholder"
       :amountPlaceholder="formAttribute.amountPlaceholder"
       />
@@ -68,7 +70,7 @@ export default {
   const faucet = res.data.faucet
   const firstChar = faucet.address[0]
   const recipientPattern = `^${firstChar}[ABCD].+`
-  const recipientPlaceholder = `${faucet.network} address start with a capital ${firstChar}`
+  const recipientPlaceholder = `Address start with a capital ${firstChar}`
   const amountPlaceholder = `(Up to ${faucet.outOpt}. Optional, if you want fixed amount)`
   const data = {
     faucet,
@@ -82,9 +84,9 @@ export default {
   return data
 },
   computed: {
-      mosaicList () {
+    mosaicList () {
       return this.$store.getters['getMosaicList']
-      }
+    }
   },
 data() {
   return {
@@ -105,7 +107,10 @@ data() {
       outOpt: null,
       step: null,
       address: null,
-      balance: null
+      balance: null,
+      blackListMosaics: [],
+      mosaicList:[],
+      filterMosaics: []
     },
     form: {
       recipient: null,
@@ -129,9 +134,6 @@ created() {
   // }
 },
 async mounted() {
-
-  // this.$store.dispatch('getAccountBalance', this.faucet)
-
   const faucetAddress = Address.createFromRawAddress(this.faucet.address)
   this.app.listener = new Listener(this.faucet.publicUrl.replace('http', 'ws'), WebSocket)
   this.app.listener.open().then(() => {
@@ -143,8 +145,8 @@ async mounted() {
     })
   })
 
-  this.app.poller = this.accountPolling(faucetAddress)
-  this.app.poller.subscribe(mosaicList => this.$store.commit('setMosaicList', mosaicList))
+  // this.app.poller = this.accountPolling(faucetAddress)
+  // this.app.poller.subscribe(mosaicList => this.$store.commit('setMosaicList', mosaicList))
 
   // this.app.poller = this.accountPolling(faucetAddress)
   // this.app.poller.subscribe(mosaicAmountView => (this.faucet.balance = mosaicAmountView.relativeAmount()))
@@ -169,32 +171,32 @@ methods: {
   //     distinctUntilChanged((prev, current) => prev.relativeAmount() === current.relativeAmount())
   //   )
   // },
-  accountPolling(address) {
-    const repositoryFactory = new RepositoryFactoryHttp(this.faucet.publicUrl)
-    const mosaicService = new MosaicService(repositoryFactory.createAccountRepository(), repositoryFactory.createMosaicRepository())
 
-    const mosaicsAmountView = mosaicService.mosaicsAmountViewFromAddress(address)
-    const mosaicsNames = mosaicService.mosaicsAmountViewFromAddress(address).pipe(
-      map(mosaicsAmountView => mosaicsAmountView.map(mosaic => mosaic.mosaicInfo.id)),
-      concatMap(mosaicIds => repositoryFactory.createNamespaceRepository().getMosaicsNames(mosaicIds))
-    )
+  // accountPolling(address) {
+  //   const repositoryFactory = new RepositoryFactoryHttp(this.faucet.publicUrl)
+  //   const mosaicService = new MosaicService(repositoryFactory.createAccountRepository(), repositoryFactory.createMosaicRepository())
 
-    return combineLatest(mosaicsAmountView, mosaicsNames).pipe(
-      map(([mosaicsAmountView, mosaicsNames]) => {
-        return mosaicsAmountView.map(mosaicView => {
-          const mosaicName = mosaicsNames.find(name => name.mosaicId.equals(mosaicView.mosaicInfo.id))
-          const mosaicAliasName = mosaicName.names.length > 0 ? mosaicName.names[0].name : mosaicView.mosaicInfo.id.toHex()
+  //   const mosaicsAmountView = mosaicService.mosaicsAmountViewFromAddress(address)
+  //   const mosaicsNames = mosaicService.mosaicsAmountViewFromAddress(address).pipe(
+  //     map(mosaicsAmountView => mosaicsAmountView.map(mosaic => mosaic.mosaicInfo.id)),
+  //     concatMap(mosaicIds => repositoryFactory.createNamespaceRepository().getMosaicsNames(mosaicIds))
+  //   )
 
-          return {
-            ...mosaicView,
-            amount: mosaicView.amount.compact() / Math.pow(10, mosaicView.mosaicInfo.divisibility),
-            mosaicAliasName
-          }
-        })
-      })
-    )
+  //   return combineLatest(mosaicsAmountView, mosaicsNames).pipe(
+  //     map(([mosaicsAmountView, mosaicsNames]) => {
+  //       return mosaicsAmountView.map(mosaicView => {
+  //         const mosaicName = mosaicsNames.find(name => name.mosaicId.equals(mosaicView.mosaicInfo.id))
+  //         const mosaicAliasName = mosaicName.names.length > 0 ? mosaicName.names[0].name : mosaicView.mosaicInfo.id.toHex()
 
-  },
+  //         return {
+  //             ...mosaicView,
+  //             amount: mosaicView.amount.compact() / Math.pow(10, mosaicView.mosaicInfo.divisibility),
+  //             mosaicAliasName
+  //           }
+  //       })
+  //     })
+  //   )
+  // },
   makeToast(variant = null, message) {
     this.$bvToast.toast(message, {
     title: `Notification`,

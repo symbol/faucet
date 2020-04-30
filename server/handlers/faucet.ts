@@ -1,55 +1,62 @@
-import { catchError, map } from "rxjs/operators"
+import { map, concatMap } from "rxjs/operators"
+import { combineLatest } from 'rxjs'
 import { IAppConfig } from "../bootstrap"
-import { AccountService } from "../services"
-import { NetworkType } from "symbol-sdk"
+import { MosaicService } from "symbol-sdk"
 
 export const handler = (conf: IAppConfig) => {
-  const accountService = new AccountService(conf.API_URL, conf.NETWORK_TYPE)
 
-  return (_req: any, res: any, next: any) => {
-    accountService.getAccountInfoWithMosaicAmountView(conf.FAUCET_ACCOUNT, conf.MOSAIC_ID)
-      .pipe(
-        map(info => {
-          console.debug({ info })
-          if(info.mosaicAmountView) return info
-          const error = JSON.stringify({
-            statusCode: 404,
-            body: { message: `The account(${conf.FAUCET_ACCOUNT.address.pretty()}) has no mosaic for distribution.` }
+  const getAccountMosaic = (conf: IAppConfig) => {
+    const repositoryFactory = conf.REPOSITORY_FACTORY
+      const address = conf.FAUCET_ACCOUNT.address
+      const mosaicService = new MosaicService(repositoryFactory.createAccountRepository(), repositoryFactory.createMosaicRepository())
+
+      const mosaicsAmountView = mosaicService.mosaicsAmountViewFromAddress(address)
+      const mosaicsNames = mosaicService.mosaicsAmountViewFromAddress(address).pipe(
+        map(mosaicsAmountView => mosaicsAmountView.map(mosaic => mosaic.mosaicInfo.id)),
+        concatMap(mosaicIds => repositoryFactory.createNamespaceRepository().getMosaicsNames(mosaicIds))
+      )
+
+      return combineLatest(mosaicsAmountView, mosaicsNames).pipe(
+        map(([mosaicsAmountView, mosaicsNames]) => {
+          return mosaicsAmountView.map(mosaicView => {
+            const mosaicName = mosaicsNames.find(name => name.mosaicId.equals(mosaicView.mosaicInfo.id))
+
+            let mosaicAliasName = ''
+
+            if(mosaicName) {
+              mosaicAliasName = mosaicName.names.length > 0 ? mosaicName.names[0].name : mosaicView.mosaicInfo.id.toHex()
+            }
+
+            return {
+                ...mosaicView,
+                mosaicId: mosaicView.mosaicInfo.id.toHex(),
+                divisibility: mosaicView.mosaicInfo.divisibility,
+                amount: mosaicView.amount.compact() / Math.pow(10, mosaicView.mosaicInfo.divisibility),
+                mosaicAliasName
+              }
           })
-          throw new Error(error)
-        }),
-        catchError(error => {
-          if (error.code === "ECONNREFUSED") {
-            throw new Error(error.message)
-          } else if (error.message) {
-            const eInfo = JSON.parse(error.message)
-            throw new Error(`${eInfo.statusCode}: ${eInfo.body.message}`)
-          } else {
-            throw new Error(error)
-          }
         })
       )
+  }
+
+  return (_req: any, res: any, next: any) => {
+      getAccountMosaic(conf)
       .subscribe(
-        info => {
-          const { account, mosaicAmountView } = info
-          const denominator = 10 ** mosaicAmountView.mosaicInfo.divisibility
-          const balance = mosaicAmountView.amount.compact()
-          const drained = balance < conf.OUT_MAX
+        mosaicList => {
           const faucet = {
-            drained,
-            network: NetworkType[conf.NETWORK_TYPE],
+            // drained,
+            network: conf.NETWORK_TYPE,
             generationHash: conf.GENERATION_HASH,
             apiUrl: conf.API_URL,
             publicUrl: conf.PUBLIC_URL || conf.API_URL,
-            mosaicFQN: conf.MOSAIC_FQN,
-            mosaicId: conf.MOSAIC_ID.toHex(),
-            outMax: conf.OUT_MAX / denominator,
-            outMin: conf.OUT_MIN / denominator,
-            outOpt: conf.OUT_OPT / denominator,
-            step: 1 / denominator,
-            address: account.address.pretty(),
-            balance: balance / denominator
+            mosaicFQN: 'symbol.xym',
+            mosaicId: '747B276C30626442',
+            address: conf.FAUCET_ACCOUNT.address.pretty(),
+            blackListMosaics: conf.BLACK_LIST_MOSAICS,
+            mosaicList: mosaicList,
+            filterMosaics: mosaicList.filter(mosaic => conf.BLACK_LIST_MOSAICS.indexOf(mosaic.mosaicId) === -1)
           }
+
           res.data = { faucet }
           return next()
         },
@@ -60,7 +67,7 @@ export const handler = (conf: IAppConfig) => {
           return next()
         }
       )
-  }
+    }
 }
 
 export default handler

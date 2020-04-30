@@ -8,8 +8,8 @@
             <div class="formInput">
             <div class="inputGroup">
                 <span>Mosaic</span>
-                <b-form-select v-model="form.mosaicName" size="sm" required>
-                    <b-form-select-option v-for="(mosaic,index) in mosaicList" :value="mosaic.mosaicAliasName" :key="'option_'+index">
+                <b-form-select v-model="form.mosaicId" size="sm" required>
+                    <b-form-select-option v-for="(mosaic,index) in filterMosaics" :value="mosaic.mosaicId" :key="'option_'+index">
                         {{mosaic.mosaicAliasName}}
                     </b-form-select-option>
                 </b-form-select>
@@ -37,9 +37,10 @@
 <script>
 export default {
     props: {
-        mosaicFQN: { type: String, default: '' },
+        mosaicId: { type: String, default: '' },
         recipientPlaceholder: { type: String, default: ''},
-        amountPlaceholder: { type: String, default: ''}
+        amountPlaceholder: { type: String, default: ''},
+        filterMosaics: {type: Array, default: []}
     },
     computed: {
         mosaicList () {
@@ -49,7 +50,8 @@ export default {
     data() {
       return {
         form: {
-          mosaicName: this.mosaicFQN,
+            mosaicId: this.mosaicId,
+          mosaicName: '',
           recipient: '',
           amount: ''
         }
