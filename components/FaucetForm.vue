@@ -97,6 +97,7 @@ export default {
     background: linear-gradient(120deg, #5200c6 0%, #44004e 100%);
     background-size: 100% auto;
     box-shadow: 0 1px 5px 1px #000a;
+    margin-top: 15px;
 }
 
 .formInput {

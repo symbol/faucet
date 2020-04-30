@@ -1,6 +1,5 @@
 <template>
-<b-jumbotron class="d-flex align-items-center bg-transparent">
-<b-container lg>
+<b-container fluid="lg" style="max-width: 1200px">
   <b-row>
     <b-col cols="12" lg="6" >
       <div class="p-3">
@@ -14,14 +13,16 @@
         </div>
       </b-row>
 
-      <b-row>
+      <b-col cols="12">
+        <b-row>
         <FaucetForm class="d-lg-none d-xl-none d-md-block"
-        :mosaicFQN="faucet.mosaicId"
-        :filterMosaics="faucet.filterMosaics"
-        :recipientPlaceholder="formAttribute.recipientPlaceholder"
-        :amountPlaceholder="formAttribute.amountPlaceholder"
+          :mosaicId="faucet.mosaicId"
+          :filterMosaics="faucet.filterMosaics"
+          :recipientPlaceholder="formAttribute.recipientPlaceholder"
+          :amountPlaceholder="formAttribute.amountPlaceholder"
         />
       </b-row>
+      </b-col>
 
       <b-row>
         <div class="info">
@@ -50,7 +51,6 @@
     </b-col>
   </b-row>
 </b-container>
-</b-jumbotron>
 </template>
 
 <script>
