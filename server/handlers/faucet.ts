@@ -54,7 +54,10 @@ export const handler = (conf: IAppConfig) => {
             address: conf.FAUCET_ACCOUNT.address.pretty(),
             blackListMosaics: conf.BLACK_LIST_MOSAICS,
             mosaicList: mosaicList,
-            filterMosaics: mosaicList.filter(mosaic => conf.BLACK_LIST_MOSAICS.indexOf(mosaic.mosaicId) === -1)
+            filterMosaics: mosaicList.filter(mosaic => conf.BLACK_LIST_MOSAICS.indexOf(mosaic.mosaicId) === -1),
+            outOpt: conf.OUT_OPT / Math.pow(10, 6),
+            outMax: conf.OUT_MAX / Math.pow(10, 6),
+            outMin: conf.OUT_MIN / Math.pow(10, 6)
           }
 
           res.data = { faucet }

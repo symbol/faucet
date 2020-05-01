@@ -10,7 +10,7 @@
                 <span>Mosaic</span>
                 <b-form-select v-model="form.mosaicId" size="sm" required>
                     <b-form-select-option v-for="(mosaic,index) in filterMosaics" :value="mosaic.mosaicId" :key="'option_'+index">
-                        {{mosaic.mosaicAliasName}}
+                        {{mosaic.mosaicAliasName}} - Balance: {{mosaic.amount}}
                     </b-form-select-option>
                 </b-form-select>
             </div>

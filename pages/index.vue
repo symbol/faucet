@@ -32,9 +32,9 @@
               {{ faucet.address }}
             </span>
           </span>
-          <div v-for="(mosaic,index) in faucet.filterMosaics" :key="'mosaic_'+index">
+          <!-- <div v-for="(mosaic,index) in faucet.filterMosaics" :key="'mosaic_'+index">
             <span>Faucet Balance: {{ mosaic.amount }} ({{mosaic.mosaicAliasName}}) </span>
-          </div>
+          </div> -->
         </div>
       </b-row>
         </b-col>
