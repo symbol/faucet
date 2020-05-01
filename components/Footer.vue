@@ -3,13 +3,13 @@
   <footer class="footer">
       <b-container fluid>
           <b-row class="footer-row mx-0 mx-md-4 mx-lg-4 px-lg-4">
-              <b-col sm="12" lg="4">
+              <b-col sm="12" lg="4" class="footer-description">
                   <div class="ft-logo">
                       <a href="https://www.nem.io/" target="_blank">
                       <img src="~/assets/images/logo_footer.png" >
                       </a>
                   </div>
-                  <div class="footer-description mt-3" >
+                  <div class="ft-desc mt-3" >
                       <p>
                       Symbol is a platform built on revolutionary blockchain
                       technology, reimagining from scratch the ideal
@@ -22,7 +22,7 @@
                       </p>
                   </div>
               </b-col>
-              <b-col sm="12" lg="4" class="vertical-center">
+              <b-col sm="12" lg="4">
                   <ul class="social-icon">
                       <li v-for="link in links" :key="link.text" class="social-icon-item">
                           <a target="_blank" :href="link.href">
@@ -33,7 +33,7 @@
                   </ul>
               </b-col>
 
-              <b-col sm="12" lg="4" class="vertical-center">
+              <b-col sm="12" lg="4">
                 <span class="endpoint-info">
                   Node: {{endpointURL}}
                 </span>
@@ -130,7 +130,7 @@ export default {
     .footer-row {
         padding-top: 40px;
 
-        .footer-description {
+        .ft-desc {
           p {
               font-size: 12px;
               text-align: justify;
@@ -151,17 +151,23 @@ export default {
             }
           }
         }
+
+        .footer-description {
+          margin-top: -40px;
+        }
     }
 }
 
 .social-icon {
   list-style: none;
-  justify-content: space-between;
+  justify-content: flex-start;
   flex-wrap: wrap;
   display: flex;
   padding: 0;
+  margin: 0 -15px;
 
   .social-icon-item {
+      -webkit-box-flex: 1;
       flex: auto;
       margin: 5px;
 
@@ -180,15 +186,9 @@ export default {
   }
 }
 
-.vertical-center {
-    margin-top: 5px;
-    display: flex;
-    justify-content: center;
-
-    .endpoint-info {
-      font-size: small;
-      padding-top: 10%;
-    }
+.endpoint-info {
+    font-size: small;
+    padding-top: 10%;
 }
 
 .horisontal-center {
