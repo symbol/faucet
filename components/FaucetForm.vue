@@ -4,7 +4,7 @@
         <div class="formTitle">
             <span>Faucet</span>
         </div>
-        <b-form @submit.prevent="claim">
+        <b-form @submit.prevent="claim_store">
             <div class="formInput">
             <div class="inputGroup">
                 <span>Mosaic</span>
@@ -22,7 +22,7 @@
 
             <div class="inputGroup">
                 <span>Amount</span>
-                <b-form-input id="input-small" size="sm" :placeholder="amountPlaceholder" v-model="form.amount" />
+                <b-form-input type="number" id="input-small" size="sm" :placeholder="amountPlaceholder" v-model="form.amount" />
             </div>
         </div>
 
@@ -42,22 +42,19 @@ export default {
         amountPlaceholder: { type: String, default: ''},
         filterMosaics: {type: Array, default: []}
     },
-    computed: {
-        mosaicList () {
-        return this.$store.getters['getMosaicList']
-        }
-    },
     data() {
       return {
         form: {
             mosaicId: this.mosaicId,
-          mosaicName: '',
-          recipient: '',
-          amount: ''
+            recipient: '',
+            amount: ''
         }
       }
     },
     methods: {
+        claim_store() {
+            this.$store.dispatch("claimFaucet", { ...this.form })
+        },
     claim() {
         this.$axios
         .$post('/claims', { ...this.form })

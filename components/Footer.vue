@@ -35,7 +35,7 @@
 
               <b-col sm="12" lg="4">
                 <span class="endpoint-info">
-                  Node: {{endpointURL}}
+                  Node: {{networkInfo.hostname}}
                 </span>
               </b-col>
 
@@ -66,7 +66,11 @@ export default {
     IconHomeCurrencyUsd,
     IconEarth
   },
-
+  computed: {
+    networkInfo () {
+      return this.$store.getters['getNetworkInfo']
+    },
+  },
   data() {
     return {
       links: [

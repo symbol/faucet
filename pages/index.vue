@@ -16,10 +16,10 @@
       <b-col cols="12">
         <b-row>
         <FaucetForm class="d-lg-none d-xl-none d-md-block"
-          :mosaicId="faucet.mosaicId"
-          :filterMosaics="faucet.filterMosaics"
-          :recipientPlaceholder="formAttribute.recipientPlaceholder"
-          :amountPlaceholder="formAttribute.amountPlaceholder"
+          :mosaicId="networkInfo.nativeCurrencyId"
+          :filterMosaics="faucetAccount.filterMosaics"
+          :recipientPlaceholder="`Address start with a capital T`"
+          :amountPlaceholder="`(Faucet will pay up to ${networkInfo.nativeCurrencyMaxOut} XYM, or enter custom amount)`"
         />
       </b-row>
       </b-col>
@@ -29,12 +29,9 @@
           <span>Please send back claimed mosaics when you no longer need it.</span>
           <span>Faucet Address:
             <span class="highlight">
-              {{ faucet.address }}
+              {{ faucetAccount.address }}
             </span>
           </span>
-          <!-- <div v-for="(mosaic,index) in faucet.filterMosaics" :key="'mosaic_'+index">
-            <span>Faucet Balance: {{ mosaic.amount }} ({{mosaic.mosaicAliasName}}) </span>
-          </div> -->
         </div>
       </b-row>
         </b-col>
@@ -43,10 +40,11 @@
 
     <b-col lg="6">
       <FaucetForm class="d-lg-block d-none"
-      :mosaicId="faucet.mosaicId"
-      :filterMosaics="faucet.filterMosaics"
-      :recipientPlaceholder="formAttribute.recipientPlaceholder"
-      :amountPlaceholder="formAttribute.amountPlaceholder"
+      :mosaicId="networkInfo.nativeCurrencyId"
+      :filterMosaics="faucetAccount.filterMosaics"
+      :recipientPlaceholder="`Address start with a capital T`"
+      :amountPlaceholder="`(Faucet will pay up to ${networkInfo.nativeCurrencyMaxOut} XYM, or enter custom amount)`"
+
       />
     </b-col>
   </b-row>
@@ -65,28 +63,31 @@ export default {
     FaucetForm
   },
   asyncData({ res, store, error }) {
-  if (res.error) return error(res.error)
-  if (!res.data) return {}
-  const faucet = res.data.faucet
-  const firstChar = faucet.address[0]
-  const recipientPattern = `^${firstChar}[ABCD].+`
-  const recipientPlaceholder = `Address start with a capital ${firstChar}`
-  const amountPlaceholder = `(Up to ${faucet.outOpt}. Optional, if you want fixed amount)`
-  const data = {
-    faucet,
-    formAttribute: {
-      recipientPattern,
-      recipientPlaceholder,
-      amountPlaceholder
-    }
-  }
-  console.debug('asyncData: %o', data)
-  return data
+  // if (res.error) return error(res.error)
+  // if (!res.data) return {}
+  // const faucet = res.data.faucet
+  // const firstChar = faucet.address[0]
+  // const recipientPattern = `^${firstChar}[ABCD].+`
+  // const recipientPlaceholder = `Address start with a capital ${firstChar}`
+  // const amountPlaceholder = `(Up to ${faucet.outOpt}. Optional, if you want fixed amount)`
+  // const data = {
+  //   faucet,
+  //   formAttribute: {
+  //     recipientPattern,
+  //     recipientPlaceholder,
+  //     amountPlaceholder
+  //   }
+  // }
+  // console.debug('asyncData: %o', res.data)
+  // return data
 },
   computed: {
-    mosaicList () {
-      return this.$store.getters['getMosaicList']
-    }
+    faucetAccount () {
+      return this.$store.getters['getFaucetAccount']
+    },
+    networkInfo () {
+      return this.$store.getters['getNetworkInfo']
+    },
   },
 data() {
   return {
@@ -134,16 +135,16 @@ created() {
   // }
 },
 async mounted() {
-  const faucetAddress = Address.createFromRawAddress(this.faucet.address)
-  this.app.listener = new Listener(this.faucet.publicUrl.replace('http', 'ws'), WebSocket)
-  this.app.listener.open().then(() => {
-    this.app.listener.unconfirmedAdded(faucetAddress).subscribe(_ => {
-      this.makeToast('success', 'Your request had been unconfirmed status!')
-    })
-    this.app.listener.confirmed(faucetAddress).subscribe(_ => {
-      this.makeToast('success', 'Your Request had been confirmed status!')
-    })
-  })
+  // const faucetAddress = Address.createFromRawAddress(this.faucetAccount.address)
+  // this.app.listener = new Listener(this.faucet.publicUrl.replace('http', 'ws'), WebSocket)
+  // this.app.listener.open().then(() => {
+  //   this.app.listener.unconfirmedAdded(faucetAddress).subscribe(_ => {
+  //     this.makeToast('success', 'Your request had been unconfirmed status!')
+  //   })
+  //   this.app.listener.confirmed(faucetAddress).subscribe(_ => {
+  //     this.makeToast('success', 'Your Request had been confirmed status!')
+  //   })
+  // })
 
   // this.app.poller = this.accountPolling(faucetAddress)
   // this.app.poller.subscribe(mosaicList => this.$store.commit('setMosaicList', mosaicList))
