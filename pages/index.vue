@@ -123,37 +123,9 @@ data() {
   }
 },
 created() {
-  // if (process.browser) {
-  //   const { recipient, amount, message, encryption } = this.$nuxt.$route.query
-  //   this.form = {
-  //     ...this.form,
-  //     recipient,
-  //     amount,
-  //     message,
-  //     encryption: encryption && encryption.toLowerCase() === 'true'
-  //   }
-  // }
-},
-async mounted() {
-  // const faucetAddress = Address.createFromRawAddress(this.faucetAccount.address)
-  // this.app.listener = new Listener(this.faucet.publicUrl.replace('http', 'ws'), WebSocket)
-  // this.app.listener.open().then(() => {
-  //   this.app.listener.unconfirmedAdded(faucetAddress).subscribe(_ => {
-  //     this.makeToast('success', 'Your request had been unconfirmed status!')
-  //   })
-  //   this.app.listener.confirmed(faucetAddress).subscribe(_ => {
-  //     this.makeToast('success', 'Your Request had been confirmed status!')
-  //   })
-  // })
-
-  // this.app.poller = this.accountPolling(faucetAddress)
-  // this.app.poller.subscribe(mosaicList => this.$store.commit('setMosaicList', mosaicList))
-
-  // this.app.poller = this.accountPolling(faucetAddress)
-  // this.app.poller.subscribe(mosaicAmountView => (this.faucet.balance = mosaicAmountView.relativeAmount()))
-
-  if (this.$recaptcha) {
-    await this.$recaptcha.init()
+  if (process.browser) {
+    // inject method into $nuxt, allow access from store
+    this.$nuxt.$makeToast = this.makeToast
   }
 },
 beforeDestroy() {
@@ -161,43 +133,6 @@ beforeDestroy() {
   this.app.poller != null && this.app.poller.unsubscribe()
 },
 methods: {
-  // accountPolling(address) {
-  //   const accountHttp = new AccountHttp(this.faucet.publicUrl)
-  //   const mosaicHttp = new MosaicHttp(this.faucet.publicUrl)
-  //   const mosaicService = new MosaicService(accountHttp, mosaicHttp)
-  //   return interval(5000).pipe(
-  //     concatMap(() => mosaicService.mosaicsAmountViewFromAddress(address)),
-  //     mergeMap(_ => _),
-  //     filter(_ => _.mosaicInfo.id.toHex() === this.faucet.mosaicId),
-  //     distinctUntilChanged((prev, current) => prev.relativeAmount() === current.relativeAmount())
-  //   )
-  // },
-
-  // accountPolling(address) {
-  //   const repositoryFactory = new RepositoryFactoryHttp(this.faucet.publicUrl)
-  //   const mosaicService = new MosaicService(repositoryFactory.createAccountRepository(), repositoryFactory.createMosaicRepository())
-
-  //   const mosaicsAmountView = mosaicService.mosaicsAmountViewFromAddress(address)
-  //   const mosaicsNames = mosaicService.mosaicsAmountViewFromAddress(address).pipe(
-  //     map(mosaicsAmountView => mosaicsAmountView.map(mosaic => mosaic.mosaicInfo.id)),
-  //     concatMap(mosaicIds => repositoryFactory.createNamespaceRepository().getMosaicsNames(mosaicIds))
-  //   )
-
-  //   return combineLatest(mosaicsAmountView, mosaicsNames).pipe(
-  //     map(([mosaicsAmountView, mosaicsNames]) => {
-  //       return mosaicsAmountView.map(mosaicView => {
-  //         const mosaicName = mosaicsNames.find(name => name.mosaicId.equals(mosaicView.mosaicInfo.id))
-  //         const mosaicAliasName = mosaicName.names.length > 0 ? mosaicName.names[0].name : mosaicView.mosaicInfo.id.toHex()
-
-  //         return {
-  //             ...mosaicView,
-  //             amount: mosaicView.amount.compact() / Math.pow(10, mosaicView.mosaicInfo.divisibility),
-  //             mosaicAliasName
-  //           }
-  //       })
-  //     })
-  //   )
-  // },
   makeToast(variant = null, message) {
     this.$bvToast.toast(message, {
     title: `Notification`,

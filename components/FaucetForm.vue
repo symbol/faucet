@@ -53,21 +53,14 @@ export default {
     },
     methods: {
         claim_store() {
-            this.$store.dispatch("claimFaucet", { ...this.form })
-        },
-    claim() {
-        this.$axios
-        .$post('/claims', { ...this.form })
-        .then(resp => {
-            // this.txHashes.unshift(resp.txHash)
-            this.$parent.makeToast('success', `Send your declaration.`)
-            this.$parent.makeToast('success', `Amount: ${resp.amount} ${this.form.mosaicName}`)
-            this.$parent.makeToast('success', `Transaction Hash: ${resp.txHash}`)
-        })
-        .catch(err => {
-            const msg = (err.response.data && err.response.data.error) || err.response.statusTest
-            this.$parent.makeToast('danger', `Message from server: ${msg}`)
-        })
+            // Format string
+            this.form.recipient = this.form.recipient.replace(/\s|-/g, '')
+
+            if (this.form.recipient.length !== 40 || this.form.recipient.charAt(0) !== 'T') {
+                this.$parent.makeToast('warning', `Address format incorrect.`)
+            } else {
+                this.$store.dispatch("claimFaucet", { ...this.form })
+            }
         }
     }
 }
