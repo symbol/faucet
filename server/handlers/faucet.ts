@@ -58,7 +58,8 @@ export const handler = (conf: IAppConfig) => {
             defaultNode: defaultNode.origin,
             nativeCurrencyMaxOut: conf.NATIVE_CURRENCY_OUT_MAX / Math.pow(10, nativeMosaicInfo.divisibility),
             nativeCurrencyName: conf.NATIVE_CURRENCY_NAME,
-            nativeCurrencyId: conf.NATIVE_CURRENCY_ID
+            nativeCurrencyId: conf.NATIVE_CURRENCY_ID,
+            blackListMosaicIds: conf.BLACKLIST_MOSAICIDS
           }
 
           res.data = { faucet, networkInfo }

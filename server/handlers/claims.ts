@@ -65,7 +65,7 @@ export const handler = (conf: IAppConfig) => {
                         let randomValue = Math.min(Math.min(balance, maxOut), Math.random() * (minOut - maxOut + 1) + maxOut)
                         absoluteAmount = Math.round(randomValue)
                     } else {
-                        let randomValue = (Math.random() * (1 - balance + 1) + balance) / Math.pow(10, requestMosaicInfo.divisibility)
+                        let randomValue = (Math.random() * (1 - balance/2 + 1) + balance/2) / Math.pow(10, requestMosaicInfo.divisibility)
                         absoluteAmount = Math.round(randomValue)
                     }
                 }
@@ -108,12 +108,11 @@ export const handler = (conf: IAppConfig) => {
                     }
                 }
 
-                // payout
                 let tx = TransferTransaction.create(
                     Deadline.create(),
                     recipientAddress,
                     [new Mosaic (requestMosaicInfo.id,
-                        UInt64.fromUint(absoluteAmount))],
+                        UInt64.fromUint(absoluteAmount*Math.pow(10, requestMosaicInfo.divisibility)))],
                     EmptyMessage,
                     networkType,
                     UInt64.fromUint(conf.MAX_FEE)
@@ -132,8 +131,8 @@ export const handler = (conf: IAppConfig) => {
         ).subscribe(
             result => res.json(result),
             error => {
-                console.error(error)
-                res.status(422).json({ error: error.message })
+                console.log(error.message)
+                res.status(422).json({message: error.message})
               }
             )
     }
