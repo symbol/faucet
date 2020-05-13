@@ -66,7 +66,7 @@ export const actions = {
       }),
       map(mosaicList => {
         return {
-          address: faucetAddress.plain(),
+          address: faucetAddress.pretty(),
           filterMosaics: mosaicList.filter(mosaic => networkInfo.blackListMosaicIds.indexOf(mosaic.mosaicId) === -1)
         }
       })

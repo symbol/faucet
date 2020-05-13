@@ -18,8 +18,8 @@
         <FaucetForm class="d-lg-none d-xl-none d-md-block"
           :mosaicId="networkInfo.nativeCurrencyId"
           :filterMosaics="faucetAccount.filterMosaics"
-          :recipientPlaceholder="`Address start with a capital T`"
-          :amountPlaceholder="`(Faucet will pay up to ${networkInfo.nativeCurrencyMaxOut} XYM, or enter custom amount)`"
+          :recipientPlaceholder="recipientPlaceholder"
+          :amountPlaceholder="amountPlaceholder"
         />
       </b-row>
       </b-col>
@@ -29,7 +29,9 @@
           <span>Please send back claimed mosaics when you no longer need it.</span>
           <span>Faucet Address:
             <span class="highlight">
+              <a target="_blank" :href="faucetAccountUrl">
               {{ faucetAccount.address }}
+              </a>
             </span>
           </span>
         </div>
@@ -42,9 +44,8 @@
       <FaucetForm class="d-lg-block d-none"
       :mosaicId="networkInfo.nativeCurrencyId"
       :filterMosaics="faucetAccount.filterMosaics"
-      :recipientPlaceholder="`Address start with a capital T`"
-      :amountPlaceholder="`(Faucet will pay up to ${networkInfo.nativeCurrencyMaxOut} XYM, or enter custom amount)`"
-
+      :recipientPlaceholder="recipientPlaceholder"
+      :amountPlaceholder="amountPlaceholder"
       />
     </b-col>
   </b-row>
@@ -62,25 +63,6 @@ export default {
   components: {
     FaucetForm
   },
-  asyncData({ res, store, error }) {
-  // if (res.error) return error(res.error)
-  // if (!res.data) return {}
-  // const faucet = res.data.faucet
-  // const firstChar = faucet.address[0]
-  // const recipientPattern = `^${firstChar}[ABCD].+`
-  // const recipientPlaceholder = `Address start with a capital ${firstChar}`
-  // const amountPlaceholder = `(Up to ${faucet.outOpt}. Optional, if you want fixed amount)`
-  // const data = {
-  //   faucet,
-  //   formAttribute: {
-  //     recipientPattern,
-  //     recipientPlaceholder,
-  //     amountPlaceholder
-  //   }
-  // }
-  // console.debug('asyncData: %o', res.data)
-  // return data
-},
   computed: {
     faucetAccount () {
       return this.$store.getters['getFaucetAccount']
@@ -88,49 +70,21 @@ export default {
     networkInfo () {
       return this.$store.getters['getNetworkInfo']
     },
+    recipientPlaceholder () {
+      return `Address start with a capital ${this.faucetAccount.address[0]}`
+    },
+    amountPlaceholder () {
+      return `(Faucet will pay up to ${this.networkInfo.nativeCurrencyMaxOut} XYM, or enter custom amount)`
+    },
+    faucetAccountUrl () {
+      return this.networkInfo.explorerUrl+'account/'+this.faucetAccount.address
+    }
   },
-data() {
-  return {
-    app: {
-      waiting: false,
-      listener: null,
-      poller: null
-    },
-    faucet: {
-      drained: false,
-      network: null,
-      apiUrl: null,
-      publicUrl: null,
-      mosaicFQN: null,
-      mosaicId: null,
-      outMax: null,
-      outMin: null,
-      outOpt: null,
-      step: null,
-      address: null,
-      balance: null,
-      blackListMosaics: [],
-      mosaicList:[],
-      filterMosaics: []
-    },
-    form: {
-      recipient: null,
-      message: null,
-      amount: null,
-      encryption: false
-    },
-    txHashes: []
-  }
-},
 created() {
   if (process.browser) {
     // inject method into $nuxt, allow access from store
     this.$nuxt.$makeToast = this.makeToast
   }
-},
-beforeDestroy() {
-  this.app.listener != null && this.app.listener.close()
-  this.app.poller != null && this.app.poller.unsubscribe()
 },
 methods: {
   makeToast(variant = null, message) {

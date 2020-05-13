@@ -30,12 +30,18 @@
                               <span>{{link.text}}</span>
                           </a>
                       </li>
+                      <li class="social-icon-item">
+                        <a target="_blank" :href="explorerUrl">
+                            <IconEarth />
+                              <span>Explorer</span>
+                          </a>
+                      </li>
                   </ul>
               </b-col>
 
               <b-col sm="12" lg="4">
                 <span class="endpoint-info">
-                  Node: {{networkInfo.hostname}}
+                  Node: <a target="_blank" :href="defaultNode">{{networkInfo.hostname}}</a>
                 </span>
               </b-col>
 
@@ -70,6 +76,12 @@ export default {
     networkInfo () {
       return this.$store.getters['getNetworkInfo']
     },
+    explorerUrl () {
+      return this.networkInfo.explorerUrl
+    },
+    defaultNode () {
+      return this.networkInfo.defaultNode
+    }
   },
   data() {
     return {
@@ -98,24 +110,8 @@ export default {
 				"href": "https://github.com/nemtech",
 				"text": "Github",
 				"icon": "IconGithub"
-			},
-			{
-				"href": "https://symboldev-faucet-01.herokuapp.com/",
-				"text": "Faucet-01",
-				"icon": "IconHomeCurrencyUsd"
-			},
-			{
-				"href": "https://symboldev-faucet-02.herokuapp.com/",
-				"text": "Faucet-02",
-				"icon": "IconHomeCurrencyUsd"
-      },
-      {
-        "href": "http://explorer.symboldev.network/",
-				"text": "Explorer",
-				"icon": "IconEarth"
-      }
-    ],
-    endpointURL: "api-01.ap-northeast-1.0941-v1.symboldev.network"
+			}
+    ]
     }
   },
 }
@@ -193,6 +189,9 @@ export default {
 .endpoint-info {
     font-size: small;
     padding-top: 10%;
+    a {
+      color: #fff;
+    }
 }
 
 .horisontal-center {
