@@ -29,8 +29,7 @@ faucet:
   stop_signal: SIGINT
   command: sh -c "/bin/sleep 15 && /bin/sh /app/bin/create-env.sh && /usr/local/bin/npm start"
   environment:
-    - NEM_API_URL=http://rest-gateway:3000
-    - NEM_PUBLIC_URL=http://localhost:3000
+    - DEFAULT_NODE=http://rest-gateway:3000
   volumes:
     # for reading private key from addresses.yaml
     - ../../build/generated-addresses:/addresses:ro
@@ -50,9 +49,8 @@ faucet:
   image: 44uk/symbol-faucet:fushicho3
   stop_signal: SIGINT
   environment:
-    - NEM_API_URL=http://rest-gateway:3000
-    - NEM_PUBLIC_URL=http://localhost:3000
-    - NEM_PRIVATE_KEY=__YOUR_PRIVATE_KEY__
+    - DEFAULT_NODE=http://rest-gateway:3000
+    - FAUCET_PRIVATE_KEY=__YOUR_PRIVATE_KEY__
   ports:
     - '4000:4000'
   depends_on:
@@ -66,9 +64,8 @@ faucet:
   image: 44uk/symbol-faucet:fushicho3
   stop_signal: SIGINT
   environment:
-    - NEM_API_URL=http://rest-gateway:3000
-    - NEM_PUBLIC_URL=http://localhost:3000
-    - NEM_MOSAIC_FQN=3E70742C9A38ACAB
+    - DEFAULT_NODE=http://rest-gateway:3000
+    - NATIVE_CURRENCY_ID=3E70742C9A38ACAB
   ports:
     - '4000:4000'
   depends_on:
@@ -97,25 +94,19 @@ curl http://localhost:4000/claims -d 'recipient=__YOUR_ADDRESS__'
 
 ```shell
 # set enviroment variables
-# * PORT (default: 4000)
-# * NEM_PRIVATE_KEY (required)
-# * NEM_API_URL
-# * NEM_PUBLIC_URL
-# * NEM_NETWORK
-# * NEM_GENERATION_HASH
-# * NEM_MOSAIC_FQN (default: cat:currency)
-# * NEM_MOSAIC_HEX (for not linked mosaic)
-# * NEM_OUT_MIN
-# * NEM_OUT_MAX
-# * NEM_OUT_OPT
-# * NEM_FEE_MULTIPLIER
-# * NEM_MAX_FEE
-# * NEM_MAX_DEADLINE
-# * NEM_MAX_BALANCE
-# * NEM_MAX_UNCONFIRMED
-# * NEM_WAIT_BLOCK
-# * RECAPTCHA_CLIENT_SECRET
-# * RECAPTCHA_SERVER_SECRET
+# DEFAULT_NODE
+# HOST
+# PORT= (default: 3000)
+# NATIVE_CURRENCY_NAME
+# NATIVE_CURRENCY_ID
+# NATIVE_CURRENCY_OUT_MAX
+# NATIVE_CURRENCY_OUT_MIN
+# FAUCET_PRIVATE_KEY
+# MAX_FEE
+# ENOUGH_BALANCE
+# MAX_UNCONFIRMED
+# BLACKLIST_MOSAIC_ID
+# EXPLORER_URL
 # see .env.sample
 
 # install packages
