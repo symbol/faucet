@@ -12,7 +12,7 @@ import {
 } from "symbol-sdk"
 import { of, forkJoin } from "rxjs"
 import { map, mergeMap, filter, toArray, catchError } from "rxjs/operators"
-import { IAppConfig } from "../bootstrap_1"
+import { IAppConfig } from "../bootstrap"
 
 export const handler = (conf: IAppConfig) => {
     return async (req: any, res: any, next: any) => {

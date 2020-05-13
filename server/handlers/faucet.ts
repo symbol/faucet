@@ -1,6 +1,6 @@
 import { map, concatMap } from "rxjs/operators"
 import { combineLatest } from 'rxjs'
-import { IAppConfig } from "../bootstrap_1"
+import { IAppConfig } from "../bootstrap"
 import { MosaicService } from "symbol-sdk"
 import Url from 'url-parse'
 

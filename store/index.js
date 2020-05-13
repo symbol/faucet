@@ -32,7 +32,6 @@ export const actions = {
   },
 
   fetchFaucetBalance: (context) => {
-    // get faucetBalance and update store
     const faucetAddress = Address.createFromRawAddress(context.getters['getFaucetAccount'].address)
     const networkInfo = context.getters['getNetworkInfo']
 
@@ -117,12 +116,5 @@ export const actions = {
         }
       }
     )
-  },
-
-  closeListenser: (context) => {
-    if(context.$state.listener !== null) {
-      context.$state.listener.close()
-    }
   }
-
 }
