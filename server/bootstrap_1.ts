@@ -17,6 +17,7 @@ import {
     MAX_BALANCE: number
     FAUCET_ACCOUNT: Account,
     BLACKLIST_MOSAICIDS: string[],
+    EXPLORER_URL: string,
     REPOSITORY_FACTORY: RepositoryFactory
   }
 
@@ -37,6 +38,7 @@ import {
             await repositoryFactory.getNetworkType().toPromise()
         ),
         BLACKLIST_MOSAICIDS: env.BLACKLIST_MOSAIC_ID,
+        EXPLORER_URL: env.EXPLORER_URL,
         REPOSITORY_FACTORY: repositoryFactory
     }
     return config
