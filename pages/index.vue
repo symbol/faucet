@@ -17,7 +17,7 @@
         <b-row>
         <FaucetForm class="d-lg-none d-xl-none d-md-block"
           :mosaicId="networkInfo.nativeCurrencyId"
-          :filterMosaics="faucetAccount.filterMosaics"
+          :filterMosaics="filterMosaics"
           :recipientPlaceholder="recipientPlaceholder"
           :amountPlaceholder="amountPlaceholder"
         />
@@ -30,7 +30,7 @@
           <span>Faucet Address:
             <span class="highlight">
               <a target="_blank" :href="faucetAccountUrl">
-              {{ faucetAccount.address }}
+              {{ networkInfo.address }}
               </a>
             </span>
           </span>
@@ -43,7 +43,7 @@
     <b-col lg="6">
       <FaucetForm class="d-lg-block d-none"
       :mosaicId="networkInfo.nativeCurrencyId"
-      :filterMosaics="faucetAccount.filterMosaics"
+      :filterMosaics="filterMosaics"
       :recipientPlaceholder="recipientPlaceholder"
       :amountPlaceholder="amountPlaceholder"
       />
@@ -64,24 +64,25 @@ export default {
     FaucetForm
   },
   computed: {
-    faucetAccount () {
-      return this.$store.getters['getFaucetAccount']
+    filterMosaics () {
+      return this.$store.getters['getFilterMosaics']
     },
     networkInfo () {
       return this.$store.getters['getNetworkInfo']
     },
     recipientPlaceholder () {
-      return `Address start with a capital ${this.faucetAccount.address[0]}`
+      return `Address start with a capital ${this.networkInfo.address[0]}`
     },
     amountPlaceholder () {
       return `(Faucet will pay up to ${this.networkInfo.nativeCurrencyMaxOut} XYM, or enter custom amount)`
     },
     faucetAccountUrl () {
-      return this.networkInfo.explorerUrl+'account/'+this.faucetAccount.address
+      return this.networkInfo.explorerUrl+'account/'+this.networkInfo.address
     }
   },
 created() {
   if (process.browser) {
+    this.$store.dispatch('fetchFaucetBalance')
     // inject method into $nuxt, allow access from store
     this.$nuxt.$makeToast = this.makeToast
   }

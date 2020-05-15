@@ -6,33 +6,32 @@ import Vue from 'vue'
 
 export const state = () => ({
   listener: null,
-  faucetAccount: {},
+  filterMosaics: [],
   networkInfo: {},
   transactionHash: ''
 })
 
 export const getters = {
   getListener: state => state.listener,
-  getFaucetAccount: state => state.faucetAccount,
   getNetworkInfo: state => state.networkInfo,
-  getTransactionHash: state => state.transactionHash
+  getTransactionHash: state => state.transactionHash,
+  getFilterMosaics: state => state.filterMosaics
 }
 
 export const mutations = {
   setListener: (state, listener) => { state.listener = listener},
-  setFaucetAccount: (state, faucetAccount) => { state.faucetAccount = faucetAccount},
+  setFilterMosaics: (state, filterMosaics) => { state.filterMosaics = filterMosaics},
   setNetworkInfo: (state, networkInfo) => { state.networkInfo = networkInfo},
   setTransactionHash: (state, transactionHash) => { state.transactionHash = transactionHash},
 }
 
 export const actions = {
-  nuxtServerInit: ({ commit }, { res }) => {
-    commit('setFaucetAccount', res.data.faucet)
+  nuxtServerInit: ({ commit, dispatch }, { res }) => {
     commit('setNetworkInfo', res.data.networkInfo)
   },
 
   fetchFaucetBalance: (context) => {
-    const faucetAddress = Address.createFromRawAddress(context.getters['getFaucetAccount'].address)
+    const faucetAddress = Address.createFromRawAddress(context.getters['getNetworkInfo'].address)
     const networkInfo = context.getters['getNetworkInfo']
 
     const repositoryFactory = new RepositoryFactoryHttp(networkInfo.defaultNode)
@@ -64,13 +63,10 @@ export const actions = {
         })
       }),
       map(mosaicList => {
-        return {
-          address: faucetAddress.pretty(),
-          filterMosaics: mosaicList.filter(mosaic => networkInfo.blackListMosaicIds.indexOf(mosaic.mosaicId) === -1)
-        }
+        return mosaicList.filter(mosaic => networkInfo.blackListMosaicIds.indexOf(mosaic.mosaicId) === -1)
       })
     ).subscribe(
-      faucet => context.commit('setFaucetAccount', faucet)
+      faucet => context.commit('setFilterMosaics', faucet)
     )
   },
 
