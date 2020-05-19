@@ -1,41 +1,58 @@
 <template>
 <div class="faucetForm p-3">
+    <div v-if="!loading">
+        <Loading />
+    </div>
     <b-col>
         <div class="formTitle">
             <span>Faucet</span>
         </div>
-        <b-form @submit.prevent="claim_store">
-            <div class="formInput">
-            <div class="inputGroup">
-                <span>Mosaic</span>
-                <b-form-select v-model="form.mosaicId" size="sm" required>
-                    <b-form-select-option v-for="(mosaic,index) in filterMosaics" :value="mosaic.mosaicId" :key="'option_'+index">
-                        {{mosaic.mosaicAliasName}} - Balance: {{mosaic.amount}}
-                    </b-form-select-option>
-                </b-form-select>
+
+         <div v-if="loading">
+             <b-form @submit.prevent="claim_store">
+                <div class="formInput">
+
+                <div class="inputGroup">
+                    <span>Mosaic</span>
+                    <b-form-select v-model="form.mosaicId" size="sm" required>
+                        <b-form-select-option v-for="(mosaic,index) in filterMosaics" :value="mosaic.mosaicId" :key="'option_'+index">
+                            {{mosaic.mosaicAliasName}} - Balance: {{mosaic.amount}}
+                        </b-form-select-option>
+                    </b-form-select>
+                </div>
+
+                <div class="inputGroup">
+                    <span>Recipient</span>
+                    <b-form-input id="input-small" size="sm" :placeholder="recipientPlaceholder" v-model="form.recipient" required />
+                </div>
+
+                <div class="inputGroup">
+                    <span>Amount</span>
+                    <b-form-input type="number" id="input-small" size="sm" :placeholder="amountPlaceholder" v-model="form.amount" />
+                </div>
             </div>
 
-            <div class="inputGroup">
-                <span>Recipient</span>
-                <b-form-input id="input-small" size="sm" :placeholder="recipientPlaceholder" v-model="form.recipient" required />
+            <div class="formSubmit">
+                <b-button type="submit">CLAIM!</b-button>
             </div>
-
-            <div class="inputGroup">
-                <span>Amount</span>
-                <b-form-input type="number" id="input-small" size="sm" :placeholder="amountPlaceholder" v-model="form.amount" />
-            </div>
+            </b-form>
         </div>
-
-        <div class="formSubmit">
-            <b-button type="submit">CLAIM!</b-button>
-        </div>
-        </b-form>
     </b-col>
 </div>
 </template>
 
 <script>
+import Loading from '@/components/Loading.vue'
+
 export default {
+    components: {
+        Loading
+    },
+    computed: {
+        loading() {
+            return this.filterMosaics.length > 0 ? true : false
+        }
+    },
     props: {
         mosaicId: { type: String, default: '' },
         recipientPlaceholder: { type: String, default: ''},
