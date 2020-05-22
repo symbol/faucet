@@ -52,6 +52,7 @@
     "tls": "0.0.1",
     "tsconfig-paths": "^3.9.0",
     "utf-8-validate": "^5.0.2",
+    "vue-material-design-icons": "^4.4.0",
     "vue-property-decorator": "^8.4.1",
     "vuex-persistedstate": "^3.0.1"
   },
