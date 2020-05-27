@@ -48,13 +48,12 @@
     "rxjs": "^6.5.4",
     "stylus": "^0.54.7",
     "stylus-loader": "^3.0.2",
-    "symbol-sdk": "^0.18.0",
+    "symbol-sdk": "^0.19.2",
     "tls": "0.0.1",
     "tsconfig-paths": "^3.9.0",
     "utf-8-validate": "^5.0.2",
     "vue-material-design-icons": "^4.4.0",
-    "vue-property-decorator": "^8.4.0",
-    "vuex-persistedstate": "^2.7.1"
+    "vue-property-decorator": "^8.4.0"
   },
   "devDependencies": {
     "@nuxt/typescript": "^2.8.1",
