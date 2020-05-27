@@ -5,28 +5,25 @@ import { Listener, Address, RepositoryFactoryHttp, MosaicService } from 'symbol-
 import Vue from 'vue'
 
 export const state = () => ({
-  listener: null,
   filterMosaics: [],
   networkInfo: {},
   transactionHash: ''
 })
 
 export const getters = {
-  getListener: state => state.listener,
   getNetworkInfo: state => state.networkInfo,
   getTransactionHash: state => state.transactionHash,
   getFilterMosaics: state => state.filterMosaics
 }
 
 export const mutations = {
-  setListener: (state, listener) => { state.listener = listener},
   setFilterMosaics: (state, filterMosaics) => { state.filterMosaics = filterMosaics},
   setNetworkInfo: (state, networkInfo) => { state.networkInfo = networkInfo},
   setTransactionHash: (state, transactionHash) => { state.transactionHash = transactionHash},
 }
 
 export const actions = {
-  nuxtServerInit: ({ commit, dispatch }, { res }) => {
+  nuxtServerInit: ({ commit }, { res }) => {
     commit('setNetworkInfo', res.data.networkInfo)
   },
 
@@ -91,7 +88,11 @@ export const actions = {
   },
 
   openListenser: async (context, recipient) => {
-    const listener = new Listener(context.state.networkInfo.defaultNode.replace('http', 'ws'), WebSocket)
+    const networkInfo = context.getters['getNetworkInfo']
+    const wsEndpoint = `${networkInfo.defaultNode.replace('http', 'ws')}/ws`
+    const repositoryFactory = new RepositoryFactoryHttp(networkInfo.defaultNode)
+
+    const listener = new Listener(wsEndpoint, repositoryFactory.createNamespaceRepository(), WebSocket)
     await listener.open()
 
     listener.unconfirmedAdded(recipient).subscribe(
