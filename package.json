@@ -9,7 +9,6 @@
     "node": "8.11.1"
   },
   "scripts": {
-    "postinstall": "patch-package",
     "dev": "cross-env NODE_ENV=development nodemon server/index.ts --watch server",
     "build": "nuxt-ts build",
     "generate": "nuxt-ts generate",
