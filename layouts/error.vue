@@ -1,30 +1,12 @@
-<template lang="pug">
-main.section
-  .container
-    .content
-      h2 ❗ Something went wrong.
-      p(v-if="error.message") {{error.message}}
-      p
-        img(:src="require(`~/assets/images/${eyecatch}.png`)")
-      p Try that again, and if it still doesn't work, please inform system admin.
+<template>
+  <div class="container">
+    <h1 v-if="error.statusCode === 404">Page not found</h1>
+    <h1 v-else>An error occurred</h1>
+  </div>
 </template>
 
 <script>
-import _ from 'lodash'
-
 export default {
-  props: {
-    error: {
-      type: Object,
-      default: () => {}
-    },
-    eyecatch: {
-      type: String,
-      default: () => _.sample(['computer_error_bluescreen', 'character_program_shutdown', 'computer_sagi_error'])
-    }
-  },
-  head() {
-    return { title: 'Error has occured! | SYMBOL Faucet' }
-  }
+  props: ['error'],
 }
 </script>

@@ -13,7 +13,6 @@ require('dotenv').config({ path: '.env' })
 import config from '../nuxt.config';
 config.dev = !(process.env.NODE_ENV === 'production')
 
-import monitor from './monitor'
 import bootstrap from './bootstrap'
 import faucetHandler from './handlers/faucet'
 import claimsHandler from './handlers/claims'
@@ -33,6 +32,7 @@ async function start() {
     await nuxt.ready()
   }
 
+  // const appConfig = await bootstrap.init()
   const appConfig = await bootstrap.init()
 
   app.get('/', faucetHandler(appConfig))
@@ -47,8 +47,5 @@ async function start() {
     message: `Server listening on http://${host}:${port}`,
     badge: true
   })
-
-  const { API_URL, FAUCET_ACCOUNT } = appConfig
-  monitor(API_URL, FAUCET_ACCOUNT.address)
 }
 start()

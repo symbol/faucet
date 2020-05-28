@@ -34,17 +34,21 @@ export const config: any = {
   /*
    ** Global CSS
    */
-  css: ['assets/stylesheets/overwrite.styl', 'assets/stylesheets/symbol.styl'],
+  css: ['@/assets/stylesheets/main.scss'],
 
   /*
    ** Plugins to load before mounting the App
    */
-  plugins: [{ src: '~plugins/vuex-persistedstate', ssr: false }],
+  plugins: [],
 
   /*
    ** Nuxt.js modules
    */
-  modules: ['@nuxtjs/axios', 'nuxt-buefy'].concat(recaptchaPlugin),
+  modules: ['bootstrap-vue/nuxt', '@nuxtjs/axios'].concat(recaptchaPlugin),
+  bootstrapVue: {
+    bootstrapCSS: false,
+    bootstrapVueCSS: false
+  },
 
   buildModules: ['@nuxt/typescript-build'],
 
@@ -61,6 +65,15 @@ export const config: any = {
     siteKey: process.env.RECAPTCHA_CLIENT_SECRET,
     version: 3,
     hideBadge: false
+  },
+
+  module: {
+    rules: [
+        {
+           test: /\.s[ac]ss$/i,
+           use: ['style-loader','css-loader','sass-loader',],
+         },
+    ],
   },
 
   /*
