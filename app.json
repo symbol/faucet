@@ -1,9 +1,9 @@
 {
   "name": "symbol-faucet",
-  "description": "Faucet application for symbol",
+  "description": "Faucet application for Symbol",
   "keywords": [
-    "nem",
     "symbol",
+    "nem",
     "catapult",
     "blockchain"
   ],
@@ -18,7 +18,7 @@
       "description": "PrivateKey of Faucet Account that you want to assign."
     },
     "NEM_API_URL": {
-      "value": "http://catapult-api.example.com:3000",
+      "value": "http://symbol-api.example.com:3000",
       "description": "API URL to connect."
     },
     "NEM_PUBLIC_URL": {
