@@ -38,7 +38,7 @@
 
 
 <script>
-import IconGithub from 'vue-material-design-icons/GithubCircle.vue'
+import IconGithub from 'vue-material-design-icons/Github.vue'
 import IconNewspaper from 'vue-material-design-icons/Newspaper.vue'
 import IconReddit from 'vue-material-design-icons/Reddit.vue'
 import IconForum from 'vue-material-design-icons/Forum.vue'
