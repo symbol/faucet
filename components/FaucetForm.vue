@@ -14,11 +14,20 @@
 
                 <div class="inputGroup">
                     <span>Mosaic</span>
-                    <b-form-select v-model="form.mosaicId" size="sm" required>
-                        <b-form-select-option v-for="(mosaic,index) in filterMosaics" :value="mosaic.mosaicId" :key="'option_'+index">
-                            {{mosaic.mosaicAliasName}} - Balance: {{mosaic.amount}}
-                        </b-form-select-option>
-                    </b-form-select>
+                    <div class="mosaicGroup">
+                        <div v-for="(list,index) in mosaicSelectManager" :key="'option_'+index">
+                            <b-form-select v-model="list.mosaicId" size="sm" required>
+                                <b-form-select-option v-for="(mosaic,index) in list.mosaicOptions" :value="mosaic.mosaicId" :key="'option_'+index">
+                                    {{mosaic.mosaicAliasName}} - Balance: {{mosaic.amount}}
+                                </b-form-select-option>
+                            </b-form-select>
+                        </div>
+                    </div>
+
+                    <div class="mosaicControlPanel">
+                        <a v-if="hasAddButton" @click="add_mosaic">Add Mosaic</a>
+                        <a v-if="hasRemoveButton" @click="remove_mosaic">Remove Mosaic</a>
+                    </div>
                 </div>
 
                 <div class="inputGroup">
@@ -51,6 +60,12 @@ export default {
     computed: {
         loading() {
             return this.filterMosaics.length > 0 ? true : false
+        },
+        hasRemoveButton() {
+            return this.mosaicSelectManager.length > 1 ? true : false
+        },
+        hasAddButton() {
+            return this.filterMosaics.length > this.mosaicSelectManager.length ? true : false
         }
     },
     props: {
@@ -61,11 +76,12 @@ export default {
     },
     data() {
       return {
-        form: {
-            mosaicId: this.mosaicId,
+          mosaicSelectManager: [],
+          form: {
             recipient: '',
-            amount: ''
-        }
+            amount: '',
+            mosaicSelected: []
+          }
       }
     },
     methods: {
@@ -78,6 +94,15 @@ export default {
             } else {
                 this.$store.dispatch("claimFaucet", { ...this.form })
             }
+        },
+        add_mosaic() {
+            const selectedMosaics = this.mosaicSelectManager.map(selected => selected.mosaicId)
+            const mosaicOptions = this.filterMosaics.filter(mosaic => selectedMosaics.indexOf(mosaic.mosaicId) === -1)
+
+            this.mosaicSelectManager.push({mosaicId: mosaicOptions[0].mosaicId, mosaicOptions})
+        },
+        remove_mosaic() {
+            this.mosaicSelectManager.pop()
         }
     }
 }
@@ -114,6 +139,19 @@ export default {
 
         input {
             opacity: 1;
+        }
+    }
+
+    .mosaicGroup {
+        select {
+            margin-bottom: 5px;
+        }
+    }
+
+    .mosaicControlPanel{
+        float: right;
+        a {
+            padding: 0 15px;
         }
     }
 }
