@@ -35,8 +35,8 @@
                     <b-form-input id="input-small" size="sm" :placeholder="recipientPlaceholder" v-model="form.recipient" required />
                 </div>
 
-                <div class="inputGroup">
-                    <span>Amount</span>
+                <div v-if="hasNativeMosaicAmount" class="inputGroup">
+                    <span>XYM Amount</span>
                     <b-form-input type="number" id="input-small" size="sm" :placeholder="amountPlaceholder" v-model="form.amount" />
                 </div>
             </div>
@@ -66,6 +66,9 @@ export default {
         },
         hasAddButton() {
             return this.filterMosaics.length > this.mosaicSelectManager.length ? true : false
+        },
+        hasNativeMosaicAmount() {
+            return this.mosaicSelectManager.find(mosaic => mosaic.mosaicId === this.mosaicId) ? true : false
         }
     },
     props: {
@@ -84,10 +87,17 @@ export default {
           }
       }
     },
+    updated(){
+        if (!this.mosaicSelectManager.length) {
+            this.mosaicSelectManager.push({mosaicId: this.mosaicId ,mosaicOptions:this.filterMosaics})
+        }
+    },
     methods: {
         claim_store() {
-            // Format string
+            // Format data
             this.form.recipient = this.form.recipient.replace(/\s|-/g, '')
+            this.form.mosaicSelected = this.mosaicSelectManager.map(mosaic => mosaic.mosaicId)
+            this.form.amount = Number(this.form.amount)
 
             if (this.form.recipient.length !== 40 || this.form.recipient.charAt(0) !== 'T') {
                 this.$parent.makeToast('warning', `Address format incorrect.`)

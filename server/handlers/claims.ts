@@ -31,18 +31,18 @@ const getNativeCurrencyRandomAmount = (faucetBalance: number, minOut: number,  m
 
 export const handler = (conf: IAppConfig) => {
     return async (req: any, res: any, next: any) => {
-        const { recipient, amount, mosaics } = req.body
-        console.debug({recipient, amount, mosaics})
+        const { recipient, amount, mosaicSelected } = req.body
+        console.debug({recipient, amount, mosaicSelected})
         if (typeof recipient !== 'string' || recipient.length !== 40)
             throw new Error(`recipient address invalid.`)
 
         if (typeof amount !== 'number')
             throw new Error(`amount format invalid.`)
 
-        if (!Array.isArray(mosaics))
+        if (!Array.isArray(mosaicSelected))
             throw new Error(`mosaics is not array.`)
 
-        const mosaicIds = mosaics.map(mosaic => new MosaicId(mosaic))
+        const mosaicIds = mosaicSelected.map(mosaic => new MosaicId(mosaic))
         const repositoryFactory: RepositoryFactory = conf.REPOSITORY_FACTORY
         const faucetAccount: Account = conf.FAUCET_ACCOUNT
         const recipientAddress: Address = Address.createFromRawAddress(recipient)
