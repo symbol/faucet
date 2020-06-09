@@ -59,16 +59,16 @@ export default {
     },
     computed: {
         loading() {
-            return this.filterMosaics.length > 0 ? true : false
+            return this.filterMosaics.length > 0
         },
         hasRemoveButton() {
-            return this.mosaicSelectManager.length > 1 ? true : false
+            return this.mosaicSelectManager.length > 1
         },
         hasAddButton() {
-            return this.filterMosaics.length > this.mosaicSelectManager.length ? true : false
+            return this.filterMosaics.length > this.mosaicSelectManager.length
         },
         hasNativeMosaicAmount() {
-            return this.mosaicSelectManager.find(mosaic => mosaic.mosaicId === this.mosaicId) ? true : false
+            return this.mosaicSelectManager.find(mosaic => mosaic.mosaicId === this.mosaicId)
         }
     },
     props: {
@@ -83,7 +83,7 @@ export default {
           form: {
             recipient: '',
             amount: '',
-            mosaicSelected: []
+            selectedMosaics: []
           }
       }
     },
@@ -96,7 +96,7 @@ export default {
         claim_store() {
             // Format data
             this.form.recipient = this.form.recipient.replace(/\s|-/g, '')
-            this.form.mosaicSelected = this.mosaicSelectManager.map(mosaic => mosaic.mosaicId)
+            this.form.selectedMosaics = this.mosaicSelectManager.map(mosaic => mosaic.mosaicId)
             this.form.amount = Number(this.form.amount)
 
             if (this.form.recipient.length !== 40 || this.form.recipient.charAt(0) !== 'T') {
