@@ -8,8 +8,7 @@ import {
     Deadline,
     MosaicId,
     RepositoryFactory,
-    TransactionType,
-    MosaicNames
+    TransactionType
 } from "symbol-sdk"
 import { of, forkJoin } from "rxjs"
 import { map, mergeMap, filter, toArray, catchError } from "rxjs/operators"
@@ -153,10 +152,11 @@ export const handler = (conf: IAppConfig) => {
 
                 const transferMosaics = requestedMosicList.map(mosaic => {
                     const mosaicName: any = requestMosaicName.find(mosaicName => mosaicName.mosaicId.equals(mosaic.id))
+                    const mosaicInfo: any = requestMosaicInfo.find(mosaicInfo => mosaicInfo.id.equals(mosaic.id))
                     const name = mosaicName.names.length ? mosaicName.names[0].name : mosaicName.mosaicId.id.toHex()
 
                     return {
-                       amount: mosaic.amount.compact(),
+                       amount: toRelativeAmount(mosaic.amount.compact(), mosaicInfo.divisibility),
                        name: name
                     }
                 })

@@ -16,7 +16,7 @@
                     <span>Mosaic</span>
                     <div class="mosaicGroup">
                         <div v-for="(list,index) in mosaicSelectManager" :key="'option_'+index">
-                            <b-form-select v-model="list.mosaicId" size="sm" required>
+                            <b-form-select v-model="list.mosaicId" size="sm" required @change="onChange" >
                                 <b-form-select-option v-for="(mosaic,index) in list.mosaicOptions" :value="mosaic.mosaicId" :key="'option_'+index">
                                     {{mosaic.mosaicAliasName}} - Balance: {{mosaic.amount}}
                                 </b-form-select-option>
@@ -110,9 +110,23 @@ export default {
             const mosaicOptions = this.filterMosaics.filter(mosaic => selectedMosaics.indexOf(mosaic.mosaicId) === -1)
 
             this.mosaicSelectManager.push({mosaicId: mosaicOptions[0].mosaicId, mosaicOptions})
+            this.updateMosaicSelectManager()
         },
         remove_mosaic() {
             this.mosaicSelectManager.pop()
+            this.updateMosaicSelectManager()
+        },
+        onChange() {
+            this.updateMosaicSelectManager()
+        },
+        updateMosaicSelectManager() {
+            this.mosaicSelectManager = this.mosaicSelectManager.map(selector => {
+                const selectedMosaics = this.mosaicSelectManager.map(selected => selected.mosaicId).filter(mosaic => mosaic !== selector.mosaicId)
+                return {
+                    ...selector,
+                    mosaicOptions: this.filterMosaics.filter(option => selectedMosaics.indexOf(option.mosaicId) === -1)
+                }
+            })
         }
     }
 }
