@@ -162,6 +162,7 @@ export default {
         float: right;
         a {
             padding: 0 15px;
+            cursor: pointer;
         }
     }
 }
