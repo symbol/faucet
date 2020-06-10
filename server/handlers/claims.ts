@@ -54,7 +54,12 @@ export const handler = (conf: IAppConfig) => {
             repositoryFactory.createNamespaceRepository().getMosaicsNames(mosaicIds),
             repositoryFactory.createMosaicRepository().getMosaics(mosaicIds),
             repositoryFactory.createAccountRepository().getAccountInfo(faucetAccount.address),
-            repositoryFactory.createAccountRepository().getAccountInfo(recipientAddress),
+            repositoryFactory.createAccountRepository().getAccountInfo(recipientAddress).pipe(
+                catchError(error => {
+                    console.error({ error })
+                    return of(null)
+                })
+            ),
             repositoryFactory.createAccountRepository().getAccountUnconfirmedTransactions(faucetAccount.address).pipe(
                 mergeMap(_ => _),
                 filter(tx => tx.type === TransactionType.TRANSFER),
@@ -62,8 +67,8 @@ export const handler = (conf: IAppConfig) => {
                 filter(tx => tx.recipientAddress.equals(recipientAddress)),
                 toArray(),
                 catchError(error => {
-                console.error({ error })
-                return of([])
+                    console.error({ error })
+                    return of([])
                 })
             )
         )
@@ -105,10 +110,12 @@ export const handler = (conf: IAppConfig) => {
                         const minOut = toRelativeAmount(conf.NATIVE_CURRENCY_OUT_MIN, nativeCurrencyMosaicInfo.divisibility)
 
                         // Check recipientBalanceMosaic
-                        for (let recipientBalance of recipientAccountInfo.mosaics) {
-                            if (recipientBalance.id.equals(mosaic.id))
-                                if (recipientBalance.amount.compact() > conf.MAX_BALANCE)
-                                    throw new Error(`Your account already has enough balance for ${MosaicNames}`)
+                        if (recipientAccountInfo) {
+                            for (let recipientBalance of recipientAccountInfo.mosaics) {
+                                if (recipientBalance.id.equals(mosaic.id))
+                                    if (recipientBalance.amount.compact() > conf.MAX_BALANCE)
+                                        throw new Error(`Your account already has enough balance for ${conf.NATIVE_CURRENCY_NAME}`)
+                            }
                         }
 
                         // Check Request Amount if More than maxOut
