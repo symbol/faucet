@@ -20,7 +20,9 @@ const toRelativeAmount = (amount: number, divisibility: number) => amount / Math
 const toAbsoluteAmount = (amount: number, divisibility: number) => amount * Math.pow(10, divisibility)
 
 const getMosaicsRandomAmount = (faucetBalance: number) => {
-    const absoluteAmount = (Math.random() * (1 - faucetBalance/2 + 1) + faucetBalance/2)
+    const max = faucetBalance * 0.15
+    const min = faucetBalance * 0.1
+    const absoluteAmount = Math.random() * (max - min) + min
     return Math.round(absoluteAmount)
 }
 
