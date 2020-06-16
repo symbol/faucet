@@ -76,8 +76,9 @@ export const actions = {
       res => {
         context.commit('setTransactionHash', res.data.txHash)
 
-        Vue.prototype.$nuxt.$makeToast('info', `Mosaic: ${res.data.mosaic}`)
-        Vue.prototype.$nuxt.$makeToast('info', `Amount: ${res.data.absoluteAmount}`)
+        res.data.mosaics.map(mosaic => {
+          Vue.prototype.$nuxt.$makeToast('info', `Mosaic: ${mosaic.name} - Amount: ${mosaic.amount}`)
+        })
         Vue.prototype.$nuxt.$makeToast('info', `Transaction Hash: ${res.data.txHash}`)
       }
     )

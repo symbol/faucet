@@ -124,7 +124,6 @@ export default {
 
 .footer {
     width: 100%;
-    position: fixed;
     bottom: 0;
 
     .footer-row {
