@@ -152,7 +152,7 @@ export const handler = (conf: IAppConfig) => {
                     requestedMosicList,
                     EmptyMessage,
                     networkType
-                    ).setMaxFee(feeMultiplier)
+                    ).setMaxFee(feeMultiplier > 0 ? feeMultiplier : 1000)
 
                 const transferMosaics = requestedMosicList.map(mosaic => {
                     const mosaicName: any = requestMosaicName.find(mosaicName => mosaicName.mosaicId.equals(mosaic.id))
