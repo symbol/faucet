@@ -99,7 +99,7 @@ export default {
             this.form.selectedMosaics = this.mosaicSelectManager.map(mosaic => mosaic.mosaicId)
             this.form.amount = Number(this.form.amount)
 
-            if (this.form.recipient.length !== 40 || this.form.recipient.charAt(0) !== 'T') {
+            if (this.form.recipient.length !== 39 || this.form.recipient.charAt(0) !== 'T') {
                 this.$parent.makeToast('warning', `Address format incorrect.`)
             } else {
                 this.$store.dispatch("claimFaucet", { ...this.form })

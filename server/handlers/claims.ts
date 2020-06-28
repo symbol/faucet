@@ -8,7 +8,8 @@ import {
     Deadline,
     MosaicId,
     RepositoryFactory,
-    TransactionType
+    TransactionType,
+    TransactionGroup
 } from "symbol-sdk"
 import { of, forkJoin } from "rxjs"
 import { map, mergeMap, filter, toArray, catchError } from "rxjs/operators"
@@ -34,7 +35,7 @@ export const handler = (conf: IAppConfig) => {
     return async (req: any, res: any, next: any) => {
         const { recipient, amount, selectedMosaics } = req.body
         console.debug({recipient, amount, selectedMosaics})
-        if (typeof recipient !== 'string' || recipient.length !== 40)
+        if (typeof recipient !== 'string' || recipient.length !== 39)
             throw new Error(`recipient address invalid.`)
 
         if (typeof amount !== 'number')
@@ -61,8 +62,11 @@ export const handler = (conf: IAppConfig) => {
                     return of(null)
                 })
             ),
-            repositoryFactory.createAccountRepository().getAccountUnconfirmedTransactions(faucetAccount.address).pipe(
-                mergeMap(_ => _),
+            repositoryFactory.createTransactionRepository().search({
+                group: TransactionGroup.Unconfirmed,
+                address: faucetAccount.address,
+            }).pipe(
+                mergeMap(_ => _.data),
                 filter(tx => tx.type === TransactionType.TRANSFER),
                 map(_ => _ as TransferTransaction),
                 filter(tx => tx.recipientAddress.equals(recipientAddress)),
@@ -148,7 +152,7 @@ export const handler = (conf: IAppConfig) => {
                     requestedMosicList,
                     EmptyMessage,
                     networkType
-                    ).setMaxFee(feeMultiplier)
+                    ).setMaxFee(feeMultiplier > 0 ? feeMultiplier : 1000)
 
                 const transferMosaics = requestedMosicList.map(mosaic => {
                     const mosaicName: any = requestMosaicName.find(mosaicName => mosaicName.mosaicId.equals(mosaic.id))
