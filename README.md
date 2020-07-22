@@ -1,4 +1,4 @@
-# :potable_water: Symbol (Catapult) Faucet
+# :potable_water: Symbol Faucet
 
 ## :heartbeat: Symbol Faucet
 
