@@ -13,16 +13,14 @@
         </div>
       </b-row>
 
-      <b-col cols="12">
-        <b-row>
-        <FaucetForm class="d-lg-none d-xl-none d-md-block"
+      <b-row>
+        <FaucetForm class="d-lg-none d-xl-none d-md-block mx-form"
           :mosaicId="networkInfo.nativeCurrencyId"
           :filterMosaics="filterMosaics"
           :recipientPlaceholder="recipientPlaceholder"
           :amountPlaceholder="amountPlaceholder"
         />
       </b-row>
-      </b-col>
 
       <b-row>
         <div class="info">
@@ -112,6 +110,11 @@ methods: {
 .subTitle {
     font-size: 18px;
     font-weight: bolder;
+}
+
+.mx-form {
+  margin: 0 -0.7rem !important;
+  padding: 0 0.7rem !important;
 }
 
 .info {
