@@ -77,15 +77,18 @@ export default {
         amountPlaceholder: { type: String, default: ''},
         filterMosaics: {type: Array, default: []}
     },
+    mounted() {
+        this.updateForm()
+    },
     data() {
-      return {
-          mosaicSelectManager: [],
-          form: {
-            recipient: '',
-            amount: '',
-            selectedMosaics: []
-          }
-      }
+        return {
+            mosaicSelectManager: [],
+            form: {
+                recipient: '',
+                amount: '',
+                selectedMosaics: []
+            }
+        }
     },
     updated(){
         if (!this.mosaicSelectManager.length) {
@@ -97,7 +100,7 @@ export default {
             // Format data
             this.form.recipient = this.form.recipient.replace(/\s|-/g, '')
             this.form.selectedMosaics = this.mosaicSelectManager.map(mosaic => mosaic.mosaicId)
-            this.form.amount = Number(this.form.amount)
+            this.form.amount = Number(this.form.amount | 0)
 
             if (this.form.recipient.length !== 39 || this.form.recipient.charAt(0) !== 'T') {
                 this.$parent.makeToast('warning', `Address format incorrect.`)
@@ -127,6 +130,11 @@ export default {
                     mosaicOptions: this.filterMosaics.filter(option => selectedMosaics.indexOf(option.mosaicId) === -1)
                 }
             })
+        },
+        updateForm() {
+            const { recipient, amount } = this.$route.query
+            this.form.recipient = recipient || ''
+            this.form.amount = amount || ''
         }
     }
 }
