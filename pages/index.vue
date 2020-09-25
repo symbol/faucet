@@ -75,7 +75,7 @@ export default {
       return `(Faucet will pay up to ${this.networkInfo.nativeCurrencyMaxOut} XYM, or enter custom amount)`
     },
     faucetAccountUrl () {
-      return `${this.networkInfo.explorerUrl}account/${this.networkInfo.address}`
+      return `${this.networkInfo.explorerUrl}accounts/${Address.createFromRawAddress(this.networkInfo.address).plain()}`
     }
   },
 created() {
