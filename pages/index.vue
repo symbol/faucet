@@ -24,7 +24,7 @@
 
       <b-row>
         <div class="info">
-          <span>Please send back claimed mosaics when you no longer need it.</span>
+          <span>Please send back claimed mosaics when you no longer need them.</span>
           <span>Faucet Address:
             <span class="highlight">
               <a target="_blank" :href="faucetAccountUrl">
