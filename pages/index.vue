@@ -86,13 +86,14 @@ created() {
   }
 },
 methods: {
-  makeToast(variant = null, message) {
+  makeToast(variant = null, message, config) {
     this.$bvToast.toast(message, {
     title: `Notification`,
     variant: variant,
     solid: true,
     toaster: 'b-toaster-top-right',
-    appendToast: true
+    appendToast: true,
+    ...config
     })
   }
 }
