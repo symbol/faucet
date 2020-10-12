@@ -79,7 +79,9 @@ export const actions = {
         res.data.mosaics.map(mosaic => {
           Vue.prototype.$nuxt.$makeToast('info', `Mosaic: ${mosaic.name} - Amount: ${mosaic.amount}`)
         })
-        Vue.prototype.$nuxt.$makeToast('info', `Transaction Hash: ${res.data.txHash}`)
+        Vue.prototype.$nuxt.$makeToast('info', `Pending Transaction Hash: ${res.data.txHash}`, {
+          noAutoHide: true,
+        })
       }
     )
     .catch(error => {
@@ -107,7 +109,12 @@ export const actions = {
     listener.confirmed(recipient).subscribe(
       response => {
         if (context.getters["getTransactionHash"] === response.transactionInfo.hash) {
-          Vue.prototype.$nuxt.$makeToast('success', 'Your Request had been confirmed status!')
+          Vue.prototype.$nuxt.$makeToast('success', `Your request has been confirmed!`)
+          Vue.prototype.$nuxt.$makeToast('success', `View Transaction in Explorer`, {
+            noAutoHide: true,
+            href: `${networkInfo.explorerUrl}transactions/${response.transactionInfo.hash}`
+          })
+
           context.commit('setTransactionHash', '')
           listener.close()
           context.dispatch('fetchFaucetBalance')
