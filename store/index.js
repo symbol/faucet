@@ -109,7 +109,7 @@ export const actions = {
     listener.confirmed(recipient).subscribe(
       response => {
         if (context.getters["getTransactionHash"] === response.transactionInfo.hash) {
-          Vue.prototype.$nuxt.$makeToast('success', `Your request is processed.`)
+          Vue.prototype.$nuxt.$makeToast('success', `Your request has been processed.`)
           Vue.prototype.$nuxt.$makeToast('success', `View transaction in explorer.`, {
             noAutoHide: true,
             href: `${networkInfo.explorerUrl}transactions/${response.transactionInfo.hash}`
