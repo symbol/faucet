@@ -9,7 +9,7 @@ export const handler = (conf: IAppConfig) => {
     const repositoryFactory = conf.REPOSITORY_FACTORY
     const nativeMosaicInfo: MosaicInfo = await repositoryFactory.createMosaicRepository().getMosaic(new MosaicId(conf.NATIVE_CURRENCY_ID)).toPromise()
 
-    const defaultNode = new Url(conf.DEFAULT_NODE)
+    const defaultNode = new Url(conf.DEFAULT_NODE_CLIENT)
     const networkInfo = {
       address: conf.FAUCET_ACCOUNT.address.pretty(),
       hostname: defaultNode.hostname,

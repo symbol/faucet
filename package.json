@@ -13,7 +13,12 @@
     "build": "nuxt-ts build",
     "generate": "nuxt-ts generate",
     "start": "cross-env NODE_ENV=production ts-node -r tsconfig-paths/register server/index.ts",
+    "bootstrap-start": "symbol-bootstrap start -p bootstrap -c bootstrap-preset.yml --detached --healthCheck -r",
+    "bootstrap-stop": "symbol-bootstrap stop",
     "lint": "eslint --ext .js,.vue --ignore-path .gitignore .",
+    "lint:fix": "eslint --fix --ext .js,.vue --ignore-path .gitignore . ",
+    "prettier:fix": "prettier --write ./server/** /components/** /store/**",
+    "style:fix": "npm run prettier:fix && npm run lint:fix",
     "precommit": "npm run lint",
     "test": "jest",
     "heroku-postbuild": "npm run build"
@@ -91,6 +96,7 @@
     "nodemon": "^2.0.4",
     "prettier": "1.19.1",
     "sass-loader": "^8.0.2",
+    "symbol-bootstrap": "^0.1.2-alpha-202010121756",
     "ts-node": "^8.6.2",
     "url-parse": "^1.4.7",
     "vue-jest": "^3.0.5"

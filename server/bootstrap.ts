@@ -8,6 +8,7 @@ import {
 
   export interface IAppConfig {
     DEFAULT_NODE: string,
+    DEFAULT_NODE_CLIENT: string
     NATIVE_CURRENCY_NAME: string,
     NATIVE_CURRENCY_ID: string,
     NATIVE_CURRENCY_OUT_MIN: number
@@ -26,6 +27,7 @@ import {
   export const init = async () => {
     const config: IAppConfig = {
         DEFAULT_NODE: env.DEFAULT_NODE,
+        DEFAULT_NODE_CLIENT: env.DEFAULT_NODE_CLIENT,
         NATIVE_CURRENCY_NAME: env.NATIVE_CURRENCY_NAME,
         NATIVE_CURRENCY_ID: env.NATIVE_CURRENCY_ID,
         NATIVE_CURRENCY_OUT_MAX: env.NATIVE_CURRENCY_OUT_MAX,
