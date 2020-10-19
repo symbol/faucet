@@ -119,7 +119,7 @@ export const handler = (conf: IAppConfig) => {
                             for (let recipientBalance of recipientAccountInfo.mosaics) {
                                 if (recipientBalance.id.equals(mosaic.id))
                                     if (recipientBalance.amount.compact() > conf.MAX_BALANCE)
-                                        throw new Error(`Your account already has enough balance for ${conf.NATIVE_CURRENCY_NAME}`)
+                                        throw new Error(`Your account already has enough balance of ${conf.NATIVE_CURRENCY_NAME}`)
                             }
                         }
 
