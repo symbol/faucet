@@ -1,64 +1,87 @@
 <template>
-	<div class="faucetForm p-3">
-		<div v-if="!loading">
-			<Loading />
-		</div>
-		<b-col>
-			<div class="formTitle">
-				<span>Faucet</span>
-			</div>
+  <div class="faucetForm p-3">
+    <div v-if="!loading">
+      <Loading />
+    </div>
+    <b-col>
+      <div class="formTitle">
+        <span>Faucet</span>
+      </div>
 
-			<div v-if="loading">
-				<b-form @submit.prevent="claim_store">
-					<div class="formInput">
-						<div class="inputGroup">
-							<span>Mosaic</span>
-							<div class="mosaicGroup">
-								<div v-for="(list, index) in mosaicSelectManager" :key="'option_' + index">
-									<b-form-select v-model="list.mosaicId" size="sm" required @change="onChange">
-										<b-form-select-option
-											v-for="(mosaic, optIndex) in list.mosaicOptions"
-											:key="'option_' + optIndex"
-											:value="mosaic.mosaicId"
-										>
-											{{ mosaic.mosaicAliasName }} - Balance: {{ mosaic.amount }}
-										</b-form-select-option>
-									</b-form-select>
-								</div>
-							</div>
+      <div v-if="loading">
+        <b-form @submit.prevent="claim_store">
+          <div class="formInput">
+            <div class="inputGroup">
+              <span>Mosaic</span>
+              <div class="mosaicGroup">
+                <div
+                  v-for="(list, index) in mosaicSelectManager"
+                  :key="'option_' + index"
+                >
+                  <b-form-select
+                    v-model="list.mosaicId"
+                    size="sm"
+                    required
+                    @change="onChange"
+                  >
+                    <b-form-select-option
+                      v-for="(mosaic, optIndex) in list.mosaicOptions"
+                      :key="'option_' + optIndex"
+                      :value="mosaic.mosaicId"
+                    >
+                      {{ mosaic.mosaicAliasName }} - Balance: {{ mosaic.amount }}
+                    </b-form-select-option>
+                  </b-form-select>
+                </div>
+              </div>
 
-							<div class="mosaicControlPanel">
-								<a v-if="hasAddButton" @click="add_mosaic">Add Mosaic</a>
-								<a v-if="hasRemoveButton" @click="remove_mosaic">Remove Mosaic</a>
-							</div>
-						</div>
+              <div class="mosaicControlPanel">
+                <a
+                  v-if="hasAddButton"
+                  @click="add_mosaic"
+                >Add Mosaic</a>
+                <a
+                  v-if="hasRemoveButton"
+                  @click="remove_mosaic"
+                >Remove Mosaic</a>
+              </div>
+            </div>
 
-						<div class="inputGroup">
-							<span>Recipient</span>
-							<b-form-input
-								id="input-small"
-								v-model="form.recipient"
-								size="sm"
-								:placeholder="recipientPlaceholder"
-								required
-							/>
-						</div>
+            <div class="inputGroup">
+              <span>Recipient</span>
+              <b-form-input
+                id="input-small"
+                v-model="form.recipient"
+                size="sm"
+                :placeholder="recipientPlaceholder"
+                required
+              />
+            </div>
 
-						<div v-if="hasNativeMosaicAmount" class="inputGroup">
-							<span>XYM Amount</span>
-							<b-form-input id="input-small" v-model="form.amount" type="number" size="sm" :placeholder="amountPlaceholder" />
-						</div>
-					</div>
+            <div
+              v-if="hasNativeMosaicAmount"
+              class="inputGroup"
+            >
+              <span>XYM Amount</span>
+              <b-form-input
+                id="input-small"
+                v-model="form.amount"
+                type="number"
+                size="sm"
+                :placeholder="amountPlaceholder"
+              />
+            </div>
+          </div>
 
-					<div class="formSubmit">
-						<b-button type="submit">
-							CLAIM!
-						</b-button>
-					</div>
-				</b-form>
-			</div>
-		</b-col>
-	</div>
+          <div class="formSubmit">
+            <b-button type="submit">
+              CLAIM!
+            </b-button>
+          </div>
+        </b-form>
+      </div>
+    </b-col>
+  </div>
 </template>
 
 <script>
@@ -72,7 +95,7 @@ export default {
 		mosaicId: { type: String, default: '' },
 		recipientPlaceholder: { type: String, default: '' },
 		amountPlaceholder: { type: String, default: '' },
-		filterMosaics: { type: Array, default: () => [] },
+		filterMosaics: { type: Array, default: () => [''] },
 	},
 	data() {
 		return {
@@ -102,7 +125,7 @@ export default {
 		this.updateForm();
 	},
 	updated() {
-		if (!this.mosaicSelectManager.length) this.mosaicSelectManager.push({ mosaicId: this.mosaicId, mosaicOptions: this.filterMosaics });
+		if (!this.mosaicSelectManager.length) {this.mosaicSelectManager.push({ mosaicId: this.mosaicId, mosaicOptions: this.filterMosaics });}
 	},
 	methods: {
 		claim_store() {
@@ -112,8 +135,8 @@ export default {
 			this.form.amount = Number(this.form.amount | 0);
 
 			if (this.form.recipient.length !== 39 || this.form.recipient.charAt(0) !== 'T')
-				this.$parent.makeToast('warning', `Address format incorrect.`);
-			else this.$store.dispatch('claimFaucet', { ...this.form });
+				{this.$parent.makeToast('warning', `Address format incorrect.`);}
+			else {this.$store.dispatch('claimFaucet', { ...this.form });}
 		},
 		add_mosaic() {
 			const selectedMosaics = this.mosaicSelectManager.map(selected => selected.mosaicId);

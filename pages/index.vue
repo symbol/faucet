@@ -1,57 +1,71 @@
 <template>
-	<b-container fluid="lg" style="max-width: 1200px">
-		<b-row>
-			<b-col cols="12" lg="6">
-				<div class="p-3">
-					<b-col>
-						<b-row>
-							<b-img src="~/assets/images/symbol_logo_white.svg" fluid alt="Symbol" width="240" />
-						</b-row>
-						<b-row>
-							<div>
-								<span class="subTitle">Claim mosaics for development and testing purposes on the symbol network</span>
-							</div>
-						</b-row>
+  <b-container
+    fluid="lg"
+    style="max-width: 1200px"
+  >
+    <b-row>
+      <b-col
+        cols="12"
+        lg="6"
+      >
+        <div class="p-3">
+          <b-col>
+            <b-row>
+              <b-img
+                src="~/assets/images/symbol_logo_white.svg"
+                fluid
+                alt="Symbol"
+                width="240"
+              />
+            </b-row>
+            <b-row>
+              <div>
+                <span class="subTitle">Claim mosaics for development and testing purposes on the symbol network</span>
+              </div>
+            </b-row>
 
-						<b-row>
-							<FaucetForm
-								class="d-lg-none d-xl-none d-md-block mx-form"
-								:mosaic-id="networkInfo.nativeCurrencyId"
-								:filter-mosaics="filterMosaics"
-								:recipient-placeholder="recipientPlaceholder"
-								:amount-placeholder="amountPlaceholder"
-							/>
-						</b-row>
+            <b-row>
+              <FaucetForm
+                class="d-lg-none d-xl-none d-md-block mx-form"
+                :mosaic-id="networkInfo.nativeCurrencyId"
+                :filter-mosaics="filterMosaics"
+                :recipient-placeholder="recipientPlaceholder"
+                :amount-placeholder="amountPlaceholder"
+              />
+            </b-row>
 
-						<b-row>
-							<div class="info">
-								<span>Please send back claimed mosaics when you no longer need them.</span>
-								<span>
-									Faucet Address:
+            <b-row>
+              <div class="info">
+                <span>Please send back claimed mosaics when you no longer need them.</span>
+                <span>
+                  Faucet Address:
 
-									<span class="highlight">
-										<a target="_blank" :href="faucetAccountUrl">
-											{{ networkInfo.address }}
-										</a>
-									</span>
-								</span>
-							</div>
-						</b-row>
-					</b-col>
-				</div>
-			</b-col>
+                  <span class="highlight">
+                    <a
+                      target="_blank"
+                      :href="faucetAccountUrl"
+                    >
+                      {{ networkInfo.address }}
+                    </a>
+                  </span>
+                </span>
+              </div>
+            </b-row>
+          </b-col>
+        </div>
+      </b-col>
 
-			<b-col lg="6">
-				<FaucetForm
-					class="d-lg-block d-none"
-					:mosaic-id="networkInfo.nativeCurrencyId"
-					:filter-mosaics="filterMosaics"
-					:recipient-placeholder="recipientPlaceholder"
-					:amount-placeholder="amountPlaceholder"
-				/>
-			</b-col>
-		</b-row>
-	</b-container>
+      <b-col lg="6">
+        <FaucetForm
+          class="d-lg-block d-none"
+          :mosaic-id="networkInfo.nativeCurrencyId"
+          :filter-mosaics="filterMosaics"
+          :recipient-placeholder="recipientPlaceholder"
+          :amount-placeholder="amountPlaceholder"
+        />
+      </b-col>
+    </b-row>
+  </b-container>
 </template>
 
 <script>

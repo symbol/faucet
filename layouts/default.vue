@@ -1,8 +1,8 @@
 <template>
-	<div id="app">
-		<nuxt />
-		<Footer />
-	</div>
+  <div id="app">
+    <nuxt />
+    <Footer />
+  </div>
 </template>
 
 <script>

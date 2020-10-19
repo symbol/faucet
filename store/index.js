@@ -54,8 +54,9 @@ export const actions = {
 
 						let mosaicAliasName = '';
 
-						if (mosaicName)
+						if (mosaicName) {
 							mosaicAliasName = mosaicName.names.length > 0 ? mosaicName.names[0].name : mosaicView.mosaicInfo.id.toHex();
+						}
 
 						return {
 							mosaicId: mosaicView.mosaicInfo.id.toHex(),
@@ -106,7 +107,7 @@ export const actions = {
 
 		listener.unconfirmedAdded(recipient).subscribe(response => {
 			if (context.getters.getTransactionHash === response.transactionInfo.hash)
-				Vue.prototype.$nuxt.$makeToast('success', `Your request is being processed.`);
+				{Vue.prototype.$nuxt.$makeToast('success', `Your request is being processed.`);}
 		});
 
 		listener.confirmed(recipient).subscribe(response => {
