@@ -4,5 +4,6 @@
   "singleQuote": true,
   "printWidth": 140,
   "tabWidth": 4,
-  "useTabs": true
+  "useTabs": true,
+  "requirePragma": true
 }

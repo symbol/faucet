@@ -41,7 +41,6 @@ module.exports = {
     'no-mixed-spaces-and-tabs': 'off',
     'newline-per-chained-call': ['error'],
     'brace-style': ['error', 'stroustrup'],
-    'newline-after-var': ['error', 'always'],
-
+    'newline-after-var': ['error', 'always']
   }
 }
