@@ -106,13 +106,13 @@ export const actions = {
 
 		listener.unconfirmedAdded(recipient).subscribe(response => {
 			if (context.getters.getTransactionHash === response.transactionInfo.hash)
-				Vue.prototype.$nuxt.$makeToast('success', 'Your request had been unconfirmed status!');
+				Vue.prototype.$nuxt.$makeToast('success', `Your request is being processed.`);
 		});
 
 		listener.confirmed(recipient).subscribe(response => {
 			if (context.getters.getTransactionHash === response.transactionInfo.hash) {
-				Vue.prototype.$nuxt.$makeToast('success', `Your request has been confirmed!`);
-				Vue.prototype.$nuxt.$makeToast('success', `View Transaction in Explorer`, {
+				Vue.prototype.$nuxt.$makeToast('success', `Your request has been processed.`);
+				Vue.prototype.$nuxt.$makeToast('success', `View transaction in explorer.`, {
 					noAutoHide: true,
 					href: `${networkInfo.explorerUrl}transactions/${response.transactionInfo.hash}`,
 				});
