@@ -19,6 +19,7 @@
     "lint:fix": "eslint --fix --ext .js,.vue --ignore-path .gitignore . ",
     "prettier:fix": "prettier --write ./server/** ./components/** ./store/** ./layouts/** ./pages/**",
     "style:fix": "npm run prettier:fix && npm run lint:fix",
+    "version": "echo $npm_package_version",
     "precommit": "npm run lint",
     "test": "jest",
     "heroku-postbuild": "npm run build"

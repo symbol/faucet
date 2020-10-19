@@ -1,0 +1,26 @@
+dist: bionic
+language: node_js
+node_js:
+    - "10"
+    - "12"
+cache:
+    npm: true
+    directories:
+        - "node_modules"
+before_script:
+    - npm run build
+script:
+    - npm run lint
+deploy:
+    # automation build docker images for release branch
+  - provider: script
+    skip_cleanup: true
+    script: /bin/sh travis/docker.sh
+    on:
+      branch: $RELEASE_BRANCH
+  - provider: script
+    skip_cleanup: true
+    script: /bin/sh travis/release.sh
+    on:
+      branch: $RELEASE_BRANCH
+
