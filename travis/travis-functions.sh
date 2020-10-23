@@ -38,6 +38,7 @@ log_env_variables(){
   echo "TRAVIS_BRANCH = $TRAVIS_BRANCH"
   echo "TRAVIS_TAG = $TRAVIS_TAG"
   echo "FUNCTIONS_VERSION = $FUNCTIONS_VERSION"
+  echo "VERSION = $VERSION"
 }
 
 
