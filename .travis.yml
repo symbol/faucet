@@ -25,7 +25,6 @@ jobs:
     - stage: test
       mame: lint
       script: npm run lint
-    - mame: e2e tests
     - stage: test
       name: docker test build
       script: /bin/bash travis/docker-functions.sh docker_build $VERSION
