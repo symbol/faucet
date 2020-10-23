@@ -1,26 +1,47 @@
 dist: bionic
 language: node_js
 node_js:
-    - "10"
-    - "12"
+    - 10
+    - 12
+services:
+  - docker
+env:
+  global:
+    - DEV_BRANCH=dev
+    - RELEASE_BRANCH=main
+    - POST_RELEASE_BRANCH=main
+    - RELEASE_MESSAGE=release
 cache:
     npm: true
     directories:
         - "node_modules"
 before_script:
-    - npm run build
+    - . ./travis/node-functions.sh
+    - VERSION="$(node_load_version)"
+    - log_env_variables
 script:
-    - npm run lint
-deploy:
-    # automation build docker images for release branch
-  - provider: script
-    skip_cleanup: true
-    script: /bin/sh travis/docker.sh
-    on:
-      branch: $RELEASE_BRANCH
-  - provider: script
-    skip_cleanup: true
-    script: /bin/sh travis/release.sh
-    on:
-      branch: $RELEASE_BRANCH
-
+    - npm run build
+jobs:
+  include:
+    - stage: test
+      mame: lint
+      script: npm run lint
+    - stage: test
+      name: docker test build
+      script: /bin/bash travis/docker-functions.sh docker_build $VERSION
+      node_js: 10
+    - stage: publish
+      name: docker publish alpha
+      script: /bin/bash travis/docker-functions.sh docker_build $VERSION publish
+      if: branch = env(DEV_BRANCH) AND type = push
+      node_js: 10
+    - stage: release
+      name: docker publish release
+      script: /bin/bash travis/docker-functions.sh docker_build $VERSION release
+      if: branch = env(RELEASE_BRANCH) AND type = api AND commit_message = env(RELEASE_MESSAGE)
+      node_js: 10
+    - stage: post release
+      name: tag and version upgrade
+      script: /bin/bash travis/node-functions.sh node_post_release
+      if: branch = env(RELEASE_BRANCH) AND type = api AND commit_message = env(RELEASE_MESSAGE)
+      node_js: 10
