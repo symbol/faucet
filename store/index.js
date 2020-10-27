@@ -29,7 +29,11 @@ export const mutations = {
 };
 
 export const actions = {
-	nuxtServerInit: ({ commit }, { res }) => {
+	nuxtServerInit: ({ commit }, { res, error }) => {
+		if (res.error) {
+			return error(res.error);
+		}
+
 		commit('setNetworkInfo', res.data.networkInfo);
 	},
 
