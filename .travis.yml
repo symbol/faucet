@@ -24,7 +24,7 @@ script:
 jobs:
   include:
     - stage: test
-      mame: lint
+      name: lint
       script: npm run lint
     - stage: test
       name: docker test build
