@@ -3,9 +3,7 @@ export const stringToArray = (str: string | undefined): string[] => {
 
     try {
         if (typeof str === 'string') result = JSON.parse(str);
-    } catch (e) {
-        return [''];
-    }
+    } catch (e) {}
     return result;
 };
 

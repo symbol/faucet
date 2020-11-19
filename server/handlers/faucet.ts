@@ -1,29 +1,42 @@
-import { IAppConfig } from "../bootstrap"
-import { MosaicId, MosaicInfo } from "symbol-sdk"
-import Url from 'url-parse'
+import { MosaicId, MosaicInfo } from 'symbol-sdk';
+import Url from 'url-parse';
+import { IApp } from '../app';
 
-export const handler = (conf: IAppConfig) => {
+export const faucetHandler = (appConfig: IApp) => {
+    return async (_req: any, res: any, next: any) => {
+        const { repositoryFactory, config, faucetAccount, isNodeHealth } = appConfig;
 
-   return async (_req: any, res: any, next: any) => {
+        if (!isNodeHealth) {
+            res.error = {
+                statusCode: 500,
+                message: `${appConfig.config.DEFAULT_NODE} node is offline.`,
+            };
 
-    const repositoryFactory = conf.REPOSITORY_FACTORY
-    const nativeMosaicInfo: MosaicInfo = await repositoryFactory.createMosaicRepository().getMosaic(new MosaicId(conf.NATIVE_CURRENCY_ID)).toPromise()
+            return next();
+        }
 
-    const defaultNode = new Url(conf.DEFAULT_NODE_CLIENT)
-    const networkInfo = {
-      address: conf.FAUCET_ACCOUNT.address.pretty(),
-      hostname: defaultNode.hostname,
-      defaultNode: defaultNode.origin,
-      nativeCurrencyMaxOut: conf.NATIVE_CURRENCY_OUT_MAX / Math.pow(10, nativeMosaicInfo.divisibility),
-      nativeCurrencyName: conf.NATIVE_CURRENCY_NAME,
-      nativeCurrencyId: conf.NATIVE_CURRENCY_ID,
-      blackListMosaicIds: conf.BLACKLIST_MOSAICIDS,
-      explorerUrl: conf.EXPLORER_URL
-    }
+        const nativeMosaicInfo: MosaicInfo = await repositoryFactory
+            .createMosaicRepository()
+            .getMosaic(new MosaicId(config.NATIVE_CURRENCY_ID))
+            .toPromise();
 
-      res.data = { networkInfo }
-      return next()
-    }
-}
+        const defaultNode = new Url(config.DEFAULT_NODE_CLIENT);
+        const networkInfo = {
+            address: faucetAccount.address.pretty(),
+            hostname: defaultNode.hostname,
+            defaultNode: defaultNode.origin,
+            nativeCurrencyMaxOut: config.NATIVE_CURRENCY_OUT_MAX / Math.pow(10, nativeMosaicInfo.divisibility),
+            nativeCurrencyName: config.NATIVE_CURRENCY_NAME,
+            nativeCurrencyId: config.NATIVE_CURRENCY_ID,
+            blackListMosaicIds: config.BLACKLIST_MOSAICIDS,
+            explorerUrl: config.EXPLORER_URL,
+        };
 
-export default handler
+        // Todo: Move fetch Faucet account mosaic
+
+        res.data = { networkInfo };
+        return next();
+    };
+};
+
+export default faucetHandler;

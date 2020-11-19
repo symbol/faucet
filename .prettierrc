@@ -3,7 +3,5 @@
   "trailingComma": "all",
   "singleQuote": true,
   "printWidth": 140,
-  "tabWidth": 4,
-  "useTabs": true,
-  "requirePragma": true
+  "tabWidth": 4
 }

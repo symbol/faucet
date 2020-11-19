@@ -10,7 +10,7 @@ const {
     MAX_FEE,
     ENOUGH_BALANCE,
     MAX_UNCONFIRMED,
-    BLACKLIST_MOSAIC_ID,
+    BLACKLIST_MOSAIC_IDS,
     EXPLORER_URL,
 } = process.env;
 
@@ -40,6 +40,6 @@ export const Config: IConfig = {
     MAX_FEE: parseFloat(MAX_FEE || '') || 5000000,
     MAX_UNCONFIRMED: parseInt(MAX_UNCONFIRMED || '') || 99,
     MAX_BALANCE: parseInt(ENOUGH_BALANCE || '') || 100000000000,
-    BLACKLIST_MOSAICIDS: helper.stringToArray(BLACKLIST_MOSAIC_ID),
+    BLACKLIST_MOSAICIDS: helper.stringToArray(BLACKLIST_MOSAIC_IDS),
     EXPLORER_URL: EXPLORER_URL || 'http://localhost:80',
 };

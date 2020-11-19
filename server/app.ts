@@ -59,18 +59,18 @@ export default class App implements IApp {
     }
 
     static isNodeHealth(repositoryFactory: RepositoryFactory): Promise<boolean> {
-        return new Promise(resolve => {
+        return new Promise((resolve) => {
             repositoryFactory
                 .createNodeRepository()
                 .getNodeHealth()
                 .pipe(timeout(3000))
                 .subscribe(
-                    nodeHealth => {
+                    (nodeHealth) => {
                         if (nodeHealth.apiNode !== 'up' || nodeHealth.db !== 'up') resolve(false);
 
                         resolve(true);
                     },
-                    error => {
+                    (error) => {
                         console.error(error);
                         resolve(false);
                     },
