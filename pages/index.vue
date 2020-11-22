@@ -81,7 +81,6 @@ export default {
     },
     created() {
         if (process.browser) {
-            // this.$store.dispatch('fetchFaucetBalance');
             // inject method into $nuxt, allow access from store
             this.$nuxt.$makeToast = this.makeToast;
         }

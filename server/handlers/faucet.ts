@@ -1,4 +1,5 @@
-import { MosaicId, Mosaic, MosaicInfo, Address, NamespaceId, AccountInfo, Account } from 'symbol-sdk';
+import { ServerMiddleware } from '@nuxt/types';
+import { MosaicId, Mosaic, NamespaceId } from 'symbol-sdk';
 import Url from 'url-parse';
 import { IApp } from '../app';
 import helper from '../helper';
@@ -9,7 +10,7 @@ interface Ibalance {
     mosaicAliasName: string;
 }
 
-export const faucetHandler = (appConfig: IApp) => {
+export const faucetHandler = (appConfig: IApp): ServerMiddleware => {
     return async (_req: any, res: any, next: any) => {
         const { repositoryFactory, config, faucetAccount, isNodeHealth } = appConfig;
 
@@ -21,11 +22,13 @@ export const faucetHandler = (appConfig: IApp) => {
         try {
             const defaultNode = new Url(config.DEFAULT_NODE_CLIENT);
 
+            // Gets native mosaic info and faucet account info.
             const [nativeMosaicInfo, accountInfo] = await Promise.all([
                 repositoryFactory.createMosaicRepository().getMosaic(new MosaicId(config.NATIVE_CURRENCY_ID)).toPromise(),
                 repositoryFactory.createAccountRepository().getAccountInfo(faucetAccount.address).toPromise(),
             ]);
 
+            // Build network info object
             const networkInfo = {
                 address: faucetAccount.address.pretty(),
                 hostname: defaultNode.hostname,
@@ -37,6 +40,7 @@ export const faucetHandler = (appConfig: IApp) => {
                 explorerUrl: config.EXPLORER_URL,
             };
 
+            // Gets resolved mosaic from account.
             const resolvedMosaics = await Promise.all(
                 accountInfo.mosaics.map(async (mosaic) => {
                     let mosaicId: MosaicId = mosaic.id;
@@ -50,11 +54,13 @@ export const faucetHandler = (appConfig: IApp) => {
 
             const resolvedMosaicIds = resolvedMosaics.map((mosaic) => mosaic.id);
 
+            // Gets mosaics info and mosaice namespace
             const [mosaicInfos, mosaicNames] = await Promise.all([
                 repositoryFactory.createMosaicRepository().getMosaics(resolvedMosaicIds).toPromise(),
                 repositoryFactory.createNamespaceRepository().getMosaicsNames(resolvedMosaicIds).toPromise(),
             ]);
 
+            // Build balance object.
             const balance: Ibalance[] = resolvedMosaics.map((mosaic) => {
                 let mosaicInfo: any = mosaicInfos.find((info) => info.id.equals(mosaic.id));
 
@@ -65,6 +71,7 @@ export const faucetHandler = (appConfig: IApp) => {
                 };
             });
 
+            // Filter black list mosaics from the account balance.
             const faucetBalance: Ibalance[] = balance.filter((mosaic) => !networkInfo.blackListMosaicIds.includes(mosaic.mosaicId));
 
             res.data = {
