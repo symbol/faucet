@@ -1,4 +1,5 @@
-import * as helper from './helper';
+import helper from './helper';
+
 const {
     DEFAULT_NODE,
     DEFAULT_NODE_CLIENT,

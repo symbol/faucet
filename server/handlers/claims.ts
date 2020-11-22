@@ -12,7 +12,7 @@ import {
 import { of, forkJoin } from 'rxjs';
 import { map, mergeMap, filter, toArray, catchError } from 'rxjs/operators';
 import { IApp } from '../app';
-import { toRelativeAmount, toAbsoluteAmount, getMosaicsRandomAmount, getNativeCurrencyRandomAmount } from '../helper';
+import helper from '../helper';
 
 export const claimsHandler = (appConfig: IApp) => {
     return async (req: any, res: any, next: any) => {
@@ -106,10 +106,13 @@ export const claimsHandler = (appConfig: IApp) => {
 
                             if (!nativeCurrencyMosaicInfo) throw new Error(`Native currency mosaic not found.`);
 
-                            const nativeCurrencyBalance = toRelativeAmount(mosaic.amount.compact(), nativeCurrencyMosaicInfo.divisibility);
+                            const nativeCurrencyBalance = helper.toRelativeAmount(
+                                mosaic.amount.compact(),
+                                nativeCurrencyMosaicInfo.divisibility,
+                            );
 
-                            const maxOut = toRelativeAmount(config.NATIVE_CURRENCY_OUT_MAX, nativeCurrencyMosaicInfo.divisibility);
-                            const minOut = toRelativeAmount(config.NATIVE_CURRENCY_OUT_MIN, nativeCurrencyMosaicInfo.divisibility);
+                            const maxOut = helper.toRelativeAmount(config.NATIVE_CURRENCY_OUT_MAX, nativeCurrencyMosaicInfo.divisibility);
+                            const minOut = helper.toRelativeAmount(config.NATIVE_CURRENCY_OUT_MIN, nativeCurrencyMosaicInfo.divisibility);
 
                             // Check recipientBalanceMosaic
                             if (recipientAccountInfo) {
@@ -136,13 +139,13 @@ export const claimsHandler = (appConfig: IApp) => {
 
                         const randomAmount =
                             mosaic.id.toHex() === config.NATIVE_CURRENCY_ID
-                                ? toAbsoluteAmount(amount, mosaicDivisibility.divisibility) ||
-                                  getNativeCurrencyRandomAmount(
+                                ? helper.toAbsoluteAmount(amount, mosaicDivisibility.divisibility) ||
+                                  helper.getNativeCurrencyRandomAmount(
                                       mosaic.amount.compact(),
                                       config.NATIVE_CURRENCY_OUT_MIN,
                                       config.NATIVE_CURRENCY_OUT_MAX,
                                   )
-                                : getMosaicsRandomAmount(mosaic.amount.compact());
+                                : helper.getMosaicsRandomAmount(mosaic.amount.compact());
 
                         return new Mosaic(mosaic.id, UInt64.fromUint(randomAmount));
                     });
@@ -161,7 +164,7 @@ export const claimsHandler = (appConfig: IApp) => {
                         const name = mosaicName.names.length ? mosaicName.names[0].name : mosaicName.mosaicId.id.toHex();
 
                         return {
-                            amount: toRelativeAmount(mosaic.amount.compact(), mosaicInfo.divisibility),
+                            amount: helper.toRelativeAmount(mosaic.amount.compact(), mosaicInfo.divisibility),
                             name: name,
                         };
                     });
