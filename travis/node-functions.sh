@@ -1,7 +1,8 @@
 #!/usr/bin/env bash
 set -e
 
-. ./travis/travis-functions.sh
+TRAVIS_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
+. $TRAVIS_DIR/travis-functions.sh
 
 node_load_version(){
   VERSION="$(npm run version --silent)"
