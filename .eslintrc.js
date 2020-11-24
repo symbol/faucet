@@ -8,14 +8,14 @@ module.exports = {
     parser: 'babel-eslint'
   },
   extends: [
+    'plugin:vue/recommended',
+    'prettier/vue',
+    'plugin:prettier/recommended',
     'plugin:nuxt/recommended',
     'eslint:recommended',
-    'plugin:@typescript-eslint/recommended',
-    'plugin:vue/recommended',
-    'prettier/@typescript-eslint',
-    'plugin:prettier/recommended',
+    'prettier/@typescript-eslint'
   ],
-  plugins: ['vue', '@typescript-eslint'],
+  plugins: ['vue'],
   rules: {
     'no-console': process.env.NODE_ENV === 'production' ? 'error' : 'off',
     'no-debugger': process.env.NODE_ENV === 'production' ? 'error' : 'off',
