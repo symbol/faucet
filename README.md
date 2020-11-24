@@ -2,8 +2,8 @@
 
 ## :heartbeat: Symbol Faucet
 
-- [Symbol Faucet-01](https://symboldev-faucet-01.herokuapp.com/)
-- [Symbol Faucet-02](https://symboldev-faucet-02.herokuapp.com/)
+- [Symbol Faucet-01](http://faucet-0.10.0.x-01.symboldev.network/)
+- [Symbol Faucet-02](http://faucet-0.10.0.x-02.symboldev.network/)
 
 
 ## :handshake: Using with catapult-service-bootstrap
@@ -12,10 +12,10 @@
 
 ```console
 # build image
-$ docker build -t my-symbol-faucet .
+$ docker build -t symbol-faucet .
 
 # or pull from dockerhub
-$ docker pull 44uk/symbol-faucet:fushicho3
+$ docker pull symbolplatform/symbol-faucet:0.4.0
 ```
 
 ### Add as service
@@ -25,7 +25,7 @@ $ docker pull 44uk/symbol-faucet:fushicho3
 ```yaml:docker-compose.yml
 faucet:
   # image: my-symbol-faucet # in case of built image
-  image: 44uk/symbol-faucet:fushicho3
+  image: symbolplatform/symbol-faucet:0.4.0
   stop_signal: SIGINT
   command: sh -c "/bin/sleep 15 && /bin/sh /app/bin/create-env.sh && /usr/local/bin/npm start"
   environment:
@@ -46,7 +46,7 @@ faucet:
 
 ```yaml:docker-compose.yml
 faucet:
-  image: 44uk/symbol-faucet:fushicho3
+  image: symbolplatform/symbol-faucet:0.4.0
   stop_signal: SIGINT
   environment:
     - DEFAULT_NODE=http://rest-gateway:3000
@@ -61,7 +61,7 @@ faucet:
 
 ```yaml:docker-compose.yml
 faucet:
-  image: 44uk/symbol-faucet:fushicho3
+  image: symbolplatform/symbol-faucet:0.4.0
   stop_signal: SIGINT
   environment:
     - DEFAULT_NODE=http://rest-gateway:3000
@@ -82,7 +82,7 @@ If you want to use ReCaptcha, set both variables `RECAPTCHA_CLIENT_SECRET` and `
 
 ## :whale: Dockerimage
 
-- [44uk\/symbol-faucet | Docker Hub](https://hub.docker.com/r/44uk/symbol-faucet)
+- [symbolplatform\/symbol-faucet | Docker Hub](https://hub.docker.com/r/symbolplatform/symbol-faucet)
 
 ## :shell: Claimimg without Browser
 
@@ -105,7 +105,7 @@ curl http://localhost:4000/claims -d 'recipient=__YOUR_ADDRESS__'
 # MAX_FEE
 # ENOUGH_BALANCE
 # MAX_UNCONFIRMED
-# BLACKLIST_MOSAIC_ID
+# BLACKLIST_MOSAIC_IDS
 # EXPLORER_URL
 # see .env.sample
 
