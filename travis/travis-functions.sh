@@ -27,9 +27,8 @@ increment_version ()
 
 log_env_variables(){
   echo "DEV_BRANCH = $DEV_BRANCH"
-  echo "RELEASE_BRANCH = $RELEASE_BRANCH"
   echo "POST_RELEASE_BRANCH = $POST_RELEASE_BRANCH"
-  echo "RELEASE_MESSAGE = $RELEASE_MESSAGE"
+  echo "RELEASE_BRANCH = $RELEASE_BRANCH"
   echo "REMOTE_NAME = $REMOTE_NAME"
   echo "DOCKER_IMAGE_NAME = $DOCKER_IMAGE_NAME"
   echo "TRAVIS_EVENT_TYPE = $TRAVIS_EVENT_TYPE"
@@ -49,6 +48,21 @@ validate_env_variables(){
   validate_env_variable "POST_RELEASE_BRANCH" "$FUNCNAME"
   validate_env_variable "DEV_BRANCH" "$FUNCNAME"
   validate_env_variable "TRAVIS_COMMIT_MESSAGE" "$FUNCNAME"
+}
+
+resolve_operation ()
+{
+  OPERATION="build"
+  if [[ ("$TRAVIS_COMMIT_MESSAGE" == "release" ||  "$DEV_BRANCH" != "$RELEASE_BRANCH" ) && "$TRAVIS_EVENT_TYPE" != "pull_request"  && "$TRAVIS_BRANCH" == "$RELEASE_BRANCH" ]];
+   then
+     OPERATION="release"
+   else
+       if [ "$TRAVIS_EVENT_TYPE" != "pull_request" ] && [ "$TRAVIS_BRANCH" == "$DEV_BRANCH" ];
+     then
+       OPERATION="publish"
+    fi
+  fi
+  echo -e "$OPERATION"
 }
 
 validate_env_variable ()
@@ -86,11 +100,6 @@ checkout_branch ()
   git remote add $REMOTE_NAME "https://${GITHUB_TOKEN}@github.com/${TRAVIS_REPO_SLUG}.git" >/dev/null 2>&1
   echo "Checking out $CHECKOUT_BRANCH as travis leaves the head detached."
   git checkout $CHECKOUT_BRANCH
-}
-
-load_version_from_npm(){
-  VERSION="$(npm run version --silent)"
-  echo -e "$VERSION"
 }
 
 load_version_from_file(){
