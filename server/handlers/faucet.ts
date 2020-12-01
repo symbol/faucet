@@ -1,5 +1,5 @@
 import { ServerMiddleware } from '@nuxt/types';
-import { MosaicId, Mosaic, NamespaceId } from 'symbol-sdk';
+import { MosaicId, Mosaic, NamespaceId, UnresolvedMosaicId } from 'symbol-sdk';
 import Url from 'url-parse';
 import { IApp } from '../app';
 import helper from '../helper';
@@ -12,13 +12,13 @@ interface Ibalance {
 
 export const faucetHandler = (appConfig: IApp): ServerMiddleware => {
     return async (_req: any, res: any, next: any) => {
-        const { repositoryFactory, config, faucetAccount, isNodeHealth } = appConfig;
-
+        const { repositoryFactory, config } = appConfig;
+        const isNodeHealth = await appConfig.isNodeHealth;
         if (!isNodeHealth) {
             res.error = Error(`API node is offline.`);
             return next();
         }
-
+        const faucetAccount = await appConfig.faucetAccount;
         try {
             const defaultNode = new Url(config.DEFAULT_NODE_CLIENT);
 
@@ -43,9 +43,10 @@ export const faucetHandler = (appConfig: IApp): ServerMiddleware => {
             // Gets resolved mosaic from account.
             const resolvedMosaics = await Promise.all(
                 accountInfo.mosaics.map(async (mosaic) => {
-                    let mosaicId: MosaicId = mosaic.id;
-                    if (mosaic instanceof NamespaceId) {
-                        mosaicId = (await repositoryFactory.createNamespaceRepository().getLinkedMosaicId(mosaic).toPromise()) || mosaic.id;
+                    let mosaicId: UnresolvedMosaicId = mosaic.id;
+                    if (mosaicId instanceof NamespaceId) {
+                        mosaicId =
+                            (await repositoryFactory.createNamespaceRepository().getLinkedMosaicId(mosaicId).toPromise()) || mosaic.id;
                     }
 
                     return new Mosaic(mosaicId, mosaic.amount);

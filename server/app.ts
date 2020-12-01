@@ -3,55 +3,42 @@ import { timeout } from 'rxjs/operators';
 import { IConfig, Config } from './config';
 
 export interface IApp {
-    networkType: NetworkType;
-    isNodeHealth: boolean;
-    networkGenerationHash: string;
-    faucetAccount: Account;
+    networkType: Promise<NetworkType>;
+    isNodeHealth: Promise<boolean>;
+    networkGenerationHash: Promise<string>;
+    faucetAccount: Promise<Account>;
     config: IConfig;
     repositoryFactory: RepositoryFactory;
 }
 
 export default class App implements IApp {
-    constructor(
-        private readonly _repositoryFactory: RepositoryFactory,
-        private readonly _config: IConfig,
-        private readonly _networkType: NetworkType,
-        private readonly _networkGenerationHash: string,
-        private readonly _isNodeHealth: boolean,
-    ) {}
+    constructor(private readonly _repositoryFactory: RepositoryFactory, private readonly _config: IConfig) {}
     public static async init(): Promise<App> {
         const repositoryFactory = new RepositoryFactoryHttp(Config.DEFAULT_NODE);
-        const isNodeHealth: boolean = await App.isNodeHealth(repositoryFactory);
-
-        if (!isNodeHealth) {
-            return new App(repositoryFactory, Config, NetworkType.TEST_NET, '', isNodeHealth);
-        }
-
-        const [networkType, networkGenerationHash] = await Promise.all([
-            repositoryFactory.getNetworkType().toPromise(),
-            repositoryFactory.getGenerationHash().toPromise(),
-        ]);
-        return new App(repositoryFactory, Config, networkType, networkGenerationHash, isNodeHealth);
+        return new App(repositoryFactory, Config);
     }
 
-    get networkType(): NetworkType {
-        return this._networkType;
+    get networkType(): Promise<NetworkType> {
+        // network type is lazily cached in repo factory.
+        return this._repositoryFactory.getNetworkType().toPromise();
     }
 
-    get isNodeHealth(): boolean {
-        return this._isNodeHealth;
+    get isNodeHealth(): Promise<boolean> {
+        // perform a health check when is requested.
+        return App.isNodeHealth(this._repositoryFactory);
     }
 
-    get networkGenerationHash(): string {
-        return this._networkGenerationHash;
+    get networkGenerationHash(): Promise<string> {
+        // generation hash is lazily cached in repo factory.
+        return this._repositoryFactory.getGenerationHash().toPromise();
     }
 
     get config(): IConfig {
         return this._config;
     }
 
-    get faucetAccount(): Account {
-        return Account.createFromPrivateKey(this._config.FAUCET_PRIVATE_KEY as string, this._networkType as NetworkType);
+    get faucetAccount(): Promise<Account> {
+        return this.networkType.then((networkType) => Account.createFromPrivateKey(this._config.FAUCET_PRIVATE_KEY, networkType));
     }
 
     get repositoryFactory(): RepositoryFactory {

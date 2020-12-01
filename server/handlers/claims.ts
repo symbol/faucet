@@ -18,11 +18,13 @@ export const claimsHandler = (appConfig: IApp) => {
     return async (req: any, res: any, next: any) => {
         const { recipient, amount, selectedMosaics } = req.body;
 
-        const { repositoryFactory, config, faucetAccount } = appConfig;
-
-        console.debug({ recipient, amount, selectedMosaics });
-
         if (typeof recipient !== 'string' || recipient.length !== 39) throw new Error(`recipient address invalid.`);
+
+        const { repositoryFactory, config } = appConfig;
+        const faucetAccount = await appConfig.faucetAccount;
+        const networkType = await appConfig.networkType;
+        const generationHash = await appConfig.networkGenerationHash;
+        console.debug({ recipient, amount, selectedMosaics });
 
         if (typeof amount !== 'number') throw new Error(`amount format invalid.`);
 
@@ -30,10 +32,7 @@ export const claimsHandler = (appConfig: IApp) => {
 
         const mosaicIds = selectedMosaics.map((mosaic) => new MosaicId(mosaic));
         const recipientAddress: Address = Address.createFromRawAddress(recipient);
-        const networkType = await repositoryFactory.getNetworkType().toPromise();
-        const generationHash = await repositoryFactory.getGenerationHash().toPromise();
-        const feeMultiplier = await (await repositoryFactory.createNetworkRepository().getTransactionFees().toPromise())
-            .highestFeeMultiplier;
+        const feeMultiplier = (await repositoryFactory.createNetworkRepository().getTransactionFees().toPromise()).highestFeeMultiplier;
 
         forkJoin(
             repositoryFactory.createNamespaceRepository().getMosaicsNames(mosaicIds),
