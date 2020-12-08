@@ -1,4 +1,4 @@
-import { Account, RepositoryFactoryHttp, RepositoryFactory, NetworkType } from 'symbol-sdk';
+import { Account, RepositoryFactoryHttp, RepositoryFactory, NetworkType, CurrencyService } from 'symbol-sdk';
 import { timeout } from 'rxjs/operators';
 import { IConfig, Config } from './config';
 
@@ -6,9 +6,11 @@ export interface IApp {
     networkType: Promise<NetworkType>;
     isNodeHealth: Promise<boolean>;
     networkGenerationHash: Promise<string>;
+    epochAdjustment: Promise<number>;
     faucetAccount: Promise<Account>;
     config: IConfig;
     repositoryFactory: RepositoryFactory;
+    currencyService: CurrencyService;
 }
 
 export default class App implements IApp {
@@ -33,6 +35,10 @@ export default class App implements IApp {
         return this._repositoryFactory.getGenerationHash().toPromise();
     }
 
+    get epochAdjustment(): Promise<number> {
+        return this._repositoryFactory.getEpochAdjustment().toPromise();
+    }
+
     get config(): IConfig {
         return this._config;
     }
@@ -43,6 +49,10 @@ export default class App implements IApp {
 
     get repositoryFactory(): RepositoryFactory {
         return this._repositoryFactory;
+    }
+
+    get currencyService(): CurrencyService {
+        return new CurrencyService(this._repositoryFactory);
     }
 
     static isNodeHealth(repositoryFactory: RepositoryFactory): Promise<boolean> {
