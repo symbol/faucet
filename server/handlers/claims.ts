@@ -24,6 +24,7 @@ export const claimsHandler = (appConfig: IApp) => {
         const faucetAccount = await appConfig.faucetAccount;
         const networkType = await appConfig.networkType;
         const generationHash = await appConfig.networkGenerationHash;
+        const epochAdjustment = await appConfig.epochAdjustment;
         console.debug({ recipient, amount, selectedMosaics });
 
         if (typeof amount !== 'number') throw new Error(`amount format invalid.`);
@@ -150,7 +151,7 @@ export const claimsHandler = (appConfig: IApp) => {
                     });
 
                     const transaction = TransferTransaction.create(
-                        Deadline.create(),
+                        Deadline.create(epochAdjustment),
                         recipientAddress,
                         requestedMosicList,
                         EmptyMessage,

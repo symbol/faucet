@@ -1,5 +1,5 @@
 import { ServerMiddleware } from '@nuxt/types';
-import { MosaicId, Mosaic, NamespaceId, UnresolvedMosaicId } from 'symbol-sdk';
+import { MosaicId, NamespaceId, UnresolvedMosaicId } from 'symbol-sdk';
 import Url from 'url-parse';
 import { IApp } from '../app';
 import helper from '../helper';
@@ -23,8 +23,8 @@ export const faucetHandler = (appConfig: IApp): ServerMiddleware => {
             const defaultNode = new Url(config.DEFAULT_NODE_CLIENT);
 
             // Gets native mosaic info and faucet account info.
-            const [nativeMosaicInfo, accountInfo] = await Promise.all([
-                repositoryFactory.createMosaicRepository().getMosaic(new MosaicId(config.NATIVE_CURRENCY_ID)).toPromise(),
+            const [getCurrencies, accountInfo] = await Promise.all([
+                repositoryFactory.getCurrencies().toPromise(),
                 repositoryFactory.createAccountRepository().getAccountInfo(faucetAccount.address).toPromise(),
             ]);
 
@@ -33,7 +33,7 @@ export const faucetHandler = (appConfig: IApp): ServerMiddleware => {
                 address: faucetAccount.address.pretty(),
                 hostname: defaultNode.hostname,
                 defaultNode: defaultNode.origin,
-                nativeCurrencyMaxOut: config.NATIVE_CURRENCY_OUT_MAX / Math.pow(10, nativeMosaicInfo.divisibility),
+                nativeCurrencyMaxOut: config.NATIVE_CURRENCY_OUT_MAX / Math.pow(10, getCurrencies.currency.divisibility),
                 nativeCurrencyName: config.NATIVE_CURRENCY_NAME,
                 nativeCurrencyId: config.NATIVE_CURRENCY_ID,
                 blackListMosaicIds: config.BLACKLIST_MOSAICIDS,
@@ -41,28 +41,30 @@ export const faucetHandler = (appConfig: IApp): ServerMiddleware => {
             };
 
             // Gets resolved mosaic from account.
-            const resolvedMosaics = await Promise.all(
+            const mosaics = await Promise.all(
                 accountInfo.mosaics.map(async (mosaic) => {
-                    let mosaicId: UnresolvedMosaicId = mosaic.id;
+                    let mosaicId: UnresolvedMosaicId | MosaicId = mosaic.id;
                     if (mosaicId instanceof NamespaceId) {
                         mosaicId =
                             (await repositoryFactory.createNamespaceRepository().getLinkedMosaicId(mosaicId).toPromise()) || mosaic.id;
                     }
 
-                    return new Mosaic(mosaicId, mosaic.amount);
+                    return {
+                        id: new MosaicId(mosaicId.toHex()),
+                        amount: mosaic.amount,
+                    };
                 }),
             );
 
-            const resolvedMosaicIds = resolvedMosaics.map((mosaic) => mosaic.id);
+            const mosaicIds = mosaics.map((mosaic) => mosaic.id);
 
             // Gets mosaics info and mosaice namespace
             const [mosaicInfos, mosaicNames] = await Promise.all([
-                repositoryFactory.createMosaicRepository().getMosaics(resolvedMosaicIds).toPromise(),
-                repositoryFactory.createNamespaceRepository().getMosaicsNames(resolvedMosaicIds).toPromise(),
+                repositoryFactory.createMosaicRepository().getMosaics(mosaicIds).toPromise(),
+                repositoryFactory.createNamespaceRepository().getMosaicsNames(mosaicIds).toPromise(),
             ]);
 
-            // Build balance object.
-            const balance: Ibalance[] = resolvedMosaics.map((mosaic) => {
+            const balance: Ibalance[] = mosaics.map((mosaic) => {
                 let mosaicInfo: any = mosaicInfos.find((info) => info.id.equals(mosaic.id));
 
                 return {
