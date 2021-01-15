@@ -82,6 +82,7 @@ export const faucetHandler = (appConfig: IApp): ServerMiddleware => {
                 faucetBalance,
             };
         } catch (error) {
+            console.log(error);
             res.error = Error(`Init faucet server error.`);
         }
 

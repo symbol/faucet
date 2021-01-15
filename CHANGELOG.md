@@ -3,6 +3,18 @@ All notable changes to this project will be documented in this file.
 
 The changelog format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [0.5.0] - 16-Jan-2021
+
+### Milestone: [catapult-server@v0.10.0.5](https://github.com/nemtech/catapult-server/releases/tag/v0.10.0.5)
+
+Package  | Version  | Link
+---|---|---
+REST Core| v2.3.0 | [catapult-rest](https://github.com/nemtech/catapult-rest/releases/tag/v2.3.0)
+SDK Core| v0.23.0 | [symbol-sdk](https://www.npmjs.com/package/symbol-sdk)
+
+### Added
+- Added compatibility for 0.10.0.5 server.
+- Added some message in homepage.
 
 ## [0.4.1] - 9-Dec-2020
 
