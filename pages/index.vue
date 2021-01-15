@@ -26,6 +26,10 @@
                         <b-row>
                             <div class="info">
                                 <span>Please send back claimed mosaics when you no longer need them.</span>
+                                <span
+                                    >If anyone wants to claim 3m XYM to allow setting up a voting node/supernode, please request from the
+                                    <a target="_blank" href="https://t.me/nemhelpdesk">@nemhelpdesk</a> telegram channel
+                                </span>
                                 <span>
                                     Faucet Address:
 
