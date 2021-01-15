@@ -1,6 +1,6 @@
 {
   "name": "symbol-faucet",
-  "version": "0.4.2",
+  "version": "0.5.0",
   "description": "Symbol faucet web application",
   "author": "Yoshiyuki Ieyama",
   "homepage": "https://github.com/44uk/symbol-faucet",
@@ -54,7 +54,7 @@
     "querystring": "^0.2.0",
     "stylus": "^0.54.7",
     "stylus-loader": "^3.0.2",
-    "symbol-sdk": "^0.22.0",
+    "symbol-sdk": "^0.23.0",
     "tls": "0.0.1",
     "tsconfig-paths": "^3.9.0",
     "utf-8-validate": "^5.0.2",
