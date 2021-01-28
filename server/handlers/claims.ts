@@ -4,6 +4,7 @@ import {
     UInt64,
     EmptyMessage,
     TransferTransaction,
+    Transaction,
     Deadline,
     MosaicId,
     TransactionType,
@@ -150,13 +151,26 @@ export const claimsHandler = (appConfig: IApp) => {
                         return new Mosaic(mosaic.id, UInt64.fromUint(randomAmount));
                     });
 
-                    const transaction = TransferTransaction.create(
-                        Deadline.create(epochAdjustment),
-                        recipientAddress,
-                        requestedMosicList,
-                        EmptyMessage,
-                        networkType,
-                    ).setMaxFee(feeMultiplier > 0 ? feeMultiplier : 1000);
+                    let transaction: Transaction;
+
+                    if (config.MAX_FEE > 0) {
+                        transaction = TransferTransaction.create(
+                            Deadline.create(epochAdjustment),
+                            recipientAddress,
+                            requestedMosicList,
+                            EmptyMessage,
+                            networkType,
+                            UInt64.fromUint(config.MAX_FEE),
+                        );
+                    } else {
+                        transaction = TransferTransaction.create(
+                            Deadline.create(epochAdjustment),
+                            recipientAddress,
+                            requestedMosicList,
+                            EmptyMessage,
+                            networkType,
+                        ).setMaxFee(feeMultiplier);
+                    }
 
                     const transferMosaics = requestedMosicList.map((mosaic) => {
                         const mosaicName: any = requestMosaicName.find((mosaicName) => mosaicName.mosaicId.equals(mosaic.id));
