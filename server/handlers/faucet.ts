@@ -1,5 +1,5 @@
 import { ServerMiddleware } from '@nuxt/types';
-import { MosaicId, NamespaceId, UnresolvedMosaicId } from 'symbol-sdk';
+import { MosaicId, NamespaceId, UnresolvedMosaicId, MosaicInfo } from 'symbol-sdk';
 import Url from 'url-parse';
 import { IApp } from '../app';
 import helper from '../helper';
@@ -59,20 +59,38 @@ export const faucetHandler = (appConfig: IApp): ServerMiddleware => {
             const mosaicIds = mosaics.map((mosaic) => mosaic.id);
 
             // Gets mosaics info and mosaice namespace
-            const [mosaicInfos, mosaicNames] = await Promise.all([
+            const [mosaicInfos, mosaicNames, chainInfo] = await Promise.all([
                 repositoryFactory.createMosaicRepository().getMosaics(mosaicIds).toPromise(),
                 repositoryFactory.createNamespaceRepository().getMosaicsNames(mosaicIds).toPromise(),
+                repositoryFactory.createChainRepository().getChainInfo().toPromise(),
             ]);
 
-            const balance: Ibalance[] = mosaics.map((mosaic) => {
-                let mosaicInfo: any = mosaicInfos.find((info) => info.id.equals(mosaic.id));
+            const balance: Ibalance[] = [];
 
-                return {
-                    mosaicId: mosaic.id.toHex(),
-                    amount: helper.toRelativeAmount(mosaic.amount.compact(), mosaicInfo.divisibility),
-                    mosaicAliasName: helper.extractMosaicNamespace(mosaicInfo, mosaicNames),
-                };
-            });
+            for (const mosaic of mosaics) {
+                let mosaicInfo: MosaicInfo | undefined = mosaicInfos.find((info) => info.id.equals(mosaic.id));
+
+                if (!mosaicInfo) return;
+
+                // Filter native mosaic
+                if (Number(mosaicInfo.duration.toString()) === 0)
+                    balance.push({
+                        mosaicId: mosaic.id.toHex(),
+                        amount: helper.toRelativeAmount(mosaic.amount.compact(), mosaicInfo.divisibility),
+                        mosaicAliasName: helper.extractMosaicNamespace(mosaicInfo, mosaicNames),
+                    });
+
+                // Filter non expired mosaics
+                if (
+                    Number(chainInfo.height.toString()) <
+                    Number(mosaicInfo.startHeight.toString()) + Number(mosaicInfo.duration.toString())
+                )
+                    balance.push({
+                        mosaicId: mosaic.id.toHex(),
+                        amount: helper.toRelativeAmount(mosaic.amount.compact(), mosaicInfo.divisibility),
+                        mosaicAliasName: helper.extractMosaicNamespace(mosaicInfo, mosaicNames),
+                    });
+            }
 
             // Filter black list mosaics from the account balance.
             const faucetBalance: Ibalance[] = balance.filter((mosaic) => !networkInfo.blackListMosaicIds.includes(mosaic.mosaicId));
