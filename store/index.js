@@ -1,6 +1,5 @@
 import axios from 'axios';
 import { Listener, Address, RepositoryFactoryHttp } from 'symbol-sdk';
-import Vue from 'vue';
 
 export const state = () => ({
     filterMosaics: [],
