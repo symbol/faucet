@@ -47,15 +47,15 @@ export const actions = {
                 context.commit('setTransactionHash', res.data.txHash);
 
                 res.data.mosaics.map((mosaic) => {
-                    Vue.prototype.$nuxt.$makeToast('info', `Mosaic: ${mosaic.name} - Amount: ${mosaic.amount}`);
+                    window.$nuxt.$makeToast('info', `Mosaic: ${mosaic.name} - Amount: ${mosaic.amount}`);
                 });
-                Vue.prototype.$nuxt.$makeToast('info', `Pending Transaction Hash: ${res.data.txHash}`, {
+                window.$nuxt.$makeToast('info', `Pending Transaction Hash: ${res.data.txHash}`, {
                     noAutoHide: true,
                 });
             })
             .catch((error) => {
                 console.debug(error);
-                Vue.prototype.$nuxt.$makeToast('warning', `${error.response.data.message}`); // Error!
+                window.$nuxt.$makeToast('warning', `${error.response.data.message}`); // Error!
             });
     },
 
@@ -70,14 +70,14 @@ export const actions = {
 
         listener.unconfirmedAdded(recipient).subscribe((response) => {
             if (context.getters.getTransactionHash === response.transactionInfo.hash) {
-                Vue.prototype.$nuxt.$makeToast('success', `Your request is being processed.`);
+                window.$nuxt.$makeToast('success', `Your request is being processed.`);
             }
         });
 
         listener.confirmed(recipient).subscribe((response) => {
             if (context.getters.getTransactionHash === response.transactionInfo.hash) {
-                Vue.prototype.$nuxt.$makeToast('success', `Your request has been processed.`);
-                Vue.prototype.$nuxt.$makeToast('success', `View transaction in explorer.`, {
+                window.$nuxt.$makeToast('success', `Your request has been processed.`);
+                window.$nuxt.$makeToast('success', `View transaction in explorer.`, {
                     noAutoHide: true,
                     href: `${networkInfo.explorerUrl}transactions/${response.transactionInfo.hash}`,
                 });
