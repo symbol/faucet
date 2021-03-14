@@ -1,6 +1,6 @@
 {
   "name": "symbol-faucet",
-  "version": "0.5.1",
+  "version": "1.0.0",
   "description": "Symbol faucet web application",
   "author": "Yoshiyuki Ieyama",
   "homepage": "https://github.com/44uk/symbol-faucet",
@@ -48,6 +48,7 @@
     "net": "^1.0.2",
     "nuxt": "^2.15.2",
     "nuxt-buefy": "^0.3.31",
+    "nuxt-ts": "^2.8.1",
     "pug": "^2.0.4",
     "pug-loader": "^2.4.0",
     "pug-plain-loader": "^1.1.0",

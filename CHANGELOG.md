@@ -3,6 +3,17 @@ All notable changes to this project will be documented in this file.
 
 The changelog format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [1.0.0] - 14-Mar-2021
+
+### Milestone: [catapult-server@v1.0.0.0](https://github.com/nemtech/catapult-server/releases/tag/v1.0.0.0)
+
+Package  | Version  | Link
+---|---|---
+REST Core| v2.3.4 | [catapult-rest](https://github.com/nemtech/catapult-rest/releases/tag/v2.3.4)
+SDK Core| v1.0.0 | [symbol-sdk](https://www.npmjs.com/package/symbol-sdk)
+
+- Mainnet launch.
+
 ## [0.5.0] - 16-Jan-2021
 
 ### Milestone: [catapult-server@v0.10.0.5](https://github.com/nemtech/catapult-server/releases/tag/v0.10.0.5)
@@ -85,3 +96,8 @@ symbol-sdk| v0.17.3 | https://www.npmjs.com/package/symbol-sdk
 - Added rebrand to Symbol.
 - Added symbol icon, images, and color.
 - Changed the footer to match the explorer.
+
+
+[catapult-server@v1.0.0.0]: https://github.com/nemtech/catapult-server/releases/tag/v1.0.0.0
+
+[catapult-rest@v2.3.4]: https://github.com/nemtech/catapult-rest/releases/tag/v2.3.4
