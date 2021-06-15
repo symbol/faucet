@@ -1,15 +1,15 @@
 <template>
     <b-container fluid="lg" style="max-width: 1200px">
         <b-row>
-            <b-col cols="12" lg="6">
+            <b-col cols="12" lg="12">
                 <div class="p-3">
-                    <b-col>
+                    <b-col class="upper-section">
                         <b-row>
-                            <b-img src="~/assets/images/symbol_logo_white.svg" fluid alt="Symbol" width="240" />
+                            <b-img src="~/assets/images/grit-logo.png" fluid alt="Symbol" width="240" />
                         </b-row>
                         <b-row>
                             <div>
-                                <span class="subTitle">Claim mosaics for development and testing purposes on the symbol network</span>
+                                <span class="subTitle">Claim mosaics for development and testing purposes on the Grit Network</span>
                             </div>
                         </b-row>
 
@@ -45,7 +45,7 @@
                 </div>
             </b-col>
 
-            <b-col lg="6">
+            <b-col lg="12">
                 <FaucetForm
                     class="d-lg-block d-none"
                     :mosaic-id="networkInfo.nativeCurrencyId"
@@ -115,6 +115,11 @@ export default {
 .subTitle {
     font-size: 18px;
     font-weight: bolder;
+    text-align: center;
+}
+
+.upper-section {
+    text-align: center;
 }
 
 .mx-form {

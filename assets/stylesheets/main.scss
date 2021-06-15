@@ -43,11 +43,9 @@ $container-max-widths: (
 
 body {
     font-family: 'Noto Sans', sans-serif;
-    background-image: url("../images/Tanker.jpg");
-    background-size: cover;
-    background-repeat: no-repeat;
+    // background-color: #161616;
     color: #ffffff;
-    background-attachment:fixed;
+    background: #161616 url('../images/background/arrows-left.png') 0% 0% no-repeat padding-box;
 }
 
 // a {
