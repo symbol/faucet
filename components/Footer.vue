@@ -3,22 +3,18 @@
         <footer class="footer">
             <b-container fluid>
                 <b-row class="footer-row mx-0 mx-md-4 mx-lg-4 px-lg-4">
-                    <b-col sm="12" lg="4" class="footer-description">
+                    <b-col sm="12" lg="12" class="footer-description">
                         <div class="ft-logo">
                             <a href="https://www.nem.io/" target="_blank">
-                                <img src="~/assets/images/logo_footer.png" />
+                                <img src="~/assets/images/grit-logo.png" />
                             </a>
-                        </div>
-                        <div class="ft-desc mt-3">
+                            <p>Blockchain for the emerging digital economy</p>
                             <p>
-                                Symbol is a platform built on revolutionary blockchain technology, reimagining from scratch the ideal
-                                blockchain. Symbol does not only allow for standard peer-to-peer value transfer transactions, but instead
-                                does much more – store data, make transactions, prove identity, timestamp documents, and create arbitrary
-                                digital assets.
+                                Node: <a target="_blank" :href="defaultNode">{{ networkInfo.hostname }}</a>
                             </p>
                         </div>
                     </b-col>
-                    <b-col sm="12" lg="4">
+                    <!-- <b-col sm="12" lg="12">
                         <ul class="social-icon">
                             <li v-for="link in links" :key="link.text" class="social-icon-item">
                                 <a target="_blank" :href="link.href">
@@ -33,13 +29,7 @@
                                 </a>
                             </li>
                         </ul>
-                    </b-col>
-
-                    <b-col sm="12" lg="4">
-                        <span class="endpoint-info">
-                            Node: <a target="_blank" :href="defaultNode">{{ networkInfo.hostname }}</a>
-                        </span>
-                    </b-col>
+                    </b-col> -->
                 </b-row>
             </b-container>
         </footer>
@@ -132,6 +122,7 @@ export default {
         }
 
         .ft-logo {
+            text-align: center;
             a {
                 height: 30px;
                 display: inline-block;
@@ -146,6 +137,7 @@ export default {
 
         .footer-description {
             margin-top: -40px;
+            text-align: center;
         }
     }
 }
@@ -181,6 +173,7 @@ export default {
 .endpoint-info {
     font-size: small;
     padding-top: 10%;
+
     a {
         color: #fff;
     }

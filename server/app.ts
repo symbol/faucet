@@ -44,7 +44,7 @@ export default class App implements IApp {
     }
 
     get faucetAccount(): Promise<Account> {
-        return this.networkType.then((networkType) => Account.createFromPrivateKey(this._config.FAUCET_PRIVATE_KEY, networkType));
+      return this.networkType.then((networkType) => Account.createFromPrivateKey(this._config.FAUCET_PRIVATE_KEY, networkType));
     }
 
     get repositoryFactory(): RepositoryFactory {

@@ -5,7 +5,7 @@
         </div>
         <b-col>
             <div class="formTitle">
-                <span>Faucet</span>
+                <span>GRIT FAUCET</span>
             </div>
 
             <div v-if="loading">
@@ -45,7 +45,7 @@
                         </div>
 
                         <div v-if="hasNativeMosaicAmount" class="inputGroup">
-                            <span>XYM Amount</span>
+                            <span>GRIT Amount</span>
                             <b-form-input id="input-small" v-model="form.amount" type="number" size="sm" :placeholder="amountPlaceholder" />
                         </div>
                     </div>
@@ -158,7 +158,8 @@ export default {
 
 .formTitle {
     padding: 5px 0;
-
+    text-align: center;
+    color: var(--white-color);
     span {
         font-size: 32px;
     }
@@ -167,10 +168,8 @@ export default {
 .faucetForm {
     height: 120%;
     border-radius: 8px;
-    opacity: 0.7;
-    background: linear-gradient(120deg, #5200c6 0%, #44004e 100%);
-    background-size: 100% auto;
-    box-shadow: 0 1px 5px 1px #000a;
+    // background-size: 100% auto;
+    // box-shadow: 0 1px 5px 1px #000a;
     margin-top: 15px;
 }
 
@@ -200,17 +199,13 @@ export default {
 }
 
 .formSubmit {
-    float: right;
-    padding: 20px 0;
-    margin: 5px;
+    margin-top: 20px;
     display: grid;
     width: 100%;
-    padding-left: 30%;
 
     button {
-        color: var(--primary);
-        background-color: white;
-        opacity: 1;
+        color: var(--white-color);
+        background: linear-gradient(90deg, #0032bd 0%, #0d7ee1 81%, #0f87e5 100%);
     }
 }
 </style>

@@ -4,16 +4,16 @@
             <b-col cols="12" lg="12">
                 <div class="p-3">
                     <b-col class="upper-section">
-                        <b-row>
-                            <b-img src="~/assets/images/grit-logo.png" fluid alt="Symbol" width="240" />
-                        </b-row>
-                        <b-row>
-                            <div>
-                                <span class="subTitle">Claim mosaics for development and testing purposes on the Grit Network</span>
+                        <div>
+                            <b-img class="logo-image" src="~/assets/images/grit-logo.png" fluid alt="Grit Logo" width="240" />
+                        </div>
+                        <div>
+                            <div class="subtitle-container">
+                                <p class="subTitle">Claim mosaics for development and testing purposes on the Grit Network</p>
                             </div>
-                        </b-row>
+                        </div>
 
-                        <b-row>
+                        <divw>
                             <FaucetForm
                                 class="d-lg-none d-xl-none d-md-block mx-form"
                                 :mosaic-id="networkInfo.nativeCurrencyId"
@@ -21,15 +21,15 @@
                                 :recipient-placeholder="recipientPlaceholder"
                                 :amount-placeholder="amountPlaceholder"
                             />
-                        </b-row>
+                        </divw>
 
-                        <b-row>
+                        <div>
                             <div class="info">
                                 <span>Please send back claimed mosaics when you no longer need them.</span>
-                                <span
-                                    >If anyone wants to claim 3m XYM to allow setting up a voting node/supernode, please request from the
+                                <!-- <span
+                                    >If anyone wants to claim 3m GRIT to allow setting up a voting node/supernode, please request from the
                                     <a target="_blank" href="https://t.me/nemhelpdesk">@nemhelpdesk</a> telegram channel
-                                </span>
+                                </span> -->
                                 <span>
                                     Faucet Address:
 
@@ -40,12 +40,12 @@
                                     </span>
                                 </span>
                             </div>
-                        </b-row>
+                        </div>
                     </b-col>
                 </div>
             </b-col>
 
-            <b-col lg="12">
+            <b-col lg="8" class="faucet-container">
                 <FaucetForm
                     class="d-lg-block d-none"
                     :mosaic-id="networkInfo.nativeCurrencyId"
@@ -77,7 +77,7 @@ export default {
             return `Address start with a capital ${this.networkInfo.address[0]}`;
         },
         amountPlaceholder() {
-            return `(Faucet will pay up to ${this.networkInfo.nativeCurrencyMaxOut} XYM, or enter custom amount)`;
+            return `(Faucet will pay up to ${this.networkInfo.nativeCurrencyMaxOut} GRIT, or enter custom amount)`;
         },
         faucetAccountUrl() {
             return `${this.networkInfo.explorerUrl}accounts/${Address.createFromRawAddress(this.networkInfo.address).plain()}`;
@@ -138,5 +138,17 @@ export default {
             color: var(--secondary);
         }
     }
+}
+
+.faucet-container {
+    margin: 0 auto;
+}
+
+.subtitle-container {
+    text-align: center;
+}
+
+.logo-image {
+    margin: 0 auto;
 }
 </style>
