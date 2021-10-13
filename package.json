@@ -55,7 +55,7 @@
     "querystring": "^0.2.1",
     "stylus": "^0.54.8",
     "stylus-loader": "^3.0.2",
-    "symbol-sdk": "^0.23.3",
+    "symbol-sdk": "^1.0.2-alpha-202110111207",
     "tls": "0.0.1",
     "tsconfig-paths": "^3.9.0",
     "utf-8-validate": "^5.0.4",
