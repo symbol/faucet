@@ -60,7 +60,8 @@ export const actions = {
 
     openListenser: async (context, recipient) => {
         const networkInfo = context.getters.getNetworkInfo;
-        const wsEndpoint = `${networkInfo.defaultNode.replace('http', 'ws')}/ws`;
+        const protocal = networkInfo.defaultNode.split(':')[0];
+        const wsEndpoint = `${networkInfo.defaultNode.replace(protocal, protocal === 'https' ? 'wss' : 'ws')}/ws`;
         const repositoryFactory = new RepositoryFactoryHttp(networkInfo.defaultNode);
 
         const listener = new Listener(wsEndpoint, repositoryFactory.createNamespaceRepository(), WebSocket);
@@ -82,7 +83,6 @@ export const actions = {
                 });
 
                 listener.close();
-                context.dispatch('fetchFaucetBalance');
             }
         });
     },

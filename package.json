@@ -55,7 +55,7 @@
     "querystring": "^0.2.1",
     "stylus": "^0.54.8",
     "stylus-loader": "^3.0.2",
-    "symbol-sdk": "^1.0.2-alpha-202110111207",
+    "symbol-sdk": "^1.0.2-alpha-202110211339",
     "tls": "0.0.1",
     "tsconfig-paths": "^3.9.0",
     "utf-8-validate": "^5.0.4",
@@ -103,7 +103,7 @@
     "sass-loader": "^8.0.2",
     "symbol-bootstrap": "^0.1.2",
     "ts-node": "^8.10.2",
-    "url-parse": "^1.5.1",
+    "url-parse": "^1.5.3",
     "vue-jest": "^3.0.7"
   }
 }
