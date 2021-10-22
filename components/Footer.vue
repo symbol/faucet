@@ -68,7 +68,7 @@ export default {
                     icon: 'IconNewspaper',
                 },
                 {
-                    href: 'https://github.com/nemtech',
+                    href: 'https://github.com/symbol',
                     text: 'Github',
                     icon: 'IconGithub',
                 },
