@@ -13,6 +13,7 @@ const {
     MAX_UNCONFIRMED,
     BLACKLIST_MOSAIC_IDS,
     EXPLORER_URL,
+    STATISTICS_SERVICE_URL,
 } = process.env;
 
 export interface IConfig {
@@ -28,6 +29,7 @@ export interface IConfig {
     FAUCET_PRIVATE_KEY: string;
     BLACKLIST_MOSAICIDS: string[];
     EXPLORER_URL: string;
+    STATISTICS_SERVICE_URL: string;
 }
 
 export const Config: IConfig = {
@@ -43,4 +45,5 @@ export const Config: IConfig = {
     MAX_BALANCE: parseInt(ENOUGH_BALANCE || '') || 100000000000,
     BLACKLIST_MOSAICIDS: helper.stringToArray(BLACKLIST_MOSAIC_IDS),
     EXPLORER_URL: EXPLORER_URL || 'http://localhost:80',
+    STATISTICS_SERVICE_URL: STATISTICS_SERVICE_URL || '',
 };
