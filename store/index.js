@@ -60,8 +60,8 @@ export const actions = {
 
     openListenser: async (context, recipient) => {
         const networkInfo = context.getters.getNetworkInfo;
-        const protocal = networkInfo.defaultNode.split(':')[0];
-        const wsEndpoint = `${networkInfo.defaultNode.replace(protocal, protocal === 'https' ? 'wss' : 'ws')}/ws`;
+        const protocol = networkInfo.defaultNode.split(':')[0];
+        const wsEndpoint = `${networkInfo.defaultNode.replace(protocol, protocol === 'https' ? 'wss' : 'ws')}/ws`;
         const repositoryFactory = new RepositoryFactoryHttp(networkInfo.defaultNode);
 
         const listener = new Listener(wsEndpoint, repositoryFactory.createNamespaceRepository(), WebSocket);
