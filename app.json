@@ -13,61 +13,61 @@
     "PORT": {
       "value": "80"
     },
-    "NEM_PRIVATE_KEY": {
+    "SYMBOL_PRIVATE_KEY": {
       "value": "__SET_YOUR_KEY__",
       "description": "PrivateKey of Faucet Account that you want to assign."
     },
-    "NEM_API_URL": {
+    "SYMBOL_API_URL": {
       "value": "http://symbol-api.example.com:3000",
       "description": "API URL to connect."
     },
-    "NEM_PUBLIC_URL": {
+    "SYMBOL_PUBLIC_URL": {
       "required": false,
       "description": "For frontend link url."
     },
-    "NEM_NETWORK": {
+    "SYMBOL_NETWORK": {
       "required": false,
       "description": "MAIN_NET, TEST_NET, MIJIN, MIJIN_TEST (if empty, fetch from node.)"
     },
-    "NEM_GENERATION_HASH": {
+    "SYMBOL_GENERATION_HASH": {
       "required": false,
       "description": "Nemesis block hash. (if empty, fetch from node.)"
     },
-    "NEM_MOSAIC_FQN": {
+    "SYMBOL_MOSAIC_FQN": {
       "required": false,
       "description": "Distribution mosaic that linked namespace."
     },
-    "NEM_MOSAIC_HEX": {
+    "SYMBOL_MOSAIC_HEX": {
       "required": false,
       "description": "Distribution mosaicId."
     },
-    "NEM_OUT_MIN": {
+    "SYMBOL_OUT_MIN": {
       "value": "200000000"
     },
-    "NEM_OUT_MAX": {
+    "SYMBOL_OUT_MAX": {
       "value": "500000000"
     },
-    "NEM_OUT_OPT": {
+    "SYMBOL_OUT_OPT": {
       "required": false
     },
-    "NEM_FEE_MULTIPLIER": {
+    "SYMBOL_FEE_MULTIPLIER": {
       "required": false
     },
-    "NEM_MAX_FEE": {
+    "SYMBOL_MAX_FEE": {
       "required": false,
       "description": "Transaction Max Fee"
     },
-    "NEM_DEADLINE": {
+    "SYMBOL_DEADLINE": {
       "required": false,
       "description": "Transaction deadline (min)"
     },
-    "NEM_MAX_BALANCE": {
+    "SYMBOL_MAX_BALANCE": {
       "value": "100000000000"
     },
-    "NEM_MAX_UNCONFIRMED": {
+    "SYMBOL_MAX_UNCONFIRMED": {
       "value": "99"
     },
-    "NEM_WAIT_BLOCK": {
+    "SYMBOL_WAIT_BLOCK": {
       "value": "0"
     },
     "RECAPTCHA_CLIENT_SECRET": {
