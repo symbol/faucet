@@ -1,10 +1,5 @@
 # :potable_water: Symbol Faucet
 
-## :heartbeat: Symbol Faucet
-
-- [Symbol Faucet-01](http://faucet-0.10.0.x-01.symboldev.network/)
-- [Symbol Faucet-02](http://faucet-0.10.0.x-02.symboldev.network/)
-
 
 ## :handshake: Using with catapult-service-bootstrap
 
@@ -19,28 +14,6 @@ $ docker pull symbolplatform/symbol-faucet:0.4.0
 ```
 
 ### Add as service
-
-#### (Quickest way) Using nemesis Private Key example
-
-```yaml:docker-compose.yml
-faucet:
-  # image: my-symbol-faucet # in case of built image
-  image: symbolplatform/symbol-faucet:0.4.0
-  stop_signal: SIGINT
-  command: sh -c "/bin/sleep 15 && /bin/sh /app/bin/create-env.sh && /usr/local/bin/npm start"
-  environment:
-    - DEFAULT_NODE=http://rest-gateway:3000
-  volumes:
-    # for reading private key from addresses.yaml
-    - ../../build/generated-addresses:/addresses:ro
-    # for reading generation hash from block file
-    - ../../data/api-node-0/00000:/data/00000:ro
-  ports:
-    - '4000:4000'
-  depends_on:
-    - rest-gateway
-    - api-node-0
-```
 
 #### Using specific PrivateKey and GenerationHash
 
@@ -76,7 +49,7 @@ faucet:
 
 [![Deploy](https://www.herokucdn.com/deploy/button.svg)](https://heroku.com/deploy)
 
-Need to set `NEM_PRIVATE_KEY`(PrivateKey of your faucet account) while deployment.
+Need to set `SYMBOL_PRIVATE_KEY`(PrivateKey of your faucet account) while deployment.
 
 If you want to use ReCaptcha, set both variables `RECAPTCHA_CLIENT_SECRET` and `RECAPTCHA_SERVER_SECRET`.
 
@@ -121,8 +94,7 @@ $ npm run dev
 
 ## :muscle: Powered by
 
-- [NEM - Distributed Ledger Technology (Blockchain) Catapult](https://www.nem.io/catapult/)
-- [nemtech/symbol\-sdk\-typescript\-javascript: symbol\-sdk official for typescript & javascript](https://github.com/nemtech/symbol-sdk-typescript-javascript)
+- [symbol-sdk-typescript-javascript](https://github.com/symbol/symbol-sdk-typescript-javascript)
 - [nuxt/nuxt\.js: The Vue\.js Framework](https://github.com/nuxt/nuxt.js)
 - [44uk/symbol\-faucet: Faucet application for symbol \(catapult\)](https://github.com/44uk/symbol-faucet)
 
