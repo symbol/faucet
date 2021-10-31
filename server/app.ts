@@ -27,7 +27,7 @@ export default class App implements IApp {
         private readonly _nodeUrl: string,
     ) {}
     public static async init(nodes: string[]): Promise<App> {
-        const nodeUrl = nodes.length ? nodes[Math.floor(Math.random() * nodes.length)] : Config.DEFAULT_NODE;
+        const nodeUrl = nodes.length ? nodes[Math.floor(Math.random() * nodes.length)] : Config.DEFAULT_NODE; //NOSONAR
         const repositoryFactory = new RepositoryFactoryHttp(nodeUrl);
         return new App(repositoryFactory, Config, nodeUrl);
     }
@@ -107,8 +107,7 @@ export default class App implements IApp {
 
                         for (const node of response.data) {
                             if (node.apiStatus) {
-                                const isHttps: boolean = node.apiStatus.isHttpsEnabled || false;
-                                nodeUrls.push(`${isHttps ? 'https' : 'http'}://${node.host}:${isHttps ? '3001' : '3000'}`);
+                                nodeUrls.push(node.apiStatus.restGatewayUrl);
                             }
                         }
 
