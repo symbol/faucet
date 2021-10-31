@@ -3,6 +3,26 @@ All notable changes to this project will be documented in this file.
 
 The changelog format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [1.1.0] - 31-Oct-2021
+
+### Milestone: [catapult-server@v1.0.2.0](https://github.com/nemtech/catapult-server/releases/tag/v1.0.2.0)
+
+Package  | Version  | Link
+---|---|---
+REST Core| v2.3.7 | [catapult-rest](https://github.com/nemtech/catapult-rest/releases/tag/v2.3.7)
+SDK Core| v1.0.2 | [symbol-sdk](https://www.npmjs.com/package/symbol-sdk)
+
+### Added
+- Enable https  [#79](https://github.com/symbol/symbol-faucet/pull/79)
+- Get node list from statistics service [#81](https://github.com/symbol/symbol-faucet/pull/81)
+
+### Fixed
+- Removed hardcoded XYM to support private networks [#76](https://github.com/symbol/symbol-faucet/pull/76)
+
+### Update
+- Symbol-sdk v1.0.2 [#78](https://github.com/symbol/symbol-faucet/pull/78)
+- Readme [#80](https://github.com/symbol/symbol-faucet/pull/80)
+
 ## [1.0.0] - 14-Mar-2021
 
 ### Milestone: [catapult-server@v1.0.0.0](https://github.com/nemtech/catapult-server/releases/tag/v1.0.0.0)
