@@ -49,49 +49,33 @@
 <script>
 import IconGithub from 'vue-material-design-icons/Github.vue';
 import IconNewspaper from 'vue-material-design-icons/Newspaper.vue';
-import IconReddit from 'vue-material-design-icons/Reddit.vue';
-import IconForum from 'vue-material-design-icons/Forum.vue';
-import IconTelegram from 'vue-material-design-icons/Telegram.vue';
-import IconHomeCurrencyUsd from 'vue-material-design-icons/HomeCurrencyUsd.vue';
 import IconEarth from 'vue-material-design-icons/Earth.vue';
+import IconDiscord from 'vue-material-design-icons/Discord.vue';
 
 export default {
     components: {
         IconGithub,
         IconNewspaper,
-        IconReddit,
-        IconForum,
-        IconTelegram,
-        IconHomeCurrencyUsd,
+        IconDiscord,
         IconEarth,
     },
     data() {
         return {
             links: [
                 {
-                    href: 'https://nemflash.io/',
-                    text: 'NEM News',
+                    href: 'https://nem.io',
+                    text: 'NEM',
                     icon: 'IconNewspaper',
                 },
                 {
-                    href: 'https://forum.nem.io/',
-                    text: 'Forum',
-                    icon: 'IconForum',
-                },
-                {
-                    href: 'https://t.me/nemred',
-                    text: 'Telegram',
-                    icon: 'IconTelegram',
-                },
-                {
-                    href: 'https://www.reddit.com/r/nem/',
-                    text: 'Reddit',
-                    icon: 'IconReddit',
-                },
-                {
-                    href: 'https://github.com/nemtech',
+                    href: 'https://github.com/symbol',
                     text: 'Github',
                     icon: 'IconGithub',
+                },
+                {
+                    href: 'https://discord.com/invite/xymcity',
+                    text: 'Join Discord',
+                    icon: 'IconDiscord',
                 },
             ],
         };
