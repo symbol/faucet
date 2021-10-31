@@ -1,8 +1,15 @@
 import { Account, RepositoryFactoryHttp, RepositoryFactory, NetworkType, CurrencyService } from 'symbol-sdk';
 import { timeout } from 'rxjs/operators';
 import { IConfig, Config } from './config';
+import axios from 'axios';
 
+export interface NodeSearchCriteria {
+    nodeFilter: 'preferred' | 'suggested';
+    limit: number;
+    ssl?: boolean;
+}
 export interface IApp {
+    nodeUrl: string;
     networkType: Promise<NetworkType>;
     isNodeHealth: Promise<boolean>;
     networkGenerationHash: Promise<string>;
@@ -14,10 +21,19 @@ export interface IApp {
 }
 
 export default class App implements IApp {
-    constructor(private readonly _repositoryFactory: RepositoryFactory, private readonly _config: IConfig) {}
-    public static async init(): Promise<App> {
-        const repositoryFactory = new RepositoryFactoryHttp(Config.DEFAULT_NODE);
-        return new App(repositoryFactory, Config);
+    constructor(
+        private readonly _repositoryFactory: RepositoryFactory,
+        private readonly _config: IConfig,
+        private readonly _nodeUrl: string,
+    ) {}
+    public static async init(nodes: string[]): Promise<App> {
+        const nodeUrl = nodes.length ? nodes[Math.floor(Math.random() * nodes.length)] : Config.DEFAULT_NODE; //NOSONAR
+        const repositoryFactory = new RepositoryFactoryHttp(nodeUrl);
+        return new App(repositoryFactory, Config, nodeUrl);
+    }
+
+    get nodeUrl(): string {
+        return this._nodeUrl;
     }
 
     get networkType(): Promise<NetworkType> {
@@ -72,6 +88,35 @@ export default class App implements IApp {
                         resolve(false);
                     },
                 );
+        });
+    }
+
+    static getNodeUrls({ nodeFilter, limit, ssl }: NodeSearchCriteria): Promise<string[]> {
+        return new Promise((resolve) => {
+            if (Config.STATISTICS_SERVICE_URL && Config.STATISTICS_SERVICE_URL.length) {
+                axios
+                    .get(`${Config.STATISTICS_SERVICE_URL}nodes`, {
+                        params: {
+                            nodeFilter,
+                            limit,
+                            ssl,
+                        },
+                    })
+                    .then((response) => {
+                        let nodeUrls: string[] = [];
+
+                        for (const node of response.data) {
+                            if (node.apiStatus) {
+                                nodeUrls.push(node.apiStatus.restGatewayUrl);
+                            }
+                        }
+
+                        resolve(nodeUrls);
+                    });
+            } else {
+                console.log('Statistics service URL is not provided');
+                resolve([]);
+            }
         });
     }
 }

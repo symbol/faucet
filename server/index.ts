@@ -28,8 +28,15 @@ async function start() {
         await nuxt.ready();
     }
 
+    // load node url from statistic service
+    const nodes = await App.getNodeUrls({
+        nodeFilter: 'suggested',
+        limit: 30,
+        ssl: true,
+    });
+
     // Init App
-    const appConfig: IApp = await App.init();
+    const appConfig: IApp = await App.init(nodes);
 
     app.get('/', faucetHandler(appConfig));
     app.post('/claims', claimsHandler(appConfig));

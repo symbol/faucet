@@ -20,7 +20,7 @@ export const faucetHandler = (appConfig: IApp): ServerMiddleware => {
         }
         const faucetAccount = await appConfig.faucetAccount;
         try {
-            const defaultNode = new Url(config.DEFAULT_NODE_CLIENT);
+            const defaultNode = new Url(appConfig.nodeUrl);
 
             // Gets native mosaic info and faucet account info.
             const [getCurrencies, accountInfo] = await Promise.all([
