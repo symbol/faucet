@@ -34,7 +34,7 @@ export const config: any = {
   /*
    ** Global CSS
    */
-  css: ['@/assets/stylesheets/main.scss'],
+  css: ['design-system/build/css/styles.css','@/assets/stylesheets/main.scss'],
 
   /*
    ** Plugins to load before mounting the App

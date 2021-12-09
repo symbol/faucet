@@ -1,71 +1,29 @@
 <template>
-    <div class="faucetForm p-3">
+    <div>
         <div v-if="!loading">
             <Loading />
         </div>
-        <b-col>
-            <div class="formTitle">
-                <span>Faucet</span>
+        <div v-if="loading">
+            <div class="form">
+                <TextBox v-model="form.recipient" :placeholder="recipientPlaceholder" required />
+                <TextBox v-if="hasNativeMosaicAmount" v-model="form.amount" type="number" :min="0" :placeholder="amountPlaceholder" />
+                <Button @click="claim_store"> CLAIM </Button>
             </div>
-
-            <div v-if="loading">
-                <b-form @submit.prevent="claim_store">
-                    <div class="formInput">
-                        <div class="inputGroup">
-                            <span>Mosaic</span>
-                            <div class="mosaicGroup">
-                                <div v-for="(list, index) in mosaicSelectManager" :key="'option_' + index">
-                                    <b-form-select v-model="list.mosaicId" size="sm" required @change="onChange">
-                                        <b-form-select-option
-                                            v-for="(mosaic, optIndex) in list.mosaicOptions"
-                                            :key="'option_' + optIndex"
-                                            :value="mosaic.mosaicId"
-                                        >
-                                            {{ mosaic.mosaicAliasName }} - Balance: {{ mosaic.amount }}
-                                        </b-form-select-option>
-                                    </b-form-select>
-                                </div>
-                            </div>
-
-                            <div class="mosaicControlPanel">
-                                <a v-if="hasAddButton" @click="add_mosaic">Add Mosaic</a>
-                                <a v-if="hasRemoveButton" @click="remove_mosaic">Remove Mosaic</a>
-                            </div>
-                        </div>
-
-                        <div class="inputGroup">
-                            <span>Recipient</span>
-                            <b-form-input
-                                id="input-small"
-                                v-model="form.recipient"
-                                size="sm"
-                                :placeholder="recipientPlaceholder"
-                                required
-                            />
-                        </div>
-
-                        <div v-if="hasNativeMosaicAmount" class="inputGroup">
-                            <span>{{ mosaicTicker }} Amount</span>
-                            <b-form-input id="input-small" v-model="form.amount" type="number" size="sm" :placeholder="amountPlaceholder" />
-                        </div>
-                    </div>
-
-                    <div class="formSubmit">
-                        <b-button type="submit"> CLAIM! </b-button>
-                    </div>
-                </b-form>
-            </div>
-        </b-col>
+        </div>
     </div>
 </template>
 
 <script>
+import Button from '@/components/Button.vue';
 import Loading from '@/components/Loading.vue';
+import TextBox from '@/components/TextBox.vue';
 import { Address } from 'symbol-sdk';
 
 export default {
     components: {
+        Button,
         Loading,
+        TextBox,
     },
     props: {
         address: { type: String, default: '' },
@@ -160,65 +118,15 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.form-control {
-    font-size: inherit !important;
+.form {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 32px;
+    background: var(--color-darkmode-bg-navbar);
+    border-radius: 12px;
 }
-
-.formTitle {
-    padding: 5px 0;
-
-    span {
-        font-size: 32px;
-    }
-}
-
-.faucetForm {
-    height: 120%;
-    border-radius: 8px;
-    opacity: 0.7;
-    background: linear-gradient(120deg, #5200c6 0%, #44004e 100%);
-    background-size: 100% auto;
-    box-shadow: 0 1px 5px 1px #000a;
-    margin-top: 15px;
-}
-
-.formInput {
-    .inputGroup {
-        padding: 10px 0;
-        font-size: 14px;
-
-        input {
-            opacity: 1;
-        }
-    }
-
-    .mosaicGroup {
-        select {
-            margin-bottom: 5px;
-        }
-    }
-
-    .mosaicControlPanel {
-        float: right;
-        a {
-            padding: 0 15px;
-            cursor: pointer;
-        }
-    }
-}
-
-.formSubmit {
-    float: right;
-    padding: 20px 0;
-    margin: 5px;
-    display: grid;
+.button {
     width: 100%;
-    padding-left: 30%;
-
-    button {
-        color: var(--primary);
-        background-color: white;
-        opacity: 1;
-    }
 }
 </style>
