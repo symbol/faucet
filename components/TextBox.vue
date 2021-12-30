@@ -63,6 +63,16 @@ export default {
     &:last-child {
         margin-right: 0;
     }
+
+    &[type="number"] {
+        -webkit-appearance: textfield;
+        -moz-appearance: textfield;
+        appearance: textfield;
+    }
+    &[type=number]::-webkit-inner-spin-button, 
+    &[type=number]::-webkit-outer-spin-button { 
+        -webkit-appearance: none;
+    }
 }
 
 @media #{$screen-mobile} {

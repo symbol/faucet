@@ -82,5 +82,6 @@ export default {
 .lighter {
     opacity: 0.7;
     font-weight: lighter;
+    filter: drop-shadow(0px 0px 10px #040022);
 }
 </style>

@@ -1,42 +1,78 @@
 <template>
-    <div></div>
+    <b-container class="footer">
+        <b-row align-h="between">
+            <div v-for="(link, index) in links" :key="'link' + index" class="link">
+                <a :href="link.href" target="_blank" rel="noopener noreferrer">
+                    <img :src="link.icon" :alt="link.text" class="link-icon"/>
+                    <div class="link-text">
+                        {{ link.text }}
+                    </div>
+                </a>
+            </div>
+        </b-row>
+    </b-container>
 </template>
 
 <script>
+import { Config } from '../config';
+import IconExplorerSrc from '../assets/images/l-explorer.png';
+import IconDiscordSrc from '../assets/images/l-discord.png';
+import IconGithubSrc from '../assets/images/l-github.png';
+import IconTwitterSrc from '../assets/images/l-twitter.png';
+
 export default {
     data() {
         return {
             links: [
                 {
-                    href: 'https://nem.io',
-                    text: 'NEM',
-                    icon: 'IconNewspaper',
+                    href: Config.URL_EXPLORER,
+                    text: 'Symbol Explorer',
+                    icon: IconExplorerSrc,
                 },
                 {
-                    href: 'https://github.com/symbol',
+                    href: Config.URL_DISCORD,
+                    text: 'Discord',
+                    icon: IconDiscordSrc,
+                },
+                {
+                    href: Config.URL_GITHUB,
                     text: 'Github',
-                    icon: 'IconGithub',
+                    icon: IconGithubSrc,
                 },
                 {
-                    href: 'https://discord.com/invite/xymcity',
-                    text: 'Join Discord',
-                    icon: 'IconDiscord',
+                    href: Config.URL_TWITTER,
+                    text: 'Twitter',
+                    icon: IconTwitterSrc,
                 },
             ],
         };
-    },
-    computed: {
-        networkInfo() {
-            return this.$store.getters.getNetworkInfo;
-        },
-        explorerUrl() {
-            return this.networkInfo.explorerUrl;
-        },
-        defaultNode() {
-            return this.networkInfo.defaultNode;
-        },
-    },
+    }
 };
 </script>
 
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+@import '../assets/stylesheets/variables.scss';
+
+.footer {
+    margin-top: 48px;
+}
+
+.link-icon {
+    height: 48px;
+}
+
+.link-text {
+    padding: 5px 0;
+    max-width: 48px;
+    font-family: Carbon;
+    font-style: normal;
+    font-weight: 500;
+    font-size: 10px;
+    line-height: 120%;
+    color: var(--color-darkmode-text-body);
+    opacity: 0.7;
+    text-align: center;
+    text-transform: uppercase;
+}
+
+</style>

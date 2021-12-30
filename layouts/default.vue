@@ -1,18 +1,26 @@
 <template>
     <div id="app">
-        <img :src="MMSrc" class="bg-image" />
-        <div class="main-container">
-            <Header />
-            <nuxt />
-            <Footer />
+        <div class="bg-container">
+            <img :src="ArtLeftSrc" class="bg-image bg-image-left" />
+            <img :src="ArtRightSrc" class="bg-image bg-image-right" />
+            <div class="bg-gradient" />
         </div>
+        <div class="main-container-wrapper">
+            <div class="main-container">
+                <Header />
+                <nuxt />
+                <Footer />
+            </div>
+        </div>
+        
     </div>
 </template>
 
 <script>
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
-import MMSrc from '../assets/images/mm.png';
+import ArtLeftSrc from '../assets/images/art-left.png';
+import ArtRightSrc from '../assets/images/art-right.png';
 export default {
     components: {
         Header,
@@ -20,7 +28,8 @@ export default {
     },
     data() {
         return {
-            MMSrc,
+            ArtLeftSrc,
+            ArtRightSrc
         };
     },
     head() {
@@ -41,12 +50,22 @@ body,
     width: 100%;
     margin: 0;
     padding: 0;
+    position: relative;
 }
 
-#app {
-    background: url('../assets/images/bg-space.png');
+.bg-container {
+    width: 100%;
+    height: 100%;
+    position: fixed;
+    top: 0;
+    right: 0;
+    background: url('../assets/images/bg.png');
     background-position: center;
     background-size: cover;
+    position: fixed;
+}
+
+.main-container-wrapper {
     overflow-y: auto;
     position: relative;
 }
@@ -60,10 +79,27 @@ body,
 }
 
 .bg-image {
-    width: 25%;
+    height: 100%;
     position: fixed;
-    bottom: 16%;
-    right: 8%;
+    top: 0;
+}
+
+.bg-image-right {
+    right: 0;
+}
+
+.bg-image-left {
+    left: 0;
+}
+
+.bg-gradient {
+    width: 100%;
+    height: 37%;
+    position: fixed;
+    top: 0;
+    right: 0;
+    background: linear-gradient(180deg, #040022 0%, rgba(10, 6, 42, 0.692708) 46.35%, rgba(24, 21, 61, 0) 100%);
+    z-index: 1;
 }
 
 @media #{$screen-tablet-sm}, #{$screen-mobile} {
