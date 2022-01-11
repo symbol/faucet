@@ -1,18 +1,28 @@
 <template>
-    <div>
-        <div class="row-margin">
-            <p class="hero">Claim mosaics for development and testing purposes on the symbol network</p>
+    <Loading v-if="loading" class="mt-5 pt-5"/>
+    <div v-else class="page-container">
+        <div class="row-margin text-center d-none d-md-block">
+            <a target="_blank" :href="faucetAccountExplorerUrl" class="lighter">
+                {{ faucetAddress }}
+            </a>
+        </div>
+
+        <div class="row-margin text-center">
+            <p class="hero">
+                Thirsty? Take a drink.<br>
+                This faucet is running on the Symbol testnet and dispenses up to 10,000 XYM per account.
+            </p>
         </div>
         <div class="row-margin">
             <FaucetForm />
         </div>
-        <div class="row-margin lighter">
+        <div class="row-margin lighter text-center">
             <p>Done with your XYM? Send it back to the faucet. Remember, sharing is caring!</p>
             <p>
                 If you’re looking to set up a voting node on Symbol (minimum 3,000,000 XYM), please send a request to 
                 <a target="_blank" :href="telegramChHelpdeskURL">{{ telegramChHelpdesk }}</a> on Telegram, or {{ discordChHelpdesk }} on Discord.
             </p>
-            <p>
+            <p class="d-block d-md-none">
                 Faucet Address:
                 <a target="_blank" :href="faucetAccountExplorerUrl">
                     {{ faucetAddress }}
@@ -25,16 +35,23 @@
 <script>
 import { Config } from '../config';
 import FaucetForm from '@/components/FaucetForm.vue';
+import Loading from '@/components/Loading.vue';
 
 export default {
-    components: { FaucetForm },
+    components: { FaucetForm, Loading },
 
     computed: {
+        loading() {
+            return !(this.networkInfo && this.faucetAddress)
+        },
+        networkInfo() {
+            return this.$store.getters.getNetworkInfo;
+        },
         faucetAddress() {
-            return this.$store.getters.getNetworkInfo.address;
+            return this.networkInfo.address;
         },
         faucetAccountExplorerUrl() {
-            const explorerURL = this.$store.getters.getNetworkInfo.explorerUrl;
+            const explorerURL = this.networkInfo.explorerUrl;
             const faucetAddress = this.faucetAddress;
 
             return `${explorerURL}accounts/${faucetAddress}`;
@@ -53,9 +70,17 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+@import '../assets/stylesheets/variables.scss';
+
 .lighter {
     opacity: 0.7;
     font-weight: lighter;
     filter: drop-shadow(0px 0px 10px #040022);
+}
+
+@media #{$screen-mobile} {
+    .page-container {
+        padding-top: $spacing-base-mobile;
+    }
 }
 </style>

@@ -39,13 +39,13 @@ export default {
 .text-box {
     min-width: 235px;
     height: auto;
-    margin-right: $margin-base;
-    margin-bottom: $margin-base;
-    padding: 10px 11px 11px;
+    margin-bottom: $spacing-controls;
+    padding: 11px 11px 12px;
     color: var(--color-darkmode-button-text);
+    font: var(--font-web-large-body);
     text-decoration: none;
     background: var(--color-darkmode-button-bg);
-    border: 1px solid #b429fa;
+    border: 2px solid var(--color-darkmode-form-accent-light);
     border-radius: 4px;
     box-shadow: var(--effect-button-default);
     cursor: pointer;
@@ -53,18 +53,22 @@ export default {
     user-select: none;
 
     &:hover {
-        box-shadow: 0px 0px 0px 4px rgba(255, 153, 153, 0.2);
+        filter: drop-shadow(0 0 9px #ea00ff);
     }
 
     &:focus {
-        box-shadow: 0px 0px 0px 4px rgba(255, 153, 153, 0.2);
+        box-shadow: 0px 0px 4px 4px rgba(255, 153, 153, 0.2);
     }
 
     &:last-child {
-        margin-right: 0;
+        margin-bottom: 0;
     }
 
-    &[type="number"] {
+    &::placeholder {
+        text-align: center;
+    }
+
+    &[type=number] {
         -webkit-appearance: textfield;
         -moz-appearance: textfield;
         appearance: textfield;
@@ -75,10 +79,17 @@ export default {
     }
 }
 
+
+@media #{$screen-tablet-lg}, #{$screen-tablet-sm} {
+    .text-box {
+        font: var(--font-web-desktop-body);
+    }
+}
+
+
 @media #{$screen-mobile} {
     .text-box {
-        min-width: 128px;
-        padding: 8.79px 14.65px 7.4px;
+        font: var(--font-web-mobile-body);
     }
 }
 </style>

@@ -1,6 +1,6 @@
 <template>
-    <b-container class="footer">
-        <b-row align-h="between">
+    <b-container class="footer mw-100">
+        <b-row align-h="around">
             <div v-for="(link, index) in links" :key="'link' + index" class="link">
                 <a :href="link.href" target="_blank" rel="noopener noreferrer">
                     <img :src="link.icon" :alt="link.text" class="link-icon"/>
@@ -53,26 +53,47 @@ export default {
 <style lang="scss" scoped>
 @import '../assets/stylesheets/variables.scss';
 
-.footer {
-    margin-top: 48px;
-}
-
 .link-icon {
-    height: 48px;
+    height: 56px;
 }
 
 .link-text {
     padding: 5px 0;
-    max-width: 48px;
+    max-width: 56px;
     font-family: Carbon;
     font-style: normal;
     font-weight: 500;
-    font-size: 10px;
+    font-size: 12px;
     line-height: 120%;
     color: var(--color-darkmode-text-body);
     opacity: 0.7;
     text-align: center;
     text-transform: uppercase;
+}
+
+
+@media #{$screen-tablet-lg}, #{$screen-tablet-sm} {
+    .link-icon {
+        height: 48px;
+    }
+
+    .link-text {
+        max-width: 48px;
+        font-size: 10px;
+        line-height: 120%;
+    }
+}
+
+@media #{$screen-mobile} {
+    .link-icon {
+        height: 48px;
+    }
+
+    .link-text {
+        max-width: 48px;
+        font-size: 10px;
+        line-height: 120%;
+    }
 }
 
 </style>

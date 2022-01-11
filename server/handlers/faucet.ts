@@ -30,7 +30,7 @@ export const faucetHandler = (appConfig: IApp): ServerMiddleware => {
 
             // Build network info object
             const networkInfo = {
-                address: faucetAccount.address.pretty(),
+                address: faucetAccount.address.plain(),
                 hostname: defaultNode.hostname,
                 defaultNode: defaultNode.origin,
                 nativeCurrencyMaxOut: config.NATIVE_CURRENCY_OUT_MAX / Math.pow(10, getCurrencies.currency.divisibility),

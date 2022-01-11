@@ -1,10 +1,14 @@
-$screen-desktop: "(min-width: 1400px)";
-$screen-tablet-lg: "(max-width: 1399.8px) and (min-width: 1024px)";
+$screen-desktop: "(min-width: 2560px)";
+$screen-tablet-lg: "(max-width: 2559.8px) and (min-width: 1024px)";
 $screen-tablet-sm: "(max-width: 1023.8px) and (min-width: 768px)";
 $screen-mobile: "(max-width: 767.8px)";
 
-$margin-base: 32px;
-$margin-base-sm: 30px;
+$spacing-base: 32px;
+$spacing-paragraph: 32px;
+$spacing-controls: 32px;
+$spacing-card: 32px;
 
-$margin-mobile-base: 23px;
-$margin-mobile-base-sm: 23px;
+$spacing-base-mobile: 24px;
+$spacing-paragraph-mobile: 24px;
+$spacing-controls-mobile: 32px;
+$spacing-card-mobile: 16px;

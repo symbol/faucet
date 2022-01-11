@@ -1,103 +1,60 @@
 <template>
-    <div>
-        <div v-if="!loading">
-            <Loading />
-        </div>
-        <div v-if="loading">
-            <div class="form">
-                <TextBox v-model="form.recipient" :placeholder="recipientPlaceholder" required />
-                <TextBox v-if="hasNativeMosaicAmount" v-model="form.amount" type="number" :min="0" :placeholder="amountPlaceholder" />
-                <Button @click="claim"> CLAIM </Button>
-            </div>
-        </div>
+    <div class="form">
+        <TextBox v-model="form.recipient" :placeholder="recipientPlaceholder" required />
+        <TextBox v-model="form.amount" type="number" :min="0" :placeholder="amountPlaceholder" />
+        <Button @click="claim"> CLAIM </Button>
     </div>
 </template>
 
 <script>
 import { Address } from 'symbol-sdk';
 import Button from '@/components/Button.vue';
-import Loading from '@/components/Loading.vue';
 import TextBox from '@/components/TextBox.vue';
 
 export default {
-    components: {
-        Button,
-        Loading,
-        TextBox,
-    },
-    props: {
-        address: { type: String, default: '' },
-        mosaicId: { type: String, default: '' },
-        mosaicTicker: { type: String, default: '' },
-        recipientPlaceholder: { type: String, default: '' },
-        amountPlaceholder: { type: String, default: '' },
-        filterMosaics: { type: Array, default: () => [''] },
-    },
+    components: { Button, TextBox },
+
     data() {
         return {
-            mosaicSelectManager: [],
             form: {
                 recipient: '',
-                amount: '',
-                selectedMosaics: [],
+                amount: 0
             },
         };
     },
+
     computed: {
-        loading() {
-            return this.filterMosaics.length > 0;
-        },
-        hasRemoveButton() {
-            return this.mosaicSelectManager.length > 1;
-        },
-        hasAddButton() {
-            return this.filterMosaics.length > this.mosaicSelectManager.length;
-        },
-        hasNativeMosaicAmount() {
-            return this.mosaicSelectManager.find((mosaic) => mosaic.mosaicId === this.mosaicId);
-        },
-
-
-        filterMosaics() {
-            return this.$store.getters.getFilterMosaics;
-        },
         networkInfo() {
             return this.$store.getters.getNetworkInfo;
         },
         recipientPlaceholder() {
-            return `Recipient (Address starts with a capital ${this.networkInfo.address[0]})`;
+            return `Your Testnet Address (Starts with ${this.faucetAddress[0]})`;
         },
         amountPlaceholder() {
-            return `${this.mosaicTicker} Amount`;
+            return `${this.mosaicTicker} Amount (Max 10,000)`;
         },
-        faucetAccountUrl() {
-            return `${this.networkInfo.explorerUrl}accounts/${Address.createFromRawAddress(this.networkInfo.address).plain()}`;
-        },
-
         mosaicTicker() {
             return this.networkInfo.nativeCurrencyName?.split('.').pop().toUpperCase() || 'XYM';
         },
-
-        ///////
-        address() {
-            return this.networkInfo?.address;
-        },
-
         mosaicId() {
-            return this.networkInfo?.nativeCurrencyId;
+            return this.networkInfo.nativeCurrencyId;
         },
+        faucetAddress() {
+            return this.networkInfo.address;
+        }
+    },
 
-    },
-    mounted() {
-        this.updateForm();
-    },
     created() {
-         if (process.browser) {
+        if (process.browser) {
             // inject method into $nuxt, allow access from store
             this.$nuxt.$makeToast = this.makeToast;
         }
-        this.mosaicSelectManager.push({ mosaicId: this.mosaicId, mosaicOptions: this.filterMosaics });
     },
+
+    mounted() {
+        this.updateForm();
+    },
+
     methods: {
         makeToast(variant = null, message, config) {
             this.$bvToast.toast(message, {
@@ -109,38 +66,22 @@ export default {
                 ...config,
             });
         },
-
         claim() {
-            // Format data
             this.form.recipient = this.form.recipient.replace(/\s|-/g, '').toUpperCase();
-            this.form.selectedMosaics = this.mosaicSelectManager.map((mosaic) => mosaic.mosaicId);
+            this.form.selectedMosaics = [this.mosaicId];
             this.form.amount = Number(this.form.amount | 0);
+
             try {
-                const sender = Address.createFromRawAddress(this.address);
+                const sender = Address.createFromRawAddress(this.faucetAddress);
                 const recipient = Address.createFromRawAddress(this.form.recipient);
                 if (recipient.networkType !== sender.networkType) {
-                    this.$parent.makeToast('warning', `Incorrect network. Address must start with a capital ${this.address[0]}.`);
+                    this.makeToast('warning', `Incorrect network. Address must start with ${this.faucetAddress[0]}.`);
                 } else {
                     this.$store.dispatch('claimFaucet', { ...this.form });
                 }
             } catch (e) {
-                this.$parent.makeToast('warning', `Incorrect address format.`);
+                this.makeToast('warning', `Incorrect address format.`);
             }
-        },
-        onChange() {
-            this.updateMosaicSelectManager();
-        },
-        updateMosaicSelectManager() {
-            this.mosaicSelectManager = this.mosaicSelectManager.map((selector) => {
-                const selectedMosaics = this.mosaicSelectManager
-                    .map((selected) => selected.mosaicId)
-                    .filter((mosaic) => mosaic !== selector.mosaicId);
-
-                return {
-                    ...selector,
-                    mosaicOptions: this.filterMosaics.filter((option) => !selectedMosaics.includes(option.mosaicId)),
-                };
-            });
         },
         updateForm() {
             const { recipient, amount } = this.$route.query;
@@ -153,15 +94,20 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+@import '../assets/stylesheets/variables.scss';
+
 .form {
     display: flex;
     flex-direction: column;
     align-items: flex-start;
-    padding: 32px;
+    padding: $spacing-card;
     background: var(--color-darkmode-bg-navbar);
     border-radius: 12px;
 }
-.button {
-    width: 100%;
+
+@media #{$screen-mobile} {
+    .form {
+        padding: $spacing-card-mobile;
+    }
 }
 </style>

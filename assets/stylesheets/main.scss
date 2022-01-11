@@ -47,7 +47,7 @@ body {
     margin: 0;
     padding: 0;
     color: var(--color-darkmode-text-body);
-    font: var(--font-web-large-body);
+    font: var(--font-web-large-body) !important;
     background-color: var(--color-darkmode-bg-main);
     letter-spacing: var(--typography-web-large-body-letter-spacing);
 }
@@ -68,6 +68,7 @@ a {
 }
 
 p {
+    position: relative;
     margin-bottom: 15px;
 
     &:first-child {
@@ -127,13 +128,13 @@ h4 {
 
 .row-margin {
     position: relative;
-    margin-bottom: $margin-base;
+    margin-bottom: $spacing-base;
     overflow: visible;
 }
 
 .row-margin-sm {
     position: relative;
-    margin-bottom: $margin-base-sm;
+    margin-bottom: $spacing-controls;
     overflow: visible;
 }
 
@@ -141,7 +142,7 @@ h4 {
 
 @media #{$screen-tablet-lg}, #{$screen-tablet-sm} {
     body {
-        font: var(--font-web-desktop-body);
+        font: var(--font-web-desktop-body) !important;
     }
 
     p {
@@ -189,7 +190,7 @@ h4 {
 
 @media #{$screen-mobile} {
     body {
-        font: var(--font-web-mobile-body);
+        font: var(--font-web-mobile-body) !important;
     }
 
     p {

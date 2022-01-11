@@ -1,5 +1,5 @@
 <template>
-    <div class="header row-margin">
+    <div class="header">
         <img :src="LogoSrc" class="logo" />
     </div>
 </template>
