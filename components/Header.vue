@@ -5,7 +5,7 @@
 </template>
 
 <script>
-import LogoSrc from '../assets/images/logo-2.png';
+import LogoSrc from '../assets/images/logo.svg';
 export default {
     data() {
         return {
@@ -22,6 +22,7 @@ export default {
 }
 
 .logo {
-    width: 188px;
+    width: 280.86px;
+    height: 151.58px;
 }
 </style>

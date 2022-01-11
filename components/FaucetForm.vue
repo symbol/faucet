@@ -7,17 +7,17 @@
             <div class="form">
                 <TextBox v-model="form.recipient" :placeholder="recipientPlaceholder" required />
                 <TextBox v-if="hasNativeMosaicAmount" v-model="form.amount" type="number" :min="0" :placeholder="amountPlaceholder" />
-                <Button @click="claim_store"> CLAIM </Button>
+                <Button @click="claim"> CLAIM </Button>
             </div>
         </div>
     </div>
 </template>
 
 <script>
+import { Address } from 'symbol-sdk';
 import Button from '@/components/Button.vue';
 import Loading from '@/components/Loading.vue';
 import TextBox from '@/components/TextBox.vue';
-import { Address } from 'symbol-sdk';
 
 export default {
     components: {
@@ -56,15 +56,61 @@ export default {
         hasNativeMosaicAmount() {
             return this.mosaicSelectManager.find((mosaic) => mosaic.mosaicId === this.mosaicId);
         },
+
+
+        filterMosaics() {
+            return this.$store.getters.getFilterMosaics;
+        },
+        networkInfo() {
+            return this.$store.getters.getNetworkInfo;
+        },
+        recipientPlaceholder() {
+            return `Recipient (Address starts with a capital ${this.networkInfo.address[0]})`;
+        },
+        amountPlaceholder() {
+            return `${this.mosaicTicker} Amount`;
+        },
+        faucetAccountUrl() {
+            return `${this.networkInfo.explorerUrl}accounts/${Address.createFromRawAddress(this.networkInfo.address).plain()}`;
+        },
+
+        mosaicTicker() {
+            return this.networkInfo.nativeCurrencyName?.split('.').pop().toUpperCase() || 'XYM';
+        },
+
+        ///////
+        address() {
+            return this.networkInfo?.address;
+        },
+
+        mosaicId() {
+            return this.networkInfo?.nativeCurrencyId;
+        },
+
     },
     mounted() {
         this.updateForm();
     },
     created() {
+         if (process.browser) {
+            // inject method into $nuxt, allow access from store
+            this.$nuxt.$makeToast = this.makeToast;
+        }
         this.mosaicSelectManager.push({ mosaicId: this.mosaicId, mosaicOptions: this.filterMosaics });
     },
     methods: {
-        claim_store() {
+        makeToast(variant = null, message, config) {
+            this.$bvToast.toast(message, {
+                title: `Notification`,
+                variant,
+                solid: true,
+                toaster: 'b-toaster-top-right',
+                appendToast: true,
+                ...config,
+            });
+        },
+
+        claim() {
             // Format data
             this.form.recipient = this.form.recipient.replace(/\s|-/g, '').toUpperCase();
             this.form.selectedMosaics = this.mosaicSelectManager.map((mosaic) => mosaic.mosaicId);
@@ -80,17 +126,6 @@ export default {
             } catch (e) {
                 this.$parent.makeToast('warning', `Incorrect address format.`);
             }
-        },
-        add_mosaic() {
-            const selectedMosaics = this.mosaicSelectManager.map((selected) => selected.mosaicId);
-            const mosaicOptions = this.filterMosaics.filter((mosaic) => !selectedMosaics.includes(mosaic.mosaicId));
-
-            this.mosaicSelectManager.push({ mosaicId: mosaicOptions[0].mosaicId, mosaicOptions });
-            this.updateMosaicSelectManager();
-        },
-        remove_mosaic() {
-            this.mosaicSelectManager.pop();
-            this.updateMosaicSelectManager();
         },
         onChange() {
             this.updateMosaicSelectManager();

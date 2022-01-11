@@ -4,25 +4,18 @@
             <p class="hero">Claim mosaics for development and testing purposes on the symbol network</p>
         </div>
         <div class="row-margin">
-            <FaucetForm
-                :address="networkInfo.address"
-                :mosaic-id="networkInfo.nativeCurrencyId"
-                :mosaic-ticker="mosaicTicker"
-                :filter-mosaics="filterMosaics"
-                :recipient-placeholder="recipientPlaceholder"
-                :amount-placeholder="amountPlaceholder"
-            />
+            <FaucetForm />
         </div>
         <div class="row-margin lighter">
-            <p>Please send back claimed mosaics when you no longer need them.</p>
-            <p v-if="mosaicTicker === 'XYM'">
-                If anyone wants to claim 3m {{ mosaicTicker }} to allow setting up a voting node/supernode, please request from the
-                <a target="_blank" href="https://t.me/nemhelpdesk">@nemhelpdesk</a> telegram channel
+            <p>Done with your XYM? Send it back to the faucet. Remember, sharing is caring!</p>
+            <p>
+                If you’re looking to set up a voting node on Symbol (minimum 3,000,000 XYM), please send a request to 
+                <a target="_blank" :href="telegramChHelpdeskURL">{{ telegramChHelpdesk }}</a> on Telegram, or {{ discordChHelpdesk }} on Discord.
             </p>
             <p>
                 Faucet Address:
-                <a target="_blank" :href="faucetAccountUrl">
-                    {{ networkInfo.address }}
+                <a target="_blank" :href="faucetAccountExplorerUrl">
+                    {{ faucetAddress }}
                 </a>
             </p>
         </div>
@@ -30,54 +23,35 @@
 </template>
 
 <script>
-import { Address } from 'symbol-sdk';
+import { Config } from '../config';
 import FaucetForm from '@/components/FaucetForm.vue';
 
 export default {
-    components: {
-        FaucetForm,
-    },
-    computed: {
-        filterMosaics() {
-            return this.$store.getters.getFilterMosaics;
-        },
-        networkInfo() {
-            return this.$store.getters.getNetworkInfo;
-        },
-        recipientPlaceholder() {
-            return `Recipient (Address starts with a capital ${this.networkInfo.address[0]})`;
-        },
-        amountPlaceholder() {
-            return `${this.mosaicTicker} Amount`;
-        },
-        faucetAccountUrl() {
-            return `${this.networkInfo.explorerUrl}accounts/${Address.createFromRawAddress(this.networkInfo.address).plain()}`;
-        },
+    components: { FaucetForm },
 
-        mosaicTicker() {
-            return this.networkInfo.nativeCurrencyName?.split('.').pop().toUpperCase() || 'XYM';
+    computed: {
+        faucetAddress() {
+            return this.$store.getters.getNetworkInfo.address;
         },
-    },
-    created() {
-        if (process.browser) {
-            // inject method into $nuxt, allow access from store
-            this.$nuxt.$makeToast = this.makeToast;
+        faucetAccountExplorerUrl() {
+            const explorerURL = this.$store.getters.getNetworkInfo.explorerUrl;
+            const faucetAddress = this.faucetAddress;
+
+            return `${explorerURL}accounts/${faucetAddress}`;
+        },
+        telegramChHelpdeskURL() {
+            return `https://t.me/${this.telegramChHelpdesk.replace('@', '')}`;
+        },
+        telegramChHelpdesk() {
+            return Config.TELEGRAM_CH_HELPDESK
+        },
+        discordChHelpdesk() {
+            return Config.DISCORD_CH_HELPDESK;
         }
-    },
-    methods: {
-        makeToast(variant = null, message, config) {
-            this.$bvToast.toast(message, {
-                title: `Notification`,
-                variant,
-                solid: true,
-                toaster: 'b-toaster-top-right',
-                appendToast: true,
-                ...config,
-            });
-        },
-    },
+    }
 };
 </script>
+
 <style lang="scss" scoped>
 .lighter {
     opacity: 0.7;
