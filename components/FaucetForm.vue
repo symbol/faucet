@@ -56,7 +56,7 @@ export default {
     },
 
     methods: {
-        makeToast(variant = null, message, config) {
+        makeToast(variant, message, config) {
             this.$bvToast.toast(message, {
                 title: `Notification`,
                 variant,

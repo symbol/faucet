@@ -60,7 +60,7 @@ export default {
 .link-text {
     padding: 5px 0;
     max-width: 56px;
-    font-family: Carbon;
+    font-family: Carbon, sans-serif;
     font-style: normal;
     font-weight: 500;
     font-size: 12px;

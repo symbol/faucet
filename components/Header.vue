@@ -1,6 +1,6 @@
 <template>
     <div class="header">
-        <img :src="LogoSrc" class="logo" />
+        <img :src="LogoSrc" alt="Symbol Faucet Logo" class="logo" />
     </div>
 </template>
 

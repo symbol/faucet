@@ -85,7 +85,6 @@ body,
     background: url('../assets/images/bg.png');
     background-position: center;
     background-size: cover;
-    position: fixed;
 }
 
 .main-container-wrapper {
@@ -116,18 +115,17 @@ body,
 .bg-image {
     width: 100%;
     height: 100%;
+    background-size: cover;
 }
 
 .bg-image-left {
     background: url('../assets/images/art-left.png');
     background-position: 100% 25%;
-    background-size: cover;
 }
 
 .bg-image-right {
     background: url('../assets/images/art-right.png');
     background-position: 0% 25%;
-    background-size: cover;
 }
 
 .bg-gradient {
