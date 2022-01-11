@@ -147,10 +147,4 @@ body,
         max-width: 450px;
     }
 }
-
-@media #{$screen-tablet-sm}, #{$screen-mobile} {
-    .bg-image {
-        display: none;
-    }
-}
 </style>
