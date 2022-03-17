@@ -6,7 +6,7 @@
   "homepage": "https://github.com/44uk/symbol-faucet",
   "private": true,
   "engines": {
-    "node": "12.18.2"
+    "node": ">=16.0"
   },
   "scripts": {
     "dev": "cross-env NODE_ENV=development nodemon server/index.ts --watch server",
