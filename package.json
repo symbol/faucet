@@ -6,7 +6,7 @@
   "homepage": "https://github.com/44uk/symbol-faucet",
   "private": true,
   "engines": {
-    "node": "12.18.2"
+    "node": ">=16.0"
   },
   "scripts": {
     "dev": "cross-env NODE_ENV=development nodemon server/index.ts --watch server",
@@ -15,7 +15,7 @@
     "start": "cross-env NODE_ENV=production ts-node -r tsconfig-paths/register server/index.ts",
     "bootstrap-start": "symbol-bootstrap start -p bootstrap -c bootstrap-preset.yml --detached --healthCheck -r",
     "bootstrap-stop": "symbol-bootstrap stop",
-    "lint": "eslint --ext .js,.vue --ignore-path .gitignore .",
+    "lint": "eslint --ext .js,.vue --ignore-path .gitignore --ignore-pattern '_symbol/*' .",
     "lint:fix": "eslint --fix --ext .js,.vue --ignore-path .gitignore . ",
     "prettier:fix": "prettier --write ./server/** ./components/** ./store/** ./layouts/** ./pages/**",
     "style:fix": "npm run prettier:fix && npm run lint && npm run lint:fix",
