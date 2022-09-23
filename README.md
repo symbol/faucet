@@ -60,6 +60,12 @@ If you want to use ReCaptcha, set both variables `RECAPTCHA_CLIENT_SECRET` and `
 ## :shell: Claiming without Browser
 
 ```shell
+# Example in testnet
+# Mosaic ID (3A8416DB2D53B6C8) is XYM from testnet
+# Amount 0 returns random amount whereas nonzero returns exact amount
+curl -X POST -H "Content-Type: application/json" https://testnet.symbol.tools/claims -d '{"recipient": "__YOUR_ADDRESS__", "amount": 0, "selectedMosaics":["3A8416DB2D53B6C8"]}'
+
+# Example in localhost
 curl -X POST -H "Content-Type: application/json" http://localhost:4000/claims -d '{"recipient": "__YOUR_ADDRESS__", "amount": 0, "selectedMosaics":["__MOSAIC_ID__"]}'
 ```
 
