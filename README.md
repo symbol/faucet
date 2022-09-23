@@ -57,10 +57,10 @@ If you want to use ReCaptcha, set both variables `RECAPTCHA_CLIENT_SECRET` and `
 
 - [symbolplatform\/symbol-faucet | Docker Hub](https://hub.docker.com/r/symbolplatform/symbol-faucet)
 
-## :shell: Claimimg without Browser
+## :shell: Claiming without Browser
 
 ```shell
-curl http://localhost:4000/claims -d 'recipient=__YOUR_ADDRESS__'
+curl -X POST -H "Content-Type: application/json" http://localhost:4000/claims -d '{"recipient": "__YOUR_ADDRESS__", "amount": 0, "selectedMosaics":["__MOSAIC_ID__"]}'
 ```
 
 ## :fire: Customize
