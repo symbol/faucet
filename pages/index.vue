@@ -1,144 +1,86 @@
 <template>
-    <b-container fluid="lg" style="max-width: 1200px">
-        <b-row>
-            <b-col cols="12" lg="6">
-                <div class="p-3">
-                    <b-col>
-                        <b-row>
-                            <b-img src="~/assets/images/symbol_logo_white.svg" fluid alt="Symbol" width="240" />
-                        </b-row>
-                        <b-row>
-                            <div>
-                                <span class="subTitle">Claim mosaics for development and testing purposes on the symbol network</span>
-                            </div>
-                        </b-row>
+    <Loading v-if="loading" class="mt-5 pt-5"/>
+    <div v-else class="page-container">
+        <div class="row-margin text-center d-none d-md-block">
+            <a target="_blank" :href="faucetAccountExplorerUrl" class="lighter">
+                {{ faucetAddress }}
+            </a>
+        </div>
 
-                        <b-row>
-                            <FaucetForm
-                                class="d-lg-none d-xl-none d-md-block mx-form"
-                                :address="networkInfo.address"
-                                :mosaic-id="networkInfo.nativeCurrencyId"
-                                :mosaic-ticker="mosaicTicker"
-                                :filter-mosaics="filterMosaics"
-                                :recipient-placeholder="recipientPlaceholder"
-                                :amount-placeholder="amountPlaceholder"
-                            />
-                        </b-row>
-
-                        <b-row>
-                            <div class="info">
-                                <span>Please send back claimed mosaics when you no longer need them.</span>
-                                <span v-if="mosaicTicker === 'XYM'"
-                                    >If anyone wants to claim 3m {{ mosaicTicker }} to allow setting up a voting node/supernode, please
-                                    request from the <a target="_blank" href="https://t.me/nemhelpdesk">@nemhelpdesk</a> telegram channel
-                                </span>
-                                <span>
-                                    Faucet Address:
-                                    <span class="highlight">
-                                        <a target="_blank" :href="faucetAccountUrl">
-                                            {{ networkInfo.address }}
-                                        </a>
-                                    </span>
-                                </span>
-                            </div>
-                        </b-row>
-                    </b-col>
-                </div>
-            </b-col>
-
-            <b-col lg="6">
-                <FaucetForm
-                    class="d-lg-block d-none"
-                    :address="networkInfo.address"
-                    :mosaic-id="networkInfo.nativeCurrencyId"
-                    :mosaic-ticker="mosaicTicker"
-                    :filter-mosaics="filterMosaics"
-                    :recipient-placeholder="recipientPlaceholder"
-                    :amount-placeholder="amountPlaceholder"
-                />
-            </b-col>
-        </b-row>
-    </b-container>
+        <div class="row-margin text-center">
+            <p class="hero">
+                Thirsty? Take a drink.<br>
+                This faucet is running on the Symbol testnet and dispenses up to 10,000 XYM per account.
+            </p>
+        </div>
+        <div class="row-margin">
+            <FaucetForm />
+        </div>
+        <div class="row-margin lighter text-center">
+            <p>Done with your XYM? Send it back to the faucet. Remember, sharing is caring!</p>
+            <p>
+                If you’re looking to set up a voting node on Symbol (minimum 3,000,000 XYM), please send a request to 
+                <a target="_blank" :href="telegramChHelpdeskURL">{{ telegramChHelpdesk }}</a> on Telegram, or {{ discordChHelpdesk }} on Discord.
+            </p>
+            <p class="d-block d-md-none">
+                Faucet Address:
+                <a target="_blank" :href="faucetAccountExplorerUrl">
+                    {{ faucetAddress }}
+                </a>
+            </p>
+        </div>
+    </div>
 </template>
 
 <script>
-import { Address } from 'symbol-sdk';
+import { Config } from '../config';
 import FaucetForm from '@/components/FaucetForm.vue';
+import Loading from '@/components/Loading.vue';
 
 export default {
-    components: {
-        FaucetForm,
-    },
+    components: { FaucetForm, Loading },
+
     computed: {
-        filterMosaics() {
-            return this.$store.getters.getFilterMosaics;
+        loading() {
+            return !(this.networkInfo && this.faucetAddress)
         },
         networkInfo() {
             return this.$store.getters.getNetworkInfo;
         },
-        recipientPlaceholder() {
-            return `Address starts with a capital ${this.networkInfo.address[0]}`;
+        faucetAddress() {
+            return this.networkInfo.address;
         },
-        amountPlaceholder() {
-            return `(Faucet will pay up to ${this.networkInfo.nativeCurrencyMaxOut} ${this.mosaicTicker}, or enter custom amount)`;
-        },
-        faucetAccountUrl() {
-            return `${this.networkInfo.explorerUrl}accounts/${Address.createFromRawAddress(this.networkInfo.address).plain()}`;
-        },
+        faucetAccountExplorerUrl() {
+            const explorerURL = this.networkInfo.explorerUrl;
+            const faucetAddress = this.faucetAddress;
 
-        mosaicTicker() {
-            return this.networkInfo.nativeCurrencyName?.split('.').pop().toUpperCase() || 'XYM';
+            return `${explorerURL}accounts/${faucetAddress}`;
         },
-    },
-    created() {
-        if (process.browser) {
-            // inject method into $nuxt, allow access from store
-            this.$nuxt.$makeToast = this.makeToast;
+        telegramChHelpdeskURL() {
+            return `https://t.me/${this.telegramChHelpdesk.replace('@', '')}`;
+        },
+        telegramChHelpdesk() {
+            return Config.TELEGRAM_CH_HELPDESK
+        },
+        discordChHelpdesk() {
+            return Config.DISCORD_CH_HELPDESK;
         }
-    },
-    methods: {
-        makeToast(variant = null, message, config) {
-            this.$bvToast.toast(message, {
-                title: `Notification`,
-                variant,
-                solid: true,
-                toaster: 'b-toaster-top-right',
-                appendToast: true,
-                ...config,
-            });
-        },
-    },
+    }
 };
 </script>
+
 <style lang="scss" scoped>
-.container {
-    margin-top: 20px;
+@import '../assets/stylesheets/variables.scss';
+
+.lighter {
+    opacity: 0.7;
+    font-weight: lighter;
+    filter: drop-shadow(0px 0px 10px #040022);
 }
 
-.row {
-    padding: 10px 0;
-}
-
-.subTitle {
-    font-size: 18px;
-    font-weight: bolder;
-}
-
-.mx-form {
-    margin: 0 -0.7rem !important;
-    padding: 0 0.7rem !important;
-}
-
-.info {
-    span {
-        display: block;
-        padding: 5px 0;
-        font-size: 14px;
-
-        .highlight {
-            display: inline;
-            color: var(--secondary);
-        }
+@media #{$screen-mobile} {
+    .page-container {
+        padding-top: $spacing-base-mobile;
     }
 }
 </style>

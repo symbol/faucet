@@ -1,61 +1,245 @@
 @import url('https://fonts.googleapis.com/css?family=Noto+Sans&display=swap');
 @import '../stylesheets/variables.scss';
+@import '../stylesheets/fonts.scss';
 
-$primary: $primary-color;
-$secondary: $secondary-color;
-$info: $secondary-color;
-$danger: $red-color;
-$pink: $pink-color;
-$blue: $blue-color;
-$green: $green-color;
-$orange: $orange-color;
+// $primary: $primary-color;
+// $secondary: $secondary-color;
+// $info: $secondary-color;
+// $danger: $red-color;
+// $pink: $pink-color;
+// $blue: $blue-color;
+// $green: $green-color;
+// $orange: $orange-color;
 
 $grid-breakpoints: (
-    xxxs: 0,
-    xxs: 320px,
-    xs: 568px,
-    sm: 667px,
+    sm: 0,
     md: 768px,
-    lg: 992px,
-    xl: 1920px
+    lg: 1024px,
+    xl: 1400px
 );
 
 $container-max-widths: (
-    xxxs: 0,
-    xxs: 320px,
-    xs: 568px,
-    sm: 667px,
+    sm: 0,
     md: 768px,
-    lg: 992px,
-    xl: 1920px
+    lg: 1024px,
+    xl: 1400px
 );
 
 @import '../../node_modules/bootstrap/scss/bootstrap';
 @import '../../node_modules/bootstrap-vue/src/index.scss';
 
-.border-transparent {
-    border-color: transparent;
+// Mixins
+
+@mixin text-crop-top($value) {
+    position: relative;
+    margin-top: $value;
 }
 
-.bg-transparent {
-    background: transparent;
+@mixin text-crop-bottom($value) {
+    position: relative;
+    margin-bottom: $value;
 }
+
+// Global styles
+// Desktop Large
 
 body {
-    font-family: 'Noto Sans', sans-serif;
-    background-image: url("../images/Tanker.jpg");
-    background-size: cover;
-    background-repeat: no-repeat;
-    color: #ffffff;
-    background-attachment:fixed;
+    margin: 0;
+    padding: 0;
+    color: var(--color-darkmode-text-body);
+    font: var(--font-web-large-body) !important;
+    background-color: var(--color-darkmode-bg-main);
+    letter-spacing: var(--typography-web-large-body-letter-spacing);
 }
 
-// a {
-//     color: var(--secondary);
-//     text-decoration: none;
+#root {
+    width: 100%;
+    height: 100%;
+    overflow-x: hidden;
+}
 
-//     :hover {
-//         color: var(--pink);
-//         text-decoration: none;
-//     }
-// }
+a {
+    color: var(--color-darkmode-text-learn-more);
+
+    &:hover {
+        color: var(--color-darkmode-text-learn-more);
+        opacity: 0.9;
+    }
+}
+
+p {
+    position: relative;
+    margin-bottom: 15px;
+
+    &:first-child {
+        @include text-crop-top(-6px);
+    }
+
+    &:last-child {
+        @include text-crop-bottom(-6px);
+    }
+
+    &.hero {
+        font: var(--font-web-large-body-hero);
+    }
+}
+
+h2 {
+    margin: 0;
+    font: var(--font-web-large-h2);
+    text-transform: uppercase;
+
+    @include text-crop-top(-11px);
+    @include text-crop-bottom(-14px);
+
+    &.title {
+        background: var(--gradient-darkmode-gradient-purple-title);
+        background-clip: text;
+        -webkit-text-fill-color: transparent;
+    }
+}
+
+h3 {
+    margin: 0;
+    color: var(--color-darkmode-text-body);
+    font: var(--font-web-large-h3);
+    text-transform: uppercase;
+
+    @include text-crop-top(-14px);
+    @include text-crop-bottom(-17px);
+
+    &.title {
+        color: var(--color-darkmode-text-title);
+    }
+}
+
+h4 {
+    margin: 0;
+    color: var(--color-darkmode-text-body);
+    font: var(--font-web-large-h4);
+    text-transform: uppercase;
+}
+
+.subtitle {
+    color: var(--color-darkmode-text-subtitle);
+    font: var(--font-web-large-subtitle);
+    text-transform: uppercase;
+}
+
+.row-margin {
+    position: relative;
+    margin-bottom: $spacing-base;
+    overflow: visible;
+}
+
+.row-margin-sm {
+    position: relative;
+    margin-bottom: $spacing-controls;
+    overflow: visible;
+}
+
+// Tablets
+
+@media #{$screen-tablet-lg}, #{$screen-tablet-sm} {
+    body {
+        font: var(--font-web-desktop-body) !important;
+    }
+
+    p {
+        margin-bottom: 15px;
+
+        &:first-child {
+            margin-top: -6px;
+        }
+
+        &:last-child {
+            margin-bottom: -6px;
+        }
+
+        &.hero {
+            font: var(--font-web-desktop-hero);
+        }
+    }
+
+    h2 {
+        @include text-crop-top(-8px);
+        @include text-crop-bottom(-11px);
+
+        font: var(--font-web-desktop-h2);
+    }
+
+    h3 {
+        @include text-crop-top(-3px);
+        @include text-crop-bottom(-6px);
+
+        font: var(--font-web-desktop-h3);
+    }
+
+    h4 {
+        margin: 0;
+        font: var(--font-web-desktop-h4);
+        text-transform: uppercase;
+    }
+
+    .subtitle {
+        font: var(--font-web-desktop-subtitle);
+    }
+}
+
+// Mobile
+
+@media #{$screen-mobile} {
+    body {
+        font: var(--font-web-mobile-body) !important;
+    }
+
+    p {
+        margin-bottom: 15px;
+
+        &:first-child {
+            @include text-crop-top(-5px);
+        }
+
+        &:last-child {
+            @include text-crop-bottom(-5px);
+        }
+
+        &.hero {
+            font: var(--font-web-mobile-hero);
+        }
+    }
+
+    h2 {
+        margin: -7px 0 -9px;
+        font: var(--font-web-mobile-h2);
+    }
+
+    h3 {
+        font: var(--font-web-mobile-h3);
+
+        @include text-crop-top(-8px);
+        @include text-crop-bottom(-10px);
+    }
+
+    h4 {
+        margin: 0;
+        font: var(--font-web-mobile-h4);
+        text-transform: uppercase;
+    }
+
+    .subtitle {
+        font: var(--font-web-mobile-subtitle);
+    }
+}
+
+// Animations & Transitions
+
+@keyframes fade-in {
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
+}
